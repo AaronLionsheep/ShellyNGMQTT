@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!-- If your plugin defines device types, you can define them here.
+	 Devices must specify their type (via the type attribute):
+		relay (ON/OFF/STATUS)
+		dimmer (ON/OFF/DIM/BRIGHTEN/SET BRIGHTNESS/STATUS)
+		speedcontrol (ON/OFF/SET SPEED LEVEL/SET SPEED INDEX/INCREASE/DECREASE/STATUS)
+		sensor (ON/OFF/STATUS)
+		thermostat
+		sprinkler
+		custom
+	 The first six inherit states, actions and events from Indigo. You can
+	 also specify your own custom actions and additional states, if needed.
+	 The two Device examples below specify the relay and dimmer types.
+
+	 Devices must also specify a unique typeID - so, for instance, if you define
+	 2 relay type devices then your plugin can distinguish between the two by
+	 the typeID.
+-->
+
+<Devices>
+	<DeviceFactory>
+		<Name>Create Shelly Device...</Name>
+		<ButtonTitle>Create</ButtonTitle>
+		<ConfigUI>
+			￼<Field type="menu" id="shelly-model">
+				<Label>Shelly Model:</Label>
+				<List>
+					<Option value="shelly-plus-1">Shelly Plus 1</Option>
+					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM</Option>
+					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
+					<Option value="shelly-plus-i-4">Shelly Plus I 4</Option>
+					<Option value="shelly-pro-1">Shelly Pro 1</Option>
+					<Option value="shelly-pro-1-pm">Shelly Pro 1 PM</Option>
+					<Option value="shelly-pro-2">Shelly Pro 2</Option>
+					<Option value="shelly-pro-2-pm">Shelly Pro 2 PM</Option>
+					<Option value="shelly-pro-4-pm">Shelly Pro 4 PM</Option>
+				</List>
+			</Field>
+
+			<Field id="broker-id" type="menu">
+				<Label>MQTT Broker:</Label>
+				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			</Field>
+
+			<Field id="address" type="textfield">
+				<Label>Base MQTT Topic:</Label>
+			</Field>
+
+			<Field id="message-type" type="textfield">
+				<Label>Message Type:</Label>
+			</Field>
+		</ConfigUI>
+	</DeviceFactory>
+
+	<Device type="custom" id="shelly-plus-1">
+		<Name>Shelly Plus 1</Name>
+		<ConfigUI>
+			<Field id="broker-id" type="menu">
+				<Label>MQTT Broker:</Label>
+				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			</Field>
+
+			<Field id="address" type="textfield">
+				<Label>Base MQTT Topic:</Label>
+			</Field>
+
+			<Field id="message-type" type="textfield">
+				<Label>Message Type:</Label>
+			</Field>
+		</ConfigUI>
+		<States>
+			<State id="ip-address">
+				<ValueType>String</ValueType>
+				<TriggerLabel>IP Address</TriggerLabel>
+				<ControlPageLabel>IP Address</ControlPageLabel>
+			</State>
+		</States>
+	</Device>
+
+	<Device type="custom" id="shelly-plus-i-4">
+		<Name>Shelly Plus I4</Name>
+		<ConfigUI>
+			<Field id="broker-id" type="menu">
+				<Label>MQTT Broker:</Label>
+				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			</Field>
+
+			<Field id="address" type="textfield">
+				<Label>Base MQTT Topic:</Label>
+			</Field>
+
+			<Field id="message-type" type="textfield">
+				<Label>Message Type:</Label>
+			</Field>
+		</ConfigUI>
+		<States>
+			<State id="ip-address">
+				<ValueType>String</ValueType>
+				<TriggerLabel>IP Address</TriggerLabel>
+				<ControlPageLabel>IP Address</ControlPageLabel>
+			</State>
+		</States>
+	</Device>
+
+	<Device type="relay" id="component-switch">
+		<Name>Switch Component</Name>
+		<ConfigUI>
+			<Field id="broker-id" type="menu">
+				<Label>MQTT Broker:</Label>
+				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			</Field>
+		</ConfigUI>
+	</Device>
+
+	<Device type="sensor" id="component-input">
+		<Name>Input Component</Name>
+		<ConfigUI>
+			<Field id="broker-id" type="menu">
+				<Label>MQTT Broker:</Label>
+				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			</Field>
+		</ConfigUI>
+	</Device>
+
+	<Device type="dimmer" id="component-cover">
+		<Name>Cover Component</Name>
+		<ConfigUI>
+			<Field id="broker-id" type="menu">
+				<Label>MQTT Broker:</Label>
+				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			</Field>
+		</ConfigUI>
+	</Device>
+</Devices>

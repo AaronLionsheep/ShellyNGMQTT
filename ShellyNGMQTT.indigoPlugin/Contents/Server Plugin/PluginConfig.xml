@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<PluginConfig>
+    <Field type="menu" id="log-level" defaultValue="info">
+        <Label>The level of detail to include in the log</Label>
+        <List>
+            <Option value="debug">Debug (the most logging)</Option>
+            <Option value="info">Info (standard logging)</Option>
+            <Option value="warning">Warning (reduced logging)</Option>
+        </List>
+    </Field>
+
+    <Field type="checkbox" id="log-device-activity" defaultValue="true">
+	    <Label>Log Device Activity:</Label>
+	    <Description>Enable log entries related to device activity</Description>
+    </Field>
+    <Field id="notice-log-device-activity" type="label" fontSize="small" fontColor="darkGrey">
+        <Label>Device activity includes turning on/off a device, adjusting brightness, and similar actions.</Label>
+    </Field>
+</PluginConfig>
