@@ -296,8 +296,8 @@
 		<Name>Input Component</Name>
 		<ConfigUI>
 			<Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+			<Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
+			<Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
 
 			<Field id="name" type="textfield">
 				<Label>Name:</Label>
