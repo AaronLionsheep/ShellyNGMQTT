@@ -20,7 +20,7 @@ class ShellyPlus1(Shelly):
 
     def get_topics(self):
         """
-        Default method to return a list of topics that the device subscribes to.
+        A list of topics that the device subscribes to.
 
         :return: A list.
         """
