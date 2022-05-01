@@ -20,6 +20,7 @@ class Input(Component):
         """
 
         super(Input, self).__init__(shelly, device, comp_id)
+        self.get_config()
 
     def handle_action(self, action):
         """
@@ -79,7 +80,7 @@ class Input(Component):
             'invert': config.get("invert", False),
         }
 
-        props = self.shelly.device.pluginProps
+        props = self.device.pluginProps
         props.update(self.latest_config)
         self.device.replacePluginPropsOnServer(props)
 

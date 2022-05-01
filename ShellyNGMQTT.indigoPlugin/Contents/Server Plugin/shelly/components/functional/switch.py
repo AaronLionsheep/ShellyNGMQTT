@@ -20,6 +20,7 @@ class Switch(Component):
         """
 
         super(Switch, self).__init__(shelly, device, comp_id)
+        self.get_config()
 
     def handle_action(self, action):
         """
@@ -74,7 +75,7 @@ class Switch(Component):
             'current-limit': config.get("current_limit", ""),
         }
 
-        props = self.shelly.device.pluginProps
+        props = self.device.pluginProps
         props.update(self.latest_config)
         self.device.replacePluginPropsOnServer(props)
 
