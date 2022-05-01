@@ -8,21 +8,18 @@ class Switch(Component):
     The Switch component handles a switch (relay) output terminal with optional power metering capabilities.
     """
 
-    def __init__(self, shelly, device, comp_id):
+    component_type = "switch"
+    device_type_id = "component-switch"
+
+    def __init__(self, shelly, device, comp_id=0):
         """
         Create a Switch component and assign it to a ShellyNG device.
 
-        :param shelly: The ShellyNG device object.
+        :param shelly: The main ShellyNG device object.
         :param comp_id: The integer identifier for the component
         """
 
-        super(Switch, self).__init__(shelly, device)
-
-        if isinstance(comp_id, int):
-            self.comp_id = comp_id
-        else:
-            # Let the except be raised if it can't be cast as an int
-            self.comp_id = int(comp_id)
+        super(Switch, self).__init__(shelly, device, comp_id)
 
     def handle_action(self, action):
         """
@@ -43,24 +40,69 @@ class Switch(Component):
 
     def get_config(self):
         """
-        Get the configuration of the switch (relay).
+        Get the configuration of the switch.
 
         :return: config
         """
 
-        # TODO: get the config
-        return
+        self.shelly.publish_rpc("Switch.GetConfig", {'id': self.comp_id}, callback=self.process_config)
 
-    def set_config(self, config):
+    def process_config(self, config, error=None):
         """
-        Set the configuration for the switch (relay).
+        A method that processes the configuration message.
 
-        :param config: A SwitchConfig object to upload to the device.
+        :param config: The returned configuration data.
+        :param error: Any errors.
         :return: None
         """
 
-        # TODO: set the config
-        return
+        if error:
+            self.logger.error(error)
+            return
+
+        self.latest_config = {
+            'name': config.get("name", ""),
+            'in-mode': config.get("in_mode", ""),
+            'initial-state': config.get("initial_state", ""),
+            'auto-on': config.get("auto_on", False),
+            'auto-on-delay': config.get("auto_on_delay", ""),
+            'auto-off': config.get("auto_off", False),
+            'auto-off-delay': config.get("auto_off_delay", ""),
+            'input-id': config.get("input_id", ""),
+            'power-limit': config.get("power_limit", ""),
+            'voltage-limit': config.get("voltage_limit", ""),
+            'current-limit': config.get("current_limit", ""),
+        }
+
+        props = self.shelly.device.pluginProps
+        props.update(self.latest_config)
+        self.device.replacePluginPropsOnServer(props)
+
+    def set_config(self, config):
+        """
+        Set the configuration for the input.
+
+        :param config: An InputConfig object to upload to the device.
+        :return: None
+        """
+
+        self.shelly.publish_rpc("Switch.SetConfig", {'id': self.comp_id, 'config': config}, callback=self.process_set_config)
+
+    def process_set_config(self, status, error=None):
+        """
+        A method that processes the response from setting the config.
+
+        :param status: The status.
+        :param error: The error.
+        :return: None
+        """
+
+        if error:
+            self.logger.error("Error writing switch configuration: {}".format(error.get("message", "<Unknown>")))
+            return
+
+        if status.get('restart_required', False):
+            self.log_command_received("rebooting...")
 
     def get_status(self):
         """
@@ -97,8 +139,6 @@ class Switch(Component):
             # Do nothing on unknown value
             pass
 
-        self.logger.info(status)
-
     def set(self, on, toggle_after=None):
         """
         This method sets the output of the Switch component to on or off.
@@ -133,59 +173,3 @@ class Switch(Component):
 
         # TODO: toggle the device state
         return
-
-
-class SwitchConfig(object):
-    """
-    The configuration of the Switch component contains information about the
-    input mode, the timers and the protection settings of the chosen switch instance.
-    """
-
-    def __init__(self, comp_id=None, name=None, in_mode=None,
-                 initial_state=None, auto_on=None, auto_on_delay=None,
-                 auto_off=None, auto_off_delay=None, input_id=None,
-                 power_limit=None, voltage_limit=None, current_limit=None):
-        """
-        Creates a new configuration for a switch component.
-
-        :param comp_id: Component identifier.
-        :param name: Name of the switch.
-        :param in_mode: Mode of the associated input. Allowed values: momentary, follow, flip, detached.
-        :param initial_state: Output state to set on power_on. Allowed values: off, on, restore_last, match_input.
-        :param auto_on: True if the "Automatic ON" function is enabled, False otherwise.
-        :param auto_on_delay: Number of seconds to pass until the component is switched back on.
-        :param auto_off: True if the "Automatic OFF" function is enabled, False otherwise.
-        :param auto_off_delay: Number of seconds to pass until the component is switched back off.
-        :param input_id: The id of the Input component which controls the Switch. Applicable only to Pro1 and Pro1PM devices. Allowed values: 0, 1.
-        :param power_limit: Limit (in Watts) over which overpower condition occurs.
-        :param voltage_limit: Limit (in Volts) over which overvoltage condition occurs.
-        :param current_limit: Limit (in Amperes) over which overcurrent condition occurs.
-        """
-
-        # Attribute storage
-        self._comp_id = None
-        self._name = None
-        self._in_mode = None
-        self._initial_state = None
-        self._auto_on = None
-        self._auto_on_delay = None
-        self._auto_off = None
-        self._auto_off_delay = None
-        self._input_id = None
-        self._power_limit = None
-        self._voltage_limit = None
-        self._current_limit = None
-
-        # Set the properties
-        self.comp_id = comp_id
-
-    @property
-    def comp_id(self):
-        return self._comp_id
-
-    @comp_id.setter
-    def comp_id(self, value):
-        if isinstance(value, int):
-            self._comp_id = value
-        else:
-            self._comp_id = int(value)

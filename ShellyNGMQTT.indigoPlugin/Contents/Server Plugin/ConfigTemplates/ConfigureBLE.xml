@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Template>
+    <Field id="ble-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="ble"/>
+
+    <Field id="ble" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="ble">
+		<Label>BLE</Label>
+	</Field>
+
+    <Field type="checkbox" id="ble-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="ble">
+		<Label>Enable:</Label>
+		<Description>if bluetooth is enabled</Description>
+	</Field>
+</Template>

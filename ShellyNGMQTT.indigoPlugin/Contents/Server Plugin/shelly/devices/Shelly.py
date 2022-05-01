@@ -3,11 +3,19 @@ import json
 import logging
 import uuid
 
+from ..components.system.system import System
+from ..components.system.wifi import WiFi
+from ..components.system.ethernet import Ethernet
+from ..components.system.ble import BLE
+from ..components.system.mqtt import MQTT
+
 
 class Shelly(object):
     """
 
     """
+
+    display_name = None
 
     def __init__(self, device):
         """
@@ -16,8 +24,39 @@ class Shelly(object):
         """
         self.device = device
         self.components = []
+        self.component_devices = {}
         self.logger = logging.getLogger("Plugin.ShellyMQTT")
         self.rpc_callbacks = {}
+
+        # Inspect devices in the group to find all components
+        group_ids = indigo.device.getGroupList(self.device)
+        for dev_id in group_ids:
+            if dev_id != self.device.id:
+                device = indigo.devices[dev_id]
+                self.component_devices[device.model] = device
+
+        self.system = System(self)
+        self.wifi = WiFi(self)
+        self.ethernet = Ethernet(self)
+        self.ble = BLE(self)
+        self.mqtt = MQTT(self)
+
+        self.system_components = [self.system, self.wifi, self.ethernet, self.ble, self.mqtt]
+        self.components.extend(self.system_components)
+
+    def get_config(self):
+        """
+        Gets the config for all components
+
+        :return: None
+        """
+
+        for component in self.system_components:
+            component.get_config()
+
+    #
+    # Property getters
+    #
 
     def get_address(self):
         """
@@ -66,9 +105,43 @@ class Shelly(object):
         """
 
         for component in self.components:
-            if component.device.id == device.id:
+            if component.device and component.device.id == device.id:
                 return component
         return None
+
+    def get_topics(self):
+        return []
+
+    def get_device_state_list(self):
+        """
+        Build the device state list for the device.
+
+        Possible state helpers are:
+        - getDeviceStateDictForNumberType
+        - getDeviceStateDictForRealType
+        - getDeviceStateDictForStringType
+        - getDeviceStateDictForBoolOnOffType
+        - getDeviceStateDictForBoolYesNoType
+        - getDeviceStateDictForBoolOneZeroType
+        - getDeviceStateDictForBoolTrueFalseType
+
+        :return: The device state list.
+        """
+
+        return [
+            indigo.activePlugin.getDeviceStateDictForBoolYesNoType("online", "Online", "Online"),
+            indigo.activePlugin.getDeviceStateDictForStringType("ip-address", "IP Address", "IP Address"),
+            indigo.activePlugin.getDeviceStateDictForStringType("ssid", "Connected SSID", "Connected SSID"),
+            indigo.activePlugin.getDeviceStateDictForNumberType("rssi", "WiFi Signal Strength (dBms)", "WiFi Signal Strength (dBms)"),
+            indigo.activePlugin.getDeviceStateDictForStringType("mac-address", "Mac Address", "Mac Address"),
+            indigo.activePlugin.getDeviceStateDictForNumberType("uptime", "Uptime (seconds)", "Uptime (seconds)"),
+            indigo.activePlugin.getDeviceStateDictForStringType("available-firmware", "Available Firmware Version", "Available Firmware Version"),
+            indigo.activePlugin.getDeviceStateDictForStringType("available-beta-firmware", "Available Beta Firmware Version", "Available Beta Firmware Version"),
+        ]
+
+    #
+    # MQTT Utilities
+    #
 
     def get_mqtt(self):
         """
@@ -83,9 +156,6 @@ class Shelly(object):
             return None
         else:
             return mqtt
-
-    def get_topics(self):
-        return []
 
     def subscribe(self):
         """
@@ -140,27 +210,9 @@ class Shelly(object):
         }
         self.publish("{}/rpc".format(self.get_address()), json.dumps(rpc))
 
-    def log_command_sent(self, message):
-        """
-        Helper method that logs when a device command is sent.
-
-        :param message: The message describing the command.
-        :return: None
-        """
-
-        if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
-            self.logger.info("sent \"{}\" {}".format(self.device.name, message))
-
-    def log_command_received(self, message):
-        """
-        Helper method that logs when a command is received.
-
-        :param message: The message describing the command.
-        :return: None
-        """
-
-        if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
-            self.logger.info("received \"{}\" {}".format(self.device.name, message))
+    #
+    # Handlers
+    #
 
     def handle_message(self, topic, payload):
         """
@@ -173,9 +225,13 @@ class Shelly(object):
         """
 
         if topic == "{}/online".format(self.get_address()):
-            self.device.updateStateOnServer(key='online', value=(payload == "true"))
-            # TODO: state image?
-            # self.update_state_image()
+            self.logger.info("online: {}".format(payload))
+            is_online = (payload == "true")
+            self.device.updateStateOnServer(key='online', value=is_online)
+            if is_online:
+                self.device.updateStateImageOnServer(indigo.kStateImageSel.PowerOn)
+            else:
+                self.device.updateStateImageOnServer(indigo.kStateImageSel.PowerOff)
         elif topic == "{}/rpc".format(self.get_address()):
             rpc = json.loads(payload)
             # Only process a response, which does not have a method
@@ -255,7 +311,8 @@ class Shelly(object):
         :return: None
         """
 
-        pass
+        if component_type == "sys" and event == "config_changed":
+            self.system.get_config()
 
     def handle_action(self, action):
         """
@@ -265,4 +322,84 @@ class Shelly(object):
         :return: None
         """
 
-        self.logger.info("{} - handle_action({})".format(self.device.name, action))
+        if action.deviceAction == indigo.kDeviceAction.RequestStatus:
+            self.system.get_status()
+            self.wifi.get_status()
+            self.ethernet.get_status()
+            self.ble.get_status()
+            self.mqtt.get_status()
+
+    #
+    # Utilities
+    #
+
+    def log_command_sent(self, message):
+        """
+        Helper method that logs when a device command is sent.
+
+        :param message: The message describing the command.
+        :return: None
+        """
+
+        if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
+            self.logger.info("sent \"{}\" {}".format(self.device.name, message))
+
+    def log_command_received(self, message):
+        """
+        Helper method that logs when a command is received.
+
+        :param message: The message describing the command.
+        :return: None
+        """
+
+        if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
+            self.logger.info("received \"{}\" {}".format(self.device.name, message))
+
+    def register_component(self, component_class, name, comp_id=0):
+        """
+        Find or create the Indigo device for the functional component.
+
+        This is used for functional components that have their own Indigo
+        devices. This just performs the association of an indigo device with a
+        component object and the main shelly object.
+
+        :param component_class: The class of the component to create.
+        :param name: The name of the component (device model).
+        :param comp_id: The identifier for the component.
+        :return: The created component object.
+        """
+
+        if name not in self.component_devices:
+            # The component name we are trying to register is new, so we did
+            # not find a device with that name already in the group. Create it
+            # and add it to the group.
+            device = indigo.device.create(indigo.kProtocol.Plugin,
+                                          deviceTypeId=component_class.device_type_id,
+                                          groupWithDevice=self.device.id)
+            device.model = name
+            device.replaceOnServer()
+            self.component_devices[name] = device
+
+        component = component_class(self, self.component_devices[name], comp_id)
+        self.components.append(component)
+        return component
+
+    def get_component(self, component_class=None, component_type=None, comp_id=0):
+        """
+        Utility to find the component object matching the criteria.
+
+        :param component_class: Only return components that are an instance of this class.
+        :param component_type: Only return components that have this type.
+        :param comp_id: Only return components with this id.
+        :return: The matching component.
+        """
+
+        for component in self.components:
+            if component_class is not None and not isinstance(component, component_class):
+                continue
+            if component_type is not None and component.component_type != component_type:
+                continue
+            if component.comp_id != comp_id:
+                continue
+            # Made it this far, so all criteria matched
+            return component

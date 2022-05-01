@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<Template>
+    <Field id="ethernet-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="ethernet"/>
+
+    <Field id="ethernet" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="ethernet">
+		<Label>Ethernet</Label>
+	</Field>
+
+    <Field type="checkbox" id="ethernet-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="ethernet">
+		<Label>Enable:</Label>
+		<Description>if the connection is enabled for use</Description>
+	</Field>
+
+    <Field id="ethernet-ipv4-mode" type="menu" defaultValue="dhcp" visibleBindingId="settings-section" visibleBindingValue="ethernet">
+        <Label>IPV4 Mode:</Label>
+        <List>
+            <Option value="dhcp">DHCP</Option>
+            <Option value="static">Static</Option>
+        </List>
+    </Field>
+
+    <Field id="ethernet-ip-address" type="textfield" visibleBindingId="ethernet-ipv4-mode" visibleBindingValue="static">
+        <Label>Static IP Address:</Label>
+    </Field>
+
+    <Field id="ethernet-network-mask" type="textfield" visibleBindingId="ethernet-ipv4-mode" visibleBindingValue="static">
+        <Label>Network Mask:</Label>
+    </Field>
+
+    <Field id="ethernet-gateway" type="textfield" visibleBindingId="ethernet-ipv4-mode" visibleBindingValue="static">
+        <Label>Gateway:</Label>
+    </Field>
+
+    <Field id="ethernet-nameserver" type="textfield" visibleBindingId="ethernet-ipv4-mode" visibleBindingValue="static">
+        <Label>Name Server:</Label>
+    </Field>
+</Template>

@@ -1,27 +1,31 @@
 import indigo
 
-from ..devices.Shelly import Shelly
-
 
 class Component(object):
     """
 
     """
 
-    def __init__(self, shelly, device):
+    component_type = None
+    device_type_id = None
+
+    def __init__(self, shelly, device=None, comp_id=0):
         """
 
         :param shelly:
         :param device:
         """
 
-        if isinstance(shelly, Shelly):
-            self.shelly = shelly
+        if isinstance(comp_id, int):
+            self.comp_id = comp_id
         else:
-            raise TypeError("{} is not a Shelly device!".format(shelly))
+            # Let the except be raised if it can't be cast as an int
+            self.comp_id = int(comp_id)
 
+        self.shelly = shelly
         self.device = device
         self.logger = shelly.logger
+        self.latest_config = {}
 
     def log_command_sent(self, message):
         """
@@ -32,7 +36,11 @@ class Component(object):
         """
 
         if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
-            self.logger.info("sent \"{}\" {}".format(self.device.name, message))
+            if self.device:
+                device_name = self.device.name
+            else:
+                device_name = self.shelly.device.name
+            self.logger.info("sent \"{}\" {}".format(device_name, message))
 
     def log_command_received(self, message):
         """
@@ -43,7 +51,11 @@ class Component(object):
         """
 
         if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
-            self.logger.info("received \"{}\" {}".format(self.device.name, message))
+            if self.device:
+                device_name = self.device.name
+            else:
+                device_name = self.shelly.device.name
+            self.logger.info("received \"{}\" {}".format(device_name, message))
 
     def handle_action(self, action):
         """
@@ -55,11 +67,56 @@ class Component(object):
 
         pass
 
+    def get_status(self):
+        """
+
+        :return:
+        """
+
+        pass
+
     def process_status(self, status):
         """
         A method that processes a status message.
 
         :param status: The status message
+        :return:
+        """
+
+        pass
+
+    def get_config(self):
+        """
+
+        :return:
+        """
+
+        pass
+
+    def process_config(self, config, error=None):
+        """
+
+        :param config:
+        :param error:
+        :return:
+        """
+
+        pass
+
+    def set_config(self, config):
+        """
+
+        :param config:
+        :return:
+        """
+
+        pass
+
+    def process_set_config(self, status, error=None):
+        """
+
+        :param status:
+        :param error:
         :return:
         """
 

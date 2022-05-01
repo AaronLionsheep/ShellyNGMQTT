@@ -1,39 +1,25 @@
 <?xml version="1.0"?>
-<!-- If your plugin defines device types, you can define them here.
-	 Devices must specify their type (via the type attribute):
-		relay (ON/OFF/STATUS)
-		dimmer (ON/OFF/DIM/BRIGHTEN/SET BRIGHTNESS/STATUS)
-		speedcontrol (ON/OFF/SET SPEED LEVEL/SET SPEED INDEX/INCREASE/DECREASE/STATUS)
-		sensor (ON/OFF/STATUS)
-		thermostat
-		sprinkler
-		custom
-	 The first six inherit states, actions and events from Indigo. You can
-	 also specify your own custom actions and additional states, if needed.
-	 The two Device examples below specify the relay and dimmer types.
-
-	 Devices must also specify a unique typeID - so, for instance, if you define
-	 2 relay type devices then your plugin can distinguish between the two by
-	 the typeID.
--->
-
 <Devices>
 	<DeviceFactory>
-		<Name>Create Shelly Device...</Name>
-		<ButtonTitle>Create</ButtonTitle>
+		<Name>Create/Modify Shelly Device...</Name>
+		<ButtonTitle>Submit</ButtonTitle>
 		<ConfigUI>
-			￼<Field type="menu" id="shelly-model">
+			￼<Field type="menu" id="shelly-model" defaultValue="shelly-plus-1">
 				<Label>Shelly Model:</Label>
 				<List>
 					<Option value="shelly-plus-1">Shelly Plus 1</Option>
+					<!--
 					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM</Option>
 					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
-					<Option value="shelly-plus-i-4">Shelly Plus I 4</Option>
+					-->
+					<Option value="shelly-plus-i-4">Shelly Plus I4</Option>
+					<!--
 					<Option value="shelly-pro-1">Shelly Pro 1</Option>
 					<Option value="shelly-pro-1-pm">Shelly Pro 1 PM</Option>
 					<Option value="shelly-pro-2">Shelly Pro 2</Option>
 					<Option value="shelly-pro-2-pm">Shelly Pro 2 PM</Option>
 					<Option value="shelly-pro-4-pm">Shelly Pro 4 PM</Option>
+					-->
 				</List>
 			</Field>
 
@@ -49,37 +35,77 @@
 			<Field id="message-type" type="textfield">
 				<Label>Message Type:</Label>
 			</Field>
+
+			<Field id="model-specific-sep" type="separator"/>
+
+			<!-- Shelly Plus 2 PM / Shelly Pro 2 PM-->
+			<Field id="profile" type="menu" defaultValue="switch" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm" alwaysUseInDialogHeightCalc="true">
+				<Label>Device Profile:</Label>
+				<List>
+					<Option value="switch">Switch</Option>
+					<Option value="cover">Cover</Option>
+				</List>
+			</Field>
 		</ConfigUI>
 	</DeviceFactory>
 
-	<Device type="custom" id="shelly-plus-1">
+	<Device type="sensor" id="shelly-plus-1">
 		<Name>Shelly Plus 1</Name>
 		<ConfigUI>
-			<Field id="broker-id" type="menu">
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
+            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+
+			<Field id="settings-section" type="menu" defaultValue="indigo">
+				<Label>Configuration Section:</Label>
+				<List>
+					<Option value="indigo">Indigo</Option>
+					<Option value="system">System</Option>
+					<Option value="wifi">WiFi</Option>
+					<Option value="ble">BLE</Option>
+				</List>
+			</Field>
+
+			<!-- Indigo -->
+
+			<Field id="indigo-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="indigo"/>
+
+			<Field id="broker-id" type="menu" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>MQTT Broker:</Label>
 				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
 			</Field>
 
-			<Field id="address" type="textfield">
+			<Field id="address" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Base MQTT Topic:</Label>
 			</Field>
 
-			<Field id="message-type" type="textfield">
+			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
 			</Field>
+
+			<!-- System -->
+			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
+
+			<!-- WiFi -->
+			<Template file="ConfigTemplates/ConfigureWifi.xml"/>
+
+			<!-- Ethernet -->
+			<Template file="ConfigTemplates/ConfigureEthernet.xml"/>
+
+			<!-- BLE -->
+			<Template file="ConfigTemplates/ConfigureBLE.xml"/>
+
 		</ConfigUI>
 		<States>
-			<State id="ip-address">
-				<ValueType>String</ValueType>
-				<TriggerLabel>IP Address</TriggerLabel>
-				<ControlPageLabel>IP Address</ControlPageLabel>
-			</State>
 		</States>
 	</Device>
 
-	<Device type="custom" id="shelly-plus-i-4">
-		<Name>Shelly Plus I4</Name>
+	<!--
+	<Device type="custom" id="shelly-plus-2-pm">
+		<Name>Shelly Plus 2 PM</Name>
 		<ConfigUI>
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
+
 			<Field id="broker-id" type="menu">
 				<Label>MQTT Broker:</Label>
 				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
@@ -92,22 +118,176 @@
 			<Field id="message-type" type="textfield">
 				<Label>Message Type:</Label>
 			</Field>
+
+			<Field id="profile" type="menu" defaultValue="switch">
+				<Label>Device Profile:</Label>
+				<List>
+					<Option value="switch">Switch</Option>
+					<Option value="cover">Cover</Option>
+				</List>
+			</Field>
 		</ConfigUI>
 		<States>
-			<State id="ip-address">
-				<ValueType>String</ValueType>
-				<TriggerLabel>IP Address</TriggerLabel>
-				<ControlPageLabel>IP Address</ControlPageLabel>
-			</State>
+		</States>
+	</Device>
+	-->
+
+	<Device type="sensor" id="shelly-plus-i-4">
+		<Name>Shelly Plus I4</Name>
+		<ConfigUI>
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
+            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+
+			<Field id="settings-section" type="menu" defaultValue="indigo">
+				<Label>Configuration Section:</Label>
+				<List>
+					<Option value="indigo">Indigo</Option>
+					<Option value="system">System</Option>
+					<Option value="wifi">WiFi</Option>
+					<Option value="ble">BLE</Option>
+				</List>
+			</Field>
+
+			<!-- Indigo -->
+
+			<Field id="indigo-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="indigo"/>
+
+			<Field id="broker-id" type="menu" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>MQTT Broker:</Label>
+				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			</Field>
+
+			<Field id="address" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>Base MQTT Topic:</Label>
+			</Field>
+
+			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>Message Type:</Label>
+			</Field>
+
+			<!-- System -->
+			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
+
+			<!-- WiFi -->
+			<Template file="ConfigTemplates/ConfigureWifi.xml"/>
+
+			<!-- BLE -->
+			<Template file="ConfigTemplates/ConfigureBLE.xml"/>
+		</ConfigUI>
+		<States>
 		</States>
 	</Device>
 
 	<Device type="relay" id="component-switch">
 		<Name>Switch Component</Name>
 		<ConfigUI>
-			<Field id="broker-id" type="menu">
-				<Label>MQTT Broker:</Label>
-				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			<Field id="name" type="textfield">
+				<Label>Name:</Label>
+			</Field>
+
+			<Field id="in-mode" type="menu" defaultValue="follow">
+				<Label>Input Mode:</Label>
+				<List>
+					<Option value="momentary">Momentary</Option>
+					<Option value="follow">Follow</Option>
+					<Option value="flip">Flip</Option>
+					<Option value="detached">Detached</Option>
+				</List>
+			</Field>
+
+			<Field id="in-mode-momentary-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Momentary: available only when the corresponding input is stateless (ex: button)</Label>
+			</Field>
+			<Field id="in-mode-follow-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Follow: the state of the switch is the same as the state of the input (e.g. when the input is off then the switch is off)</Label>
+			</Field>
+			<Field id="in-mode-flip-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Flip: change of the state of the input causes change of the state of the switch (e.g. when input is toggled the switch is also)</Label>
+			</Field>
+			<Field id="in-mode-detached-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Detached: the state of the input doesn't affect the state of the switch (fully independent)</Label>
+			</Field>
+
+			<Field id="initial-state" type="menu" defaultValue="follow">
+				<Label>Initial State:</Label>
+				<List>
+					<Option value="off">Off</Option>
+					<Option value="on">On</Option>
+					<Option value="restore_last">Restore Last</Option>
+					<Option value="match_input">Match Input</Option>
+				</List>
+			</Field>
+
+			<Field id="input-id" type="menu" defaultValue="0">
+				<Label>Input ID:</Label>
+				<List>
+					<Option value="0">1</Option>
+					<Option value="1">2</Option>
+				</List>
+			</Field>
+			<Field id="input-id-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>The Input which controls the Switch (Pro1 and Pro1PM devices only)</Label>
+			</Field>
+
+			<Field id="switch-sep-1" type="separator"/>
+
+			<Field type="checkbox" id="auto-on" defaultValue="false">
+				<Label>Auto-On:</Label>
+				<Description>if the "Automatic On" function is enabled</Description>
+			</Field>
+
+			<Field id="auto-on-delay" type="textfield">
+				<Label>Auto-On Delay:</Label>
+			</Field>
+			<Field id="auto-on-delay-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>seconds to pass until the component is switched back on</Label>
+			</Field>
+
+			<Field type="checkbox" id="auto-off" defaultValue="false">
+				<Label>Auto-Off:</Label>
+				<Description>if the "Automatic Off" function is enabled</Description>
+			</Field>
+
+			<Field id="auto-off-delay" type="textfield">
+				<Label>Auto-Off Delay:</Label>
+			</Field>
+			<Field id="auto-off-delay-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Seconds to pass until the component is switched back off</Label>
+			</Field>
+
+			<Field id="switch-sep-2" type="separator"/>
+
+			<Field id="power-limit" type="textfield">
+				<Label>Power Limit:</Label>
+			</Field>
+			<Field id="power-limit-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Limit (in Watts) over which overpower condition occurs (PM devices only)</Label>
+			</Field>
+
+			<Field id="voltage-limit" type="textfield">
+				<Label>Voltage Limit:</Label>
+			</Field>
+			<Field id="voltage-limit-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Limit (in Volts) over which overvoltage condition occurs (PM devices only)</Label>
+			</Field>
+
+			<Field id="current-limit" type="textfield">
+				<Label>Current Limit:</Label>
+			</Field>
+			<Field id="current-limit-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Limit (in Amperes) over which overcurrent condition occurs (PM devices only)</Label>
+			</Field>
+
+			<Field id="switch-config-write-sep" type="separator"/>
+
+			<Field id="switch-config-write-help" type="label" fontColor="darkgray">
+				<Label>Write the current configuration to the device for this switch only. Be mindful about empty fields and check the log for error messages.</Label>
+			</Field>
+
+			<Field id="switch-config-write" type="button" tooltip="Click this button to write the switch configuration">
+				<Title>Write Configuration</Title>
+				<CallbackMethod>_write_switch_configuration</CallbackMethod>
 			</Field>
 		</ConfigUI>
 	</Device>
@@ -115,9 +295,35 @@
 	<Device type="sensor" id="component-input">
 		<Name>Input Component</Name>
 		<ConfigUI>
-			<Field id="broker-id" type="menu">
-				<Label>MQTT Broker:</Label>
-				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			<Field id="name" type="textfield">
+				<Label>Name:</Label>
+			</Field>
+
+			<Field id="type" type="menu" defaultValue="follow">
+				<Label>Input Mode:</Label>
+				<List>
+					<Option value="switch">Switch</Option>
+					<Option value="button">Button</Option>
+				</List>
+			</Field>
+
+			<Field type="checkbox" id="invert" defaultValue="false">
+				<Label>Invert:</Label>
+				<Description>if the logical state of the associated input should be inverted</Description>
+			</Field>
+			<Field id="invert-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>For the change to be applied, the physical switch has to be toggled once after invert is set</Label>
+			</Field>
+
+			<Field id="input-config-write-sep" type="separator"/>
+
+			<Field id="input-config-write-help" type="label" fontColor="darkgray">
+				<Label>Write the current configuration to the device for this input only. Be mindful about empty fields and check the log for error messages.</Label>
+			</Field>
+
+			<Field id="input-config-write" type="button" tooltip="Click this button to write the input configuration">
+				<Title>Write Configuration</Title>
+				<CallbackMethod>_write_input_configuration</CallbackMethod>
 			</Field>
 		</ConfigUI>
 	</Device>
@@ -125,10 +331,7 @@
 	<Device type="dimmer" id="component-cover">
 		<Name>Cover Component</Name>
 		<ConfigUI>
-			<Field id="broker-id" type="menu">
-				<Label>MQTT Broker:</Label>
-				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
-			</Field>
+
 		</ConfigUI>
 	</Device>
 </Devices>

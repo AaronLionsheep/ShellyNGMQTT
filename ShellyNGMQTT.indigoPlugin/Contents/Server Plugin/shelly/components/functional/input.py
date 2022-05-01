@@ -1,3 +1,5 @@
+import indigo
+
 from ..component import Component
 
 
@@ -6,7 +8,10 @@ class Input(Component):
     The Input component handles external SW input terminals of a device.
     """
 
-    def __init__(self, shelly, device, comp_id):
+    component_type = "input"
+    device_type_id = "component-input"
+
+    def __init__(self, shelly, device, comp_id=0):
         """
         Create an Input component and assign it to a Shelly device.
 
@@ -14,13 +19,7 @@ class Input(Component):
         :param comp_id: The integer identifier for the component
         """
 
-        super(Input, self).__init__(shelly, device)
-
-        if isinstance(comp_id, int):
-            self.comp_id = comp_id
-        else:
-            # Let the except be raised if it can't be cast as an int
-            self.comp_id = int(comp_id)
+        super(Input, self).__init__(shelly, device, comp_id)
 
     def handle_action(self, action):
         """
@@ -30,17 +29,40 @@ class Input(Component):
         :return: None
         """
 
-        self.logger.info("{} - handle_action({})".format(self.device.name, action))
+        if action.deviceAction == indigo.kDeviceAction.RequestStatus:
+            self.get_status()
 
     def get_config(self):
         """
-        Get the configuration of the input.
+        Get the configuration of the switch.
 
         :return: config
         """
 
-        # TODO: get the config
-        return
+        self.shelly.publish_rpc("Input.GetConfig", {'id': self.comp_id}, callback=self.process_config)
+
+    def process_config(self, config, error=None):
+        """
+        A method that processes the configuration message.
+
+        :param config: The returned configuration data.
+        :param error: Any errors.
+        :return: None
+        """
+
+        if error:
+            self.logger.error(error)
+            return
+
+        self.latest_config = {
+            'name': config.get("name", ""),
+            'type': config.get("type", ""),
+            'invert': config.get("invert", False),
+        }
+
+        props = self.shelly.device.pluginProps
+        props.update(self.latest_config)
+        self.device.replacePluginPropsOnServer(props)
 
     def set_config(self, config):
         """
@@ -50,8 +72,23 @@ class Input(Component):
         :return: None
         """
 
-        # TODO: set the config
-        return
+        self.shelly.publish_rpc("Input.SetConfig", {'id': self.comp_id, 'config': config}, callback=self.process_set_config)
+
+    def process_set_config(self, status, error=None):
+        """
+        A method that processes the response from setting the config.
+
+        :param status: The status.
+        :param error: The error.
+        :return: None
+        """
+
+        if error:
+            self.logger.error("Error writing input configuration: {}".format(error.get("message", "<Unknown>")))
+            return
+
+        if status.get('restart_required', False):
+            self.log_command_received("rebooting...")
 
     def get_status(self):
         """
@@ -61,15 +98,21 @@ class Input(Component):
         :return: status (dict)
         """
 
-        # TODO: get the status
-        return
+        params = {
+            'id': self.comp_id
+        }
 
-    def process_status(self, status):
+        self.shelly.publish_rpc("Input.GetStatus", params, callback=self.process_status)
+
+    def process_status(self, status, error=None):
         """
         A method that processes the status of the input.
 
+        :param error:
         :param status: The status message
         :return:
         """
 
-        self.logger.info(status)
+        state = status.get('state', False)
+        if state is not None:
+            self.device.updateStateOnServer(key='onOffState', value=state)
