@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<Template>
+    <Field id="system-sep-1" type="separator" visibleBindingId="settings-section" visibleBindingValue="system"/>
+
+	<Field id="system-device" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Device</Label>
+	</Field>
+
+	<Field id="system-device-name" type="textfield" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Device Name:</Label>
+	</Field>
+
+	<Field type="checkbox" id="device-eco-mode" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Eco Mode:</Label>
+		<Description>Decrease power consumption</Description>
+	</Field>
+
+	<Field id="system-device-eco-mode-help" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>EXPERIMENTAL: decreases power consumption when set to true, at the cost of reduced execution speed and increased network latency.</Label>
+	</Field>
+
+	<Field id="system-device-mac-address" type="textfield" readonly="true" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Mac Address:</Label>
+	</Field>
+
+	<Field id="system-device-firmware" type="textfield" readonly="true" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Firmware:</Label>
+	</Field>
+
+	<Field id="system-location-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="system"/>
+
+	<Field id="system-location" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Location</Label>
+	</Field>
+
+	<Field id="system-location-timezone" type="textfield" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Timezone:</Label>
+	</Field>
+
+	<Field id="system-location-lat" type="textfield" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Latitude:</Label>
+	</Field>
+
+	<Field id="system-location-lon" type="textfield" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Longitude:</Label>
+	</Field>
+
+	<Field id="system-debug-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="system"/>
+
+	<Field id="system-debug" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Debug</Label>
+	</Field>
+
+	<Field type="checkbox" id="system-debug-mqtt" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>MQTT:</Label>
+		<Description>logs streamed over MQTT</Description>
+	</Field>
+
+	<Field type="checkbox" id="system-debug-websocket" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Websocket:</Label>
+		<Description>logs streamed over websocket</Description>
+	</Field>
+
+	<Field id="system-debug-udp-address" type="textfield" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>UDP Address:</Label>
+	</Field>
+
+	<Field id="system-config-write-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="system"/>
+
+	<Field id="system-config-write-help" type="label" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Label>Write the current configuration to the device for this section only. Be mindful about empty fields and check the log for error messages.</Label>
+	</Field>
+
+	<Field id="system-config-write" type="button" tooltip="Click this button to write the system configuration" visibleBindingId="settings-section" visibleBindingValue="system">
+		<Title>Write Configuration</Title>
+		<CallbackMethod>_write_system_configuration</CallbackMethod>
+	</Field>
+</Template>

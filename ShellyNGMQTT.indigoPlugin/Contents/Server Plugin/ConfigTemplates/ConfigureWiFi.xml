@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<Template>
+    <Field id="wifi-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true"/>
+
+    <!-- Access Point -->
+
+    <Field id="wifi-ap" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>Access Point</Label>
+	</Field>
+
+    <Field id="ap-ssid" type="textfield" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>SSID:</Label>
+    </Field>
+
+    <Field type="checkbox" id="ap-is-open" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>Is Open:</Label>
+		<Description>if the access point is open</Description>
+	</Field>
+
+    <Field type="checkbox" id="ap-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>Enable:</Label>
+		<Description>if the access point is enabled</Description>
+	</Field>
+
+    <!-- WiFi 1 -->
+
+    <Field id="wifi-1-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true"/>
+
+    <Field id="wifi-1" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>WiFi 1 (Primary)</Label>
+	</Field>
+
+    <Field id="wifi-1-ssid" type="textfield" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>SSID:</Label>
+    </Field>
+
+    <Field id="wifi-1-password" type="textfield" secure="true" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>Password:</Label>
+    </Field>
+
+    <Field type="checkbox" id="wifi-1-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>Enable:</Label>
+		<Description>if the network is enabled for use</Description>
+	</Field>
+
+    <Field id="wifi-1-ipv4-mode" type="menu" defaultValue="dhcp" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>IPV4 Mode:</Label>
+        <List>
+            <Option value="dhcp">DHCP</Option>
+            <Option value="static">Static</Option>
+        </List>
+    </Field>
+
+    <Field id="wifi-1-ip-address" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+        <Label>Static IP Address:</Label>
+    </Field>
+
+    <Field id="wifi-1-network-mask" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+        <Label>Network Mask:</Label>
+    </Field>
+
+    <Field id="wifi-1-gateway" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+        <Label>Gateway:</Label>
+    </Field>
+
+    <Field id="wifi-1-nameserver" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+        <Label>Name Server:</Label>
+    </Field>
+
+    <!-- WiFi 2 -->
+
+    <Field id="wifi-2-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true"/>
+
+    <Field id="wifi-2" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>WiFi 2 (Secondary)</Label>
+	</Field>
+
+    <Field id="wifi-2-ssid" type="textfield" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>SSID:</Label>
+    </Field>
+
+    <Field id="wifi-2-password" type="textfield" secure="true" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>Password:</Label>
+    </Field>
+
+    <Field type="checkbox" id="wifi-2-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>Enable:</Label>
+		<Description>if the network is enabled for use</Description>
+	</Field>
+
+    <Field id="wifi-2-ipv4-mode" type="menu" defaultValue="dhcp" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>IPV4 Mode:</Label>
+        <List>
+            <Option value="dhcp">DHCP</Option>
+            <Option value="static">Static</Option>
+        </List>
+    </Field>
+
+    <Field id="wifi-2-ip-address" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+        <Label>Static IP Address:</Label>
+    </Field>
+
+    <Field id="wifi-2-network-mask" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+        <Label>Network Mask:</Label>
+    </Field>
+
+    <Field id="wifi-2-gateway" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+        <Label>Gateway:</Label>
+    </Field>
+
+    <Field id="wifi-2-nameserver" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+        <Label>Name Server:</Label>
+    </Field>
+
+    <!-- Roaming -->
+
+    <Field id="wifi-roaming-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true"/>
+
+    <Field id="wifi-roaming" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>Roaming</Label>
+	</Field>
+
+    <Field id="wifi-roaming-rssi-threshold" type="textfield" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>RSSI Threshold:</Label>
+    </Field>
+
+    <Field id="wifi-roaming-rssi-threshold-help" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>when reached will trigger the access point roaming</Label>
+	</Field>
+
+    <Field id="wifi-roaming-interval" type="textfield" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>Interval:</Label>
+    </Field>
+
+    <Field id="wifi-roaming-interval-help" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>interval at which to scan for better access points. Enabled if set to positive number, disabled if set to 0.</Label>
+	</Field>
+</Template>
