@@ -311,8 +311,11 @@ class Shelly(object):
         :return: None
         """
 
-        if component_type == "sys" and event == "config_changed":
-            self.system.get_config()
+        component = self.get_component(component_type=component_type, comp_id=instance_id)
+        if component:
+            component.handle_notify_event(event)
+        else:
+            self.logger.warning("'{}': Unable to find component (component_type={}, comp_id={}) to pass event '{}' to!".format(self.device.name, component_type, instance_id, event))
 
     def handle_action(self, action):
         """

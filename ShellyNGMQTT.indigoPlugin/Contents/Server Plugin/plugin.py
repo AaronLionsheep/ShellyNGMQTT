@@ -343,14 +343,20 @@ class Plugin(indigo.PluginBase):
         :return:
         """
 
+        # When a config is changed then the device already tries to get the config
+        # TODO: Determine if the device needs to be restarted from the config change
+        """
         if dev_id in self.shellies:
             self.shellies[dev_id].get_config()
         else:
             component = self.get_component(indigo.devices[dev_id])
             if component:
+                self.logger.info("Getting config of component: {} ({})".format(component, component.device.name))
                 component.get_config()
             else:
                 self.logger.error("Unable to find shelly or component for device id: {}".format(dev_id))
+        """
+        pass
 
     def actionControlDevice(self, action, device):
         """
