@@ -215,7 +215,6 @@ class Plugin(indigo.PluginBase):
         # Find the main device in the group
         for dev_id in devIdList:
             device = indigo.devices[dev_id]
-            self.logger.info(device.deviceTypeId)
             if device.deviceTypeId in shelly_model_classes:
                 main_device = device
                 break
@@ -298,7 +297,6 @@ class Plugin(indigo.PluginBase):
         if model_class.display_name not in group_models:
             # The main device is not in the group, so create one
             device = indigo.device.create(indigo.kProtocol.Plugin, deviceTypeId=shelly_model, props=device_props)
-            self.logger.info("device created...")
             device.model = model_class.display_name
             device.replaceOnServer()
         else:
@@ -314,7 +312,6 @@ class Plugin(indigo.PluginBase):
             return
 
         # Update the device properties from the factory UI
-        self.logger.info(device_props)
         device.replacePluginPropsOnServer(device_props)
 
         # Initialize the device and its components to populate the already opened UI
