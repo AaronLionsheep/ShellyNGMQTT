@@ -20,7 +20,6 @@ class Switch(Component):
         """
 
         super(Switch, self).__init__(shelly, device, comp_id)
-        self.get_config()
 
     def handle_action(self, action):
         """

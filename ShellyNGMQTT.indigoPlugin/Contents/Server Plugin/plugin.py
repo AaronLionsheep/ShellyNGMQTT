@@ -168,12 +168,9 @@ class Plugin(indigo.PluginBase):
         device.replacePluginPropsOnServer(props)
         device.stateListOrDisplayStateIdChanged()
 
+        # Update the config at the end if it is the main device
         if device.id in self.shellies:
             self.shellies[device.id].get_config()
-        else:
-            component = self.get_component(device)
-            if component:
-                component.get_config()
 
     def deviceStopComm(self, device):
         """

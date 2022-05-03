@@ -51,7 +51,7 @@ class Shelly(object):
         :return: None
         """
 
-        for component in self.system_components:
+        for component in self.components:
             component.get_config()
 
     #
