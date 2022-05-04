@@ -25,7 +25,7 @@ class Shelly(object):
         self.device = device
         self.components = []
         self.component_devices = {}
-        self.logger = logging.getLogger("Plugin.ShellyMQTT")
+        self.logger = logging.getLogger("Plugin.ShellyNGMQTT")
         self.rpc_callbacks = {}
 
         # Inspect devices in the group to find all components
