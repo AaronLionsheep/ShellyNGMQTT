@@ -6,7 +6,7 @@ class System(Component):
     The Input component handles external SW input terminals of a device.
     """
 
-    component_type = "system"
+    component_type = "sys"
     device_type_id = ""
 
     def __init__(self, shelly):

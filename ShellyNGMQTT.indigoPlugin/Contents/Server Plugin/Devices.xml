@@ -89,9 +89,6 @@
 			<!-- WiFi -->
 			<Template file="ConfigTemplates/ConfigureWifi.xml"/>
 
-			<!-- Ethernet -->
-			<Template file="ConfigTemplates/ConfigureEthernet.xml"/>
-
 			<!-- BLE -->
 			<Template file="ConfigTemplates/ConfigureBLE.xml"/>
 
@@ -174,6 +171,7 @@
 
 			<!-- BLE -->
 			<Template file="ConfigTemplates/ConfigureBLE.xml"/>
+
 		</ConfigUI>
 		<States>
 		</States>

@@ -20,24 +20,34 @@ class WiFi(Component):
 
     def get_config(self):
         """
-        Get the configuration of the WiFi.
+        Get the configuration of the wifi.
 
         :return: config
         """
 
-        # TODO: get the config
-        return
+        self.shelly.publish_rpc("WiFi.GetConfig", {}, callback=self.process_config)
 
-    def set_config(self, config):
+    def process_config(self, config, error=None):
         """
-        Set the configuration for the WiFi.
+        A method that processes the configuration message.
 
-        :param config: An InputConfig object to upload to the device.
+        :param config: The returned configuration data.
+        :param error: Any errors.
         :return: None
         """
 
-        # TODO: set the config
-        return
+        if error:
+            self.logger.error(error)
+            return
+
+        self.latest_config = {
+            'wifi-ap-ssid': config.get("ap", {}).get("ssid", ""),
+            'wifi-ap-enable': config.get("ap", {}).get("enable", "")
+        }
+
+        props = self.shelly.device.pluginProps
+        props.update(self.latest_config)
+        self.shelly.device.replacePluginPropsOnServer(props)
 
     def get_status(self):
         """

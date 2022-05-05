@@ -541,6 +541,10 @@ class Plugin(indigo.PluginBase):
         :return:
         """
 
+        shelly = self.shellies.get(dev_id, None)
+        if not shelly:
+            return
+
         config = {
             'device': {
                 'name': values_dict.get("system-device-name"),
@@ -575,7 +579,60 @@ class Plugin(indigo.PluginBase):
         if len(config['debug']['udp']['addr']) == 0:
             config['debug']['udp']['addr'] = None
 
-        self.shellies[dev_id].system.set_config(config)
+        shelly.system_components['system'].set_config(config)
+
+    def _write_wifi_configuration(self, values_dict, type_id, dev_id):
+        """
+        Handler for writing the wifi component's configuration.
+
+        :param values_dict:
+        :param type_id:
+        :param dev_id:
+        :return:
+        """
+
+        shelly = self.shellies.get(dev_id, None)
+        if not shelly:
+            return
+
+        config = {
+            'ap': {
+                'ssid': values_dict.get("wifi-ap-ssid"),
+                'enable': values_dict.get("wifi-ap-enable")
+            },
+            'sta': {
+                'ssid': values_dict.get("wifi-1-ssid"),
+                'pass': values_dict.get("wifi-1-password"),
+                'enable': values_dict.get("wifi-1-enable"),
+                'ipv4mode': values_dict.get("wifi-1-ipv4-mode"),
+                'ip': values_dict.get("wifi-1-ip-address"),
+                'netmask': values_dict.get("wifi-1-network-mask"),
+                'gw': values_dict.get("wifi-1-gateway"),
+                'nameserver': values_dict.get("wifi-1-nameserver")
+            },
+            'sta1': {
+                'ssid': values_dict.get("wifi-2-ssid"),
+                'pass': values_dict.get("wifi-2-password"),
+                'enable': values_dict.get("wifi-2-enable"),
+                'ipv4mode': values_dict.get("wifi-2-ipv4-mode"),
+                'ip': values_dict.get("wifi-2-ip-address"),
+                'netmask': values_dict.get("wifi-2-network-mask"),
+                'gw': values_dict.get("wifi-2-gateway"),
+                'nameserver': values_dict.get("wifi-2-nameserver")
+            },
+            'roam': {
+                'rssi_thr': values_dict.get("wifi-roaming-rssi-threshold"),
+                'interval': values_dict.get("wifi-roaming-interval")
+            }
+        }
+
+        if len(config['device']['name']) == 0:
+            config['device']['name'] = None
+
+        # TODO: Don't write passwords if they are blank since a get_config will not populate them
+        # TODO: ip, netmask, gw, and nameserver should be None when empty
+
+        shelly.system_components['wifi'].set_config(config)
 
     def _write_switch_configuration(self, values_dict, type_id, dev_id):
         """

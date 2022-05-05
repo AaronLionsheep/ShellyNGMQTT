@@ -8,16 +8,11 @@
 		<Label>Access Point</Label>
 	</Field>
 
-    <Field id="ap-ssid" type="textfield" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-ap-ssid" type="textfield" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
         <Label>SSID:</Label>
     </Field>
 
-    <Field type="checkbox" id="ap-is-open" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
-		<Label>Is Open:</Label>
-		<Description>if the access point is open</Description>
-	</Field>
-
-    <Field type="checkbox" id="ap-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+    <Field type="checkbox" id="wifi-ap-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
 		<Label>Enable:</Label>
 		<Description>if the access point is enabled</Description>
 	</Field>
@@ -37,6 +32,10 @@
     <Field id="wifi-1-password" type="textfield" secure="true" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
         <Label>Password:</Label>
     </Field>
+
+    <Field id="wifi-1-password-help" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>The Shelly device does not return the current password, and your password will not be saved to this Indigo device. Writing the device configuration with this field blank will NOT change the stored password on the Shelly device.</Label>
+	</Field>
 
     <Field type="checkbox" id="wifi-1-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
 		<Label>Enable:</Label>
@@ -82,6 +81,10 @@
     <Field id="wifi-2-password" type="textfield" secure="true" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
         <Label>Password:</Label>
     </Field>
+
+    <Field id="wifi-2-password-help" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>The Shelly device does not return the current password, and your password will not be saved to this Indigo device. Writing the device configuration with this field blank will NOT change the stored password on the Shelly device.</Label>
+	</Field>
 
     <Field type="checkbox" id="wifi-2-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
 		<Label>Enable:</Label>

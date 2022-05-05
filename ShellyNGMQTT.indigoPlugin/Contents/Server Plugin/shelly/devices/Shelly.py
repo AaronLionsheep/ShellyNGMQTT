@@ -284,7 +284,7 @@ class Shelly(object):
                 for e in params.get('events', []):
                     component = e.get('component', "")
                     component_type = None
-                    instance_id = None
+                    instance_id = 0
                     if ':' in component:
                         component_parts = component.split(':')
                         if len(component_parts) == 2:
