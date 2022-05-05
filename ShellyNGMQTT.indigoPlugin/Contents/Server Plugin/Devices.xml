@@ -36,7 +36,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="model-specific-sep" type="separator"/>
+			<Field id="model-specific-sep" type="separator" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm"/>
 
 			<!-- Shelly Plus 2 PM / Shelly Pro 2 PM-->
 			<Field id="profile" type="menu" defaultValue="switch" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm" alwaysUseInDialogHeightCalc="true">
