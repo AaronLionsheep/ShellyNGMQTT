@@ -3,27 +3,23 @@ import json
 import logging
 import uuid
 
-from ..components.system.system import System
-from ..components.system.wifi import WiFi
-from ..components.system.ethernet import Ethernet
-from ..components.system.ble import BLE
-from ..components.system.mqtt import MQTT
-
 
 class Shelly(object):
     """
-
+    Base class used by all Shelly model classes.
     """
 
-    display_name = None
+    display_name = "ShellyBase"
 
     def __init__(self, device):
+        """Create a new Shelly device.
+
+        :param device: The indigo device.
         """
 
-        :param device: The indigo device
-        """
         self.device = device
-        self.components = []
+        self.functional_components = []
+        self.system_components = {}
         self.component_devices = {}
         self.logger = logging.getLogger("Plugin.ShellyNGMQTT")
         self.rpc_callbacks = {}
@@ -35,14 +31,15 @@ class Shelly(object):
                 device = indigo.devices[dev_id]
                 self.component_devices[device.model] = device
 
-        self.system = System(self)
-        self.wifi = WiFi(self)
-        self.ethernet = Ethernet(self)
-        self.ble = BLE(self)
-        self.mqtt = MQTT(self)
+    @property
+    def components(self):
+        """
+        Getter for all functional and system components.
 
-        self.system_components = [self.system, self.wifi, self.ethernet, self.ble, self.mqtt]
-        self.components.extend(self.system_components)
+        :return: A list of all functional and system components.
+        """
+
+        return self.functional_components + self.system_components.values()
 
     def get_config(self):
         """
@@ -110,7 +107,21 @@ class Shelly(object):
         return None
 
     def get_topics(self):
-        return []
+        """
+        A list of topics that the device subscribes to.
+
+        :return: A list.
+        """
+
+        address = self.get_address()
+        if address is None:
+            return []
+        else:
+            return [
+                "{}/online".format(address),
+                "{}/rpc".format(address),
+                "{}/events/rpc".format(address)
+            ]
 
     def get_device_state_list(self):
         """
@@ -326,11 +337,8 @@ class Shelly(object):
         """
 
         if action.deviceAction == indigo.kDeviceAction.RequestStatus:
-            self.system.get_status()
-            self.wifi.get_status()
-            self.ethernet.get_status()
-            self.ble.get_status()
-            self.mqtt.get_status()
+            for component in self.system_components.values():
+                component.get_status()
 
     #
     # Utilities
@@ -384,7 +392,7 @@ class Shelly(object):
             self.component_devices[name] = device
 
         component = component_class(self, self.component_devices[name], comp_id)
-        self.components.append(component)
+        self.functional_components.append(component)
         return component
 
     def get_component(self, component_class=None, component_type=None, comp_id=0):

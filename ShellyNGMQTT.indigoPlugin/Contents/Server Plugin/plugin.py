@@ -167,7 +167,12 @@ class Plugin(indigo.PluginBase):
 
         # Update the config at the end if it is the main device
         if device.id in self.shellies:
-            self.shellies[device.id].get_config()
+            shelly = self.shellies[device.id]
+            shelly.get_config()
+
+            # Get the status of all components across sub-devices
+            for component in shelly.components:
+                component.get_status()
 
     def deviceStopComm(self, device):
         """

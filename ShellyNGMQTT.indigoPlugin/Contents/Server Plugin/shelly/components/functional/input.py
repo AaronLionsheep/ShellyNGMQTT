@@ -42,14 +42,14 @@ class Input(Component):
         :return: None
         """
 
+        super(Input, self).handle_notify_event(event)
+
         if event == "btn_down":
             self.device.updateStateOnServer(key='onOffState', value=True)
             # TODO: Fire any triggers
         elif event == "btn_up":
             self.device.updateStateOnServer(key='onOffState', value=False)
             # TODO: Fire any triggers
-        else:
-            Component.handle_notify_event(self, event)
 
     def get_config(self):
         """

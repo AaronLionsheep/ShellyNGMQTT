@@ -81,7 +81,7 @@ class Component(object):
         if event == "config_changed":
             self.get_config()
         else:
-            self.logger.info("no handler for event '{}'".format(event))
+            self.logger.info("no main component handler for event '{}'".format(event))
 
     def handle_notify_status(self, status):
         """
