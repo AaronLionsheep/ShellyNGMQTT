@@ -59,9 +59,9 @@ class System(Component):
 
     def set_config(self, config):
         """
-        Set the configuration for the input.
+        Set the configuration for the system.
 
-        :param config: An InputConfig object to upload to the device.
+        :param config: A system config to upload to the device.
         :return: None
         """
 

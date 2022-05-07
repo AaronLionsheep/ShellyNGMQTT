@@ -71,7 +71,7 @@
 		<Label>Write the current configuration to the device for this section only. Be mindful about empty fields and check the log for error messages.</Label>
 	</Field>
 
-	<Field id="system-config-write" type="button" tooltip="Click this button to write the system configuration" visibleBindingId="settings-section" visibleBindingValue="system">
+	<Field id="system-config-write" type="button" tooltip="Click this button to write the System configuration" visibleBindingId="settings-section" visibleBindingValue="system">
 		<Title>Write Configuration</Title>
 		<CallbackMethod>_write_system_configuration</CallbackMethod>
 	</Field>

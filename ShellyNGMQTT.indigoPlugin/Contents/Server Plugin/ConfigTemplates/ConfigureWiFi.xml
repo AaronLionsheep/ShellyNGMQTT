@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Template>
-    <Field id="wifi-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true"/>
+
+    <Field id="wifi-ap-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true"/>
 
     <!-- Access Point -->
 
@@ -11,6 +12,19 @@
     <Field id="wifi-ap-ssid" type="textfield" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
         <Label>SSID:</Label>
     </Field>
+
+    <Field id="wifi-ap-password" type="textfield" secure="true" enabledBindingId="wifi-ap-open-network" enabledBindingNegate="true" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+        <Label>Password:</Label>
+    </Field>
+
+    <Field id="wifi-ap-password-help" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>The Shelly device does not return the current password, and your password will not be saved to this Indigo device. Writing the device configuration with this field blank will NOT change the stored password on the Shelly device.</Label>
+	</Field>
+
+    <Field type="checkbox" id="wifi-ap-open-network" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>Open Network:</Label>
+		<Description>if this network does not require a password</Description>
+	</Field>
 
     <Field type="checkbox" id="wifi-ap-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
 		<Label>Enable:</Label>
@@ -29,12 +43,17 @@
         <Label>SSID:</Label>
     </Field>
 
-    <Field id="wifi-1-password" type="textfield" secure="true" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-1-password" type="textfield" secure="true" enabledBindingId="wifi-1-open-network" enabledBindingNegate="true" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
         <Label>Password:</Label>
     </Field>
 
     <Field id="wifi-1-password-help" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
 		<Label>The Shelly device does not return the current password, and your password will not be saved to this Indigo device. Writing the device configuration with this field blank will NOT change the stored password on the Shelly device.</Label>
+	</Field>
+
+    <Field type="checkbox" id="wifi-1-open-network" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>Open Network:</Label>
+		<Description>if this network does not require a password</Description>
 	</Field>
 
     <Field type="checkbox" id="wifi-1-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
@@ -50,19 +69,19 @@
         </List>
     </Field>
 
-    <Field id="wifi-1-ip-address" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-1-ip-address" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static">
         <Label>Static IP Address:</Label>
     </Field>
 
-    <Field id="wifi-1-network-mask" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-1-network-mask" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static">
         <Label>Network Mask:</Label>
     </Field>
 
-    <Field id="wifi-1-gateway" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-1-gateway" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static">
         <Label>Gateway:</Label>
     </Field>
 
-    <Field id="wifi-1-nameserver" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-1-nameserver" type="textfield" visibleBindingId="wifi-1-ipv4-mode" visibleBindingValue="static">
         <Label>Name Server:</Label>
     </Field>
 
@@ -78,12 +97,17 @@
         <Label>SSID:</Label>
     </Field>
 
-    <Field id="wifi-2-password" type="textfield" secure="true" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-2-password" type="textfield" secure="true" enabledBindingId="wifi-2-open-network" enabledBindingNegate="true" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
         <Label>Password:</Label>
     </Field>
 
     <Field id="wifi-2-password-help" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
 		<Label>The Shelly device does not return the current password, and your password will not be saved to this Indigo device. Writing the device configuration with this field blank will NOT change the stored password on the Shelly device.</Label>
+	</Field>
+
+    <Field type="checkbox" id="wifi-2-open-network" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
+		<Label>Open Network:</Label>
+		<Description>if this network does not require a password</Description>
 	</Field>
 
     <Field type="checkbox" id="wifi-2-enable" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
@@ -99,19 +123,19 @@
         </List>
     </Field>
 
-    <Field id="wifi-2-ip-address" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-2-ip-address" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static">
         <Label>Static IP Address:</Label>
     </Field>
 
-    <Field id="wifi-2-network-mask" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-2-network-mask" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static">
         <Label>Network Mask:</Label>
     </Field>
 
-    <Field id="wifi-2-gateway" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-2-gateway" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static">
         <Label>Gateway:</Label>
     </Field>
 
-    <Field id="wifi-2-nameserver" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static" alwaysUseInDialogHeightCalc="true">
+    <Field id="wifi-2-nameserver" type="textfield" visibleBindingId="wifi-2-ipv4-mode" visibleBindingValue="static">
         <Label>Name Server:</Label>
     </Field>
 
@@ -137,5 +161,16 @@
 
     <Field id="wifi-roaming-interval-help" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="wifi" alwaysUseInDialogHeightCalc="true">
 		<Label>interval at which to scan for better access points. Enabled if set to positive number, disabled if set to 0.</Label>
+	</Field>
+
+    <Field id="wifi-config-write-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="wifi"/>
+
+	<Field id="wifi-config-write-help" type="label" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="wifi">
+		<Label>Write the current configuration to the device for this section only. Be mindful about empty fields and check the log for error messages.</Label>
+	</Field>
+
+	<Field id="wifi-config-write" type="button" tooltip="Click this button to write the WiFi configuration" visibleBindingId="settings-section" visibleBindingValue="wifi">
+		<Title>Write Configuration</Title>
+		<CallbackMethod>_write_wifi_configuration</CallbackMethod>
 	</Field>
 </Template>

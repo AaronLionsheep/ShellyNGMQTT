@@ -598,11 +598,14 @@ class Plugin(indigo.PluginBase):
         config = {
             'ap': {
                 'ssid': values_dict.get("wifi-ap-ssid"),
+                'pass': values_dict.get("wifi-ap-password"),
+                'is_open': values_dict.get("wifi-ap-open-network"),
                 'enable': values_dict.get("wifi-ap-enable")
             },
             'sta': {
                 'ssid': values_dict.get("wifi-1-ssid"),
                 'pass': values_dict.get("wifi-1-password"),
+                'is_open': values_dict.get("wifi-1-open-network"),
                 'enable': values_dict.get("wifi-1-enable"),
                 'ipv4mode': values_dict.get("wifi-1-ipv4-mode"),
                 'ip': values_dict.get("wifi-1-ip-address"),
@@ -613,6 +616,7 @@ class Plugin(indigo.PluginBase):
             'sta1': {
                 'ssid': values_dict.get("wifi-2-ssid"),
                 'pass': values_dict.get("wifi-2-password"),
+                'is_open': values_dict.get("wifi-2-open-network"),
                 'enable': values_dict.get("wifi-2-enable"),
                 'ipv4mode': values_dict.get("wifi-2-ipv4-mode"),
                 'ip': values_dict.get("wifi-2-ip-address"),
@@ -626,13 +630,59 @@ class Plugin(indigo.PluginBase):
             }
         }
 
-        if len(config['device']['name']) == 0:
-            config['device']['name'] = None
+        # Don't write passwords if they are blank since a get_config will not populate them
+        if len(config['ap']['pass']) == 0:
+            del config['ap']['pass']
+        if len(config['sta']['pass']) == 0:
+            del config['sta']['pass']
+        if len(config['sta1']['pass']) == 0:
+            del config['sta1']['pass']
 
-        # TODO: Don't write passwords if they are blank since a get_config will not populate them
-        # TODO: ip, netmask, gw, and nameserver should be None when empty
+        # ip, netmask, gw, and nameserver should be None when empty
+        # wifi 1
+        if len(config['sta']['ssid']) == 0:
+            config['sta']['ssid'] = None
+        if len(config['sta']['ip']) == 0:
+            config['sta']['ip'] = None
+        if len(config['sta']['netmask']) == 0:
+            config['sta']['netmask'] = None
+        if len(config['sta']['gw']) == 0:
+            config['sta']['gw'] = None
+        if len(config['sta']['nameserver']) == 0:
+            config['sta']['nameserver'] = None
+        # wifi 2
+        if len(config['sta1']['ssid']) == 0:
+            config['sta1']['ssid'] = None
+        if len(config['sta1']['ip']) == 0:
+            config['sta1']['ip'] = None
+        if len(config['sta1']['netmask']) == 0:
+            config['sta1']['netmask'] = None
+        if len(config['sta1']['gw']) == 0:
+            config['sta1']['gw'] = None
+        if len(config['sta1']['nameserver']) == 0:
+            config['sta1']['nameserver'] = None
 
         shelly.system_components['wifi'].set_config(config)
+
+    def _write_ble_configuration(self, values_dict, type_id, dev_id):
+        """
+        Handler for writing the BLE component's configuration.
+
+        :param values_dict:
+        :param type_id:
+        :param dev_id:
+        :return:
+        """
+
+        shelly = self.shellies.get(dev_id, None)
+        if not shelly:
+            return
+
+        config = {
+            'enable': values_dict.get("ble-enable")
+        }
+
+        shelly.system_components['ble'].set_config(config)
 
     def _write_switch_configuration(self, values_dict, type_id, dev_id):
         """

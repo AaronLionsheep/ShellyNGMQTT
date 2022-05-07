@@ -10,4 +10,15 @@
 		<Label>Enable:</Label>
 		<Description>if bluetooth is enabled</Description>
 	</Field>
+
+	<Field id="ble-config-write-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="ble"/>
+
+	<Field id="ble-config-write-help" type="label" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="ble">
+		<Label>Write the current configuration to the device for this section only. Be mindful about empty fields and check the log for error messages.</Label>
+	</Field>
+
+	<Field id="ble-config-write" type="button" tooltip="Click this button to write the BLE configuration" visibleBindingId="settings-section" visibleBindingValue="ble">
+		<Title>Write Configuration</Title>
+		<CallbackMethod>_write_ble_configuration</CallbackMethod>
+	</Field>
 </Template>
