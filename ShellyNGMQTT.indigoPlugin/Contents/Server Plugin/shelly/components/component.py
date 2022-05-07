@@ -78,10 +78,14 @@ class Component(object):
         :return: None
         """
 
+        # Fire any triggers matching this event for the device associated with the component
+        for trigger in indigo.activePlugin.triggers.values():
+            if trigger.pluginTypeId == event.replace('_', '-') and int(trigger.pluginProps.get('device-id', -1)) == self.device.id:
+                indigo.trigger.execute(trigger)
+
+        # Handle base events
         if event == "config_changed":
             self.get_config()
-        else:
-            self.logger.info("no main component handler for event '{}'".format(event))
 
     def handle_notify_status(self, status):
         """

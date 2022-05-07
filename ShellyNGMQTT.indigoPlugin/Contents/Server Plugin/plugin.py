@@ -18,6 +18,7 @@ class Plugin(indigo.PluginBase):
         self.setLogLevel(pluginPrefs.get('log-level', "info"))
 
         self.shellies = {}
+        self.triggers = {}
         self.message_types = []
         self.message_queue = Queue()
         self.mqtt_plugin = indigo.server.getPlugin("com.flyingdiver.indigoplugin.mqtt")
@@ -225,6 +226,24 @@ class Plugin(indigo.PluginBase):
                 if new_dev.pluginProps.get(field, None) != orig_dev.pluginProps.get(field, None):
                     return True
         return False
+
+    def triggerStartProcessing(self, trigger):
+        """
+        Called when a new trigger should be processed by the plugin.
+        :param trigger: The trigger reference
+        :return:
+        """
+
+        self.triggers[trigger.id] = trigger
+
+    def triggerStopProcessing(self, trigger):
+        """
+        Called when a new trigger should stop being processed by the plugin.
+        :param trigger: The trigger reference
+        :return:
+        """
+
+        del self.triggers[trigger.id]
 
     def getDeviceFactoryUiValues(self, dev_id_list):
         """
