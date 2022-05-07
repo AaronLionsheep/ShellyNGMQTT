@@ -67,6 +67,31 @@ class Component(object):
 
         pass
 
+    def handle_notify_event(self, event):
+        """
+        Default handler for events coming from a device.
+
+        This default handler catches the common events for all components such
+        as configuration changes.
+
+        :param event: The event from the device.
+        :return: None
+        """
+
+        if event == "config_changed":
+            self.get_config()
+        else:
+            self.logger.info("no main component handler for event '{}'".format(event))
+
+    def handle_notify_status(self, status):
+        """
+
+        :param status:
+        :return:
+        """
+
+        pass
+
     def get_status(self):
         """
 

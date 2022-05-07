@@ -8,18 +8,16 @@
 				<Label>Shelly Model:</Label>
 				<List>
 					<Option value="shelly-plus-1">Shelly Plus 1</Option>
-					<!--
-					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM</Option>
-					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
-					-->
+					<Option value="shelly-plus-1-pm">%%disabled:Shelly Plus 1 PM%%</Option>
+					<Option value="shelly-plus-2-pm">%%disabled:Shelly Plus 2 PM%%</Option>
+					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-i-4">Shelly Plus I4</Option>
-					<!--
-					<Option value="shelly-pro-1">Shelly Pro 1</Option>
-					<Option value="shelly-pro-1-pm">Shelly Pro 1 PM</Option>
-					<Option value="shelly-pro-2">Shelly Pro 2</Option>
-					<Option value="shelly-pro-2-pm">Shelly Pro 2 PM</Option>
-					<Option value="shelly-pro-4-pm">Shelly Pro 4 PM</Option>
-					-->
+					<Option value="-1">%%separator%%</Option>
+					<Option value="shelly-pro-1">%%disabled:Shelly Pro 1%%</Option>
+					<Option value="shelly-pro-1-pm">%%disabled:Shelly Pro 1 PM%%</Option>
+					<Option value="shelly-pro-2">%%disabled:Shelly Pro 2%%</Option>
+					<Option value="shelly-pro-2-pm">%%disabled:Shelly Pro 2 PM%%</Option>
+					<Option value="shelly-pro-4-pm">%%disabled:Shelly Pro 4 PM%%</Option>
 				</List>
 			</Field>
 
@@ -36,7 +34,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="model-specific-sep" type="separator"/>
+			<Field id="model-specific-sep" type="separator" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm"/>
 
 			<!-- Shelly Plus 2 PM / Shelly Pro 2 PM-->
 			<Field id="profile" type="menu" defaultValue="switch" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm" alwaysUseInDialogHeightCalc="true">
@@ -60,6 +58,7 @@
 				<Label>Configuration Section:</Label>
 				<List>
 					<Option value="indigo">Indigo</Option>
+					<Option value="-1">%%separator%%</Option>
 					<Option value="system">System</Option>
 					<Option value="wifi">WiFi</Option>
 					<Option value="ble">BLE</Option>
@@ -88,9 +87,6 @@
 
 			<!-- WiFi -->
 			<Template file="ConfigTemplates/ConfigureWifi.xml"/>
-
-			<!-- Ethernet -->
-			<Template file="ConfigTemplates/ConfigureEthernet.xml"/>
 
 			<!-- BLE -->
 			<Template file="ConfigTemplates/ConfigureBLE.xml"/>
@@ -174,6 +170,7 @@
 
 			<!-- BLE -->
 			<Template file="ConfigTemplates/ConfigureBLE.xml"/>
+
 		</ConfigUI>
 		<States>
 		</States>
@@ -295,11 +292,15 @@
 	<Device type="sensor" id="component-input">
 		<Name>Input Component</Name>
 		<ConfigUI>
+			<Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
+			<Field type="checkbox" id="SupportsOnState" defaultValue="true" hidden="true" />
+			<Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+
 			<Field id="name" type="textfield">
 				<Label>Name:</Label>
 			</Field>
 
-			<Field id="type" type="menu" defaultValue="follow">
+			<Field id="type" type="menu">
 				<Label>Input Mode:</Label>
 				<List>
 					<Option value="switch">Switch</Option>

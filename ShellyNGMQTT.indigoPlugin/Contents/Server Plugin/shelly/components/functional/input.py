@@ -32,6 +32,25 @@ class Input(Component):
         if action.deviceAction == indigo.kDeviceAction.RequestStatus:
             self.get_status()
 
+    def handle_notify_event(self, event):
+        """
+        Handler for events coming from the device.
+
+        Look for button presses sent when the component is configured as a button.
+
+        :param event: The event from the device.
+        :return: None
+        """
+
+        super(Input, self).handle_notify_event(event)
+
+        if event == "btn_down":
+            self.device.updateStateOnServer(key='onOffState', value=True)
+            # TODO: Fire any triggers
+        elif event == "btn_up":
+            self.device.updateStateOnServer(key='onOffState', value=False)
+            # TODO: Fire any triggers
+
     def get_config(self):
         """
         Get the configuration of the switch.
@@ -60,7 +79,7 @@ class Input(Component):
             'invert': config.get("invert", False),
         }
 
-        props = self.shelly.device.pluginProps
+        props = self.device.pluginProps
         props.update(self.latest_config)
         self.device.replacePluginPropsOnServer(props)
 

@@ -104,7 +104,6 @@ class Plugin(indigo.PluginBase):
             while True:
                 data = self.mqtt_plugin.executeAction("fetchQueuedMessage", deviceId=broker_id, props=props, waitUntilDone=True)
                 if data is None:  # Ensure we got data back
-                    self.logger.debug("data was none when fetching message")
                     break
 
                 topic = '/'.join(data['topic_parts'])  # transform the topic into a single string
@@ -130,8 +129,6 @@ class Plugin(indigo.PluginBase):
         :param device:
         :return:
         """
-
-        self.logger.debug("device starting: {} ({})".format(device.name, device.id))
 
         if device.deviceTypeId in shelly_model_classes:
             model_class = shelly_model_classes[device.deviceTypeId]
@@ -168,12 +165,14 @@ class Plugin(indigo.PluginBase):
         device.replacePluginPropsOnServer(props)
         device.stateListOrDisplayStateIdChanged()
 
+        # Update the config at the end if it is the main device
         if device.id in self.shellies:
-            self.shellies[device.id].get_config()
-        else:
-            component = self.get_component(device)
-            if component:
-                component.get_config()
+            shelly = self.shellies[device.id]
+            shelly.get_config()
+
+            # Get the status of all components across sub-devices
+            for component in shelly.components:
+                component.get_status()
 
     def deviceStopComm(self, device):
         """
@@ -198,14 +197,47 @@ class Plugin(indigo.PluginBase):
 
             self.message_types.remove(shelly.get_message_type())
 
-        if device.id in self.shellies:
-            del self.shellies[device.id]
+            try:
+                del self.shellies[device.id]
+            except KeyError:
+                self.logger.warning("Something went wrong! '{}' could not be removed from internal shellies dictionary".format(device.name))
 
-    def getDeviceFactoryUiValues(self, devIdList):
+    def didDeviceCommPropertyChange(self, orig_dev, new_dev):
+        """
+        This method gets called by the default implementation of deviceUpdated() to determine if
+        any of the properties needed for device communication (or any other change requires a
+        device to be stopped and restarted). The default implementation checks for any changes to
+        properties. You can implement your own to provide more granular results. For instance, if
+        your device requires 4 parameters, but only 2 of those parameters requires that you restart
+        the device, then you can check to see if either of those changed. If they didn't then you
+        can just return False and your device won't be restarted (via deviceStopComm()/deviceStartComm() calls).
+
+        :param orig_dev: The device before updates.
+        :param new_dev: The device after updates.
+        :return: True or false whether the device had the communication properties changed.
         """
 
-        :param devIdList:
-        :return:
+        if new_dev.deviceTypeId in shelly_model_classes:
+            # The final device is a main device, so it needs to be restarted
+            # if any of the MQTT information changes
+            restart_fields = ["broker-id", "address", "message-type"]
+            for field in restart_fields:
+                if new_dev.pluginProps.get(field, None) != orig_dev.pluginProps.get(field, None):
+                    return True
+        return False
+
+    def getDeviceFactoryUiValues(self, dev_id_list):
+        """
+        Get the values and errors that should be displayed in the Device
+        Factory UI for a given device group.
+
+        If a main device can be found in the group, then the Shelly device
+        model, broker-id, address, and message-type fields are populated from
+        the main device.
+
+        :param dev_id_list: The list of device id's in the device group.
+        :return: Tuple of a dict of values to set in the UI and a dict of
+        errors for each field to display.
         """
 
         values_dict = indigo.Dict()
@@ -213,9 +245,8 @@ class Plugin(indigo.PluginBase):
 
         main_device = None
         # Find the main device in the group
-        for dev_id in devIdList:
+        for dev_id in dev_id_list:
             device = indigo.devices[dev_id]
-            self.logger.info(device.deviceTypeId)
             if device.deviceTypeId in shelly_model_classes:
                 main_device = device
                 break
@@ -228,20 +259,22 @@ class Plugin(indigo.PluginBase):
 
         return values_dict, errors_dict
 
-    def validateDeviceFactoryUi(self, valuesDict, devIdList):
+    def validateDeviceFactoryUi(self, values_dict, dev_id_list):
         """
 
-        :param valuesDict: The data the user is attempting to submit from the device factory UI.
-        :param devIdList:
-        :return: Tuple of validity, data to load into the form, and any error messages.
+        :param values_dict: The data the user is attempting to submit from the
+        device factory UI.
+        :param dev_id_list: The list of device id's in the device group.
+        :return: Tuple of validity status, data to load into the form, and any
+        error messages.
         """
 
         errors_dict = indigo.Dict()
         valid = True
-        group_device_types = [indigo.devices[dev_id].deviceTypeId for dev_id in devIdList]
+        group_device_types = [indigo.devices[dev_id].deviceTypeId for dev_id in dev_id_list]
 
         # Ensure a model is selected
-        if valuesDict['shelly-model'] == "":
+        if values_dict['shelly-model'] == "":
             valid = False
             errors_dict['shelly-model'] = "You must select the device model!"
         else:
@@ -250,84 +283,104 @@ class Plugin(indigo.PluginBase):
             if len(main_models) == 1:
                 # The selected model bust be the same
                 main_model = main_models.pop()
-                if valuesDict['shelly-model'] != main_model:
+                if values_dict['shelly-model'] != main_model:
                     valid = False
                     errors_dict['shelly-model'] = "You can not change the main model!"
 
         # Ensure a broker is selected
-        if valuesDict['broker-id'] == "":
+        if values_dict['broker-id'] == "":
             valid = False
             errors_dict['broker-id'] = "You must select the broker the device will connect to!"
 
         # Ensure the device address is supplied
-        if valuesDict['address'] == "":
+        if values_dict['address'] == "":
             valid = False
             errors_dict['address'] = "You must specify the base device address!"
 
         # Ensure the message type is supplied
-        if valuesDict['message-type'] == "":
+        if values_dict['message-type'] == "":
             valid = False
             errors_dict['message-type'] = "You must specify the message type for the device!"
 
-        return valid, valuesDict, errors_dict
+        return valid, values_dict, errors_dict
 
-    def closedDeviceFactoryUi(self, valuesDict, userCancelled, devIdList):
-        """
+    def closedDeviceFactoryUi(self, values_dict, user_cancelled, dev_id_list):
+        """Handler to process data when the Device Factory UI is closed.
 
-        :param valuesDict:
-        :param userCancelled:
-        :param devIdList:
+        If the user cancelled the UI (not saving) then no processing is done on
+        the data.
+
+        A list of device models (components) is extracted from each device in
+        the device group. This helps determine if the device group has all
+        required sub-devices in the group.The shelly model is pulled from the
+        fields and the corresponding device class is loaded.
+
+        If the main device is not found in the group then it will be created.
+        Upon creation, the required sub-devices will also be created and
+        automatically assigned to the same device group (because the Device
+        Factory UI is opened).
+
+        If the main device model is already in the device group then it will be
+        found and stored for reference later.
+
+        The main device is either created or found, so the properties entered
+        into the UI are applied to this device. The main device stores any MQTT
+        information and acts as a hub for any component in a sub-device to
+        communicate through.
+
+        :param values_dict: A dictionary of values for each field in the UI.
+        :param user_cancelled: A boolean to indicate if the user saved the UI
+        or closed it without saving.
+        :param dev_id_list: A list of device id's in the device group.
         :return:
         """
 
-        if userCancelled:
+        if user_cancelled:
             return
 
-        shelly_model = valuesDict['shelly-model']
-        group_models = [indigo.devices[dev_id].model for dev_id in devIdList]
+        shelly_model = values_dict['shelly-model']
+        group_models = [indigo.devices[dev_id].model for dev_id in dev_id_list]
         model_class = shelly_model_classes.get(shelly_model, None)
         if model_class is None:
             self.logger.error("Unable to find class for device with type: '{}'".format(shelly_model))
 
-        device = None
+        main_device = None
         device_props = {
-            'broker-id': valuesDict["broker-id"],
-            'address': valuesDict["address"],
-            'message-type': valuesDict["message-type"]
+            'broker-id': values_dict["broker-id"],
+            'address': values_dict["address"],
+            'message-type': values_dict["message-type"]
         }
         if model_class.display_name not in group_models:
             # The main device is not in the group, so create one
-            device = indigo.device.create(indigo.kProtocol.Plugin, deviceTypeId=shelly_model, props=device_props)
-            self.logger.info("device created...")
-            device.model = model_class.display_name
-            device.replaceOnServer()
+            main_device = indigo.device.create(indigo.kProtocol.Plugin, deviceTypeId=shelly_model, props=device_props)
+            main_device.model = model_class.display_name
+            main_device.replaceOnServer()
         else:
             # Find the main device in the group
-            for dev_id in devIdList:
-                device = indigo.devices[dev_id]
-                if device.deviceTypeId == shelly_model:
+            for dev_id in dev_id_list:
+                main_device = indigo.devices[dev_id]
+                if main_device.deviceTypeId == shelly_model:
                     break
 
         # Make sure we actually have a main device
-        if device is None:
+        if main_device is None:
             self.logger.error("Unable to create or find the main device!")
             return
 
         # Update the device properties from the factory UI
-        self.logger.info(device_props)
-        device.replacePluginPropsOnServer(device_props)
+        main_device.replacePluginPropsOnServer(device_props)
 
         # Initialize the device and its components to populate the already opened UI
-        model_class(device)
+        model_class(main_device)
 
         return
 
     def validateDeviceConfigUi(self, values_dict, type_id, dev_id):
         """
 
-        :param valuesDict:
-        :param typeId:
-        :param devId:
+        :param values_dict:
+        :param type_id:
+        :param dev_id:
         :return:
         """
 
@@ -343,14 +396,20 @@ class Plugin(indigo.PluginBase):
         :return:
         """
 
+        # When a config is changed then the device already tries to get the config
+        # TODO: Determine if the device needs to be restarted from the config change
+        """
         if dev_id in self.shellies:
             self.shellies[dev_id].get_config()
         else:
             component = self.get_component(indigo.devices[dev_id])
             if component:
+                self.logger.info("Getting config of component: {} ({})".format(component, component.device.name))
                 component.get_config()
             else:
                 self.logger.error("Unable to find shelly or component for device id: {}".format(dev_id))
+        """
+        pass
 
     def actionControlDevice(self, action, device):
         """
@@ -370,8 +429,10 @@ class Plugin(indigo.PluginBase):
                 component.handle_action(action)
 
     def actionControlUniversal(self, action, device):
-        """
-        Handles an action being performed on the device.
+        """Handles an action being performed on the device.
+
+        The main Shelly device or component is identified based on the device
+        and passed the action to handle at the component-level.
 
         :param action: The action that occurred.
         :param device: The device that was acted on.
@@ -480,6 +541,10 @@ class Plugin(indigo.PluginBase):
         :return:
         """
 
+        shelly = self.shellies.get(dev_id, None)
+        if not shelly:
+            return
+
         config = {
             'device': {
                 'name': values_dict.get("system-device-name"),
@@ -514,7 +579,110 @@ class Plugin(indigo.PluginBase):
         if len(config['debug']['udp']['addr']) == 0:
             config['debug']['udp']['addr'] = None
 
-        self.shellies[dev_id].system.set_config(config)
+        shelly.system_components['system'].set_config(config)
+
+    def _write_wifi_configuration(self, values_dict, type_id, dev_id):
+        """
+        Handler for writing the wifi component's configuration.
+
+        :param values_dict:
+        :param type_id:
+        :param dev_id:
+        :return:
+        """
+
+        shelly = self.shellies.get(dev_id, None)
+        if not shelly:
+            return
+
+        config = {
+            'ap': {
+                'ssid': values_dict.get("wifi-ap-ssid"),
+                'pass': values_dict.get("wifi-ap-password"),
+                'is_open': values_dict.get("wifi-ap-open-network"),
+                'enable': values_dict.get("wifi-ap-enable")
+            },
+            'sta': {
+                'ssid': values_dict.get("wifi-1-ssid"),
+                'pass': values_dict.get("wifi-1-password"),
+                'is_open': values_dict.get("wifi-1-open-network"),
+                'enable': values_dict.get("wifi-1-enable"),
+                'ipv4mode': values_dict.get("wifi-1-ipv4-mode"),
+                'ip': values_dict.get("wifi-1-ip-address"),
+                'netmask': values_dict.get("wifi-1-network-mask"),
+                'gw': values_dict.get("wifi-1-gateway"),
+                'nameserver': values_dict.get("wifi-1-nameserver")
+            },
+            'sta1': {
+                'ssid': values_dict.get("wifi-2-ssid"),
+                'pass': values_dict.get("wifi-2-password"),
+                'is_open': values_dict.get("wifi-2-open-network"),
+                'enable': values_dict.get("wifi-2-enable"),
+                'ipv4mode': values_dict.get("wifi-2-ipv4-mode"),
+                'ip': values_dict.get("wifi-2-ip-address"),
+                'netmask': values_dict.get("wifi-2-network-mask"),
+                'gw': values_dict.get("wifi-2-gateway"),
+                'nameserver': values_dict.get("wifi-2-nameserver")
+            },
+            'roam': {
+                'rssi_thr': values_dict.get("wifi-roaming-rssi-threshold"),
+                'interval': values_dict.get("wifi-roaming-interval")
+            }
+        }
+
+        # Don't write passwords if they are blank since a get_config will not populate them
+        if len(config['ap']['pass']) == 0:
+            del config['ap']['pass']
+        if len(config['sta']['pass']) == 0:
+            del config['sta']['pass']
+        if len(config['sta1']['pass']) == 0:
+            del config['sta1']['pass']
+
+        # ip, netmask, gw, and nameserver should be None when empty
+        # wifi 1
+        if len(config['sta']['ssid']) == 0:
+            config['sta']['ssid'] = None
+        if len(config['sta']['ip']) == 0:
+            config['sta']['ip'] = None
+        if len(config['sta']['netmask']) == 0:
+            config['sta']['netmask'] = None
+        if len(config['sta']['gw']) == 0:
+            config['sta']['gw'] = None
+        if len(config['sta']['nameserver']) == 0:
+            config['sta']['nameserver'] = None
+        # wifi 2
+        if len(config['sta1']['ssid']) == 0:
+            config['sta1']['ssid'] = None
+        if len(config['sta1']['ip']) == 0:
+            config['sta1']['ip'] = None
+        if len(config['sta1']['netmask']) == 0:
+            config['sta1']['netmask'] = None
+        if len(config['sta1']['gw']) == 0:
+            config['sta1']['gw'] = None
+        if len(config['sta1']['nameserver']) == 0:
+            config['sta1']['nameserver'] = None
+
+        shelly.system_components['wifi'].set_config(config)
+
+    def _write_ble_configuration(self, values_dict, type_id, dev_id):
+        """
+        Handler for writing the BLE component's configuration.
+
+        :param values_dict:
+        :param type_id:
+        :param dev_id:
+        :return:
+        """
+
+        shelly = self.shellies.get(dev_id, None)
+        if not shelly:
+            return
+
+        config = {
+            'enable': values_dict.get("ble-enable")
+        }
+
+        shelly.system_components['ble'].set_config(config)
 
     def _write_switch_configuration(self, values_dict, type_id, dev_id):
         """

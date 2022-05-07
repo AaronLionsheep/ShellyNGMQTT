@@ -3,6 +3,10 @@ import indigo
 from Shelly import Shelly
 from ..components.functional.switch import Switch
 from ..components.functional.input import Input
+from ..components.system.system import System
+from ..components.system.wifi import WiFi
+from ..components.system.ble import BLE
+from ..components.system.mqtt import MQTT
 
 
 class ShellyPlus1(Shelly):
@@ -15,25 +19,15 @@ class ShellyPlus1(Shelly):
     def __init__(self, device):
         super(ShellyPlus1, self).__init__(device)
 
+        self.system_components = {
+            'system': System(self),
+            'wifi': WiFi(self),
+            'ble': BLE(self),
+            'mqtt': MQTT(self)
+        }
+
         self.switch = self.register_component(Switch, "Switch")
         self.input = self.register_component(Input, "Input")
-
-    def get_topics(self):
-        """
-        Default method to return a list of topics that the device subscribes to.
-
-        :return: A list.
-        """
-
-        address = self.get_address()
-        if address is None:
-            return []
-        else:
-            return [
-                "{}/online".format(address),
-                "{}/rpc".format(address),
-                "{}/events/rpc".format(address)
-            ]
 
     def handle_notify_status(self, component_type, instance_id, status):
         """

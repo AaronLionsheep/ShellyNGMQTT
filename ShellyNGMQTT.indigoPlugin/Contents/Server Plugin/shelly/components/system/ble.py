@@ -25,19 +25,54 @@ class BLE(Component):
         :return: config
         """
 
-        # TODO: get the config
-        return
+        self.shelly.publish_rpc("BLE.GetConfig", {}, callback=self.process_config)
+
+    def process_config(self, config, error=None):
+        """
+        A method that processes the configuration message.
+
+        :param config: The returned configuration data.
+        :param error: Any errors.
+        :return: None
+        """
+
+        if error:
+            self.logger.error(error)
+            return
+
+        self.latest_config = {
+            'ble-enable': config.get("enable", False)
+        }
+
+        props = self.shelly.device.pluginProps
+        props.update(self.latest_config)
+        self.shelly.device.replacePluginPropsOnServer(props)
 
     def set_config(self, config):
         """
         Set the configuration for the BLE.
 
-        :param config: An InputConfig object to upload to the device.
+        :param config: A config to upload to the device.
         :return: None
         """
 
-        # TODO: set the config
-        return
+        self.shelly.publish_rpc("BLE.SetConfig", {'config': config}, callback=self.process_set_config)
+
+    def process_set_config(self, status, error=None):
+        """
+        A method that processes the response from setting the config.
+
+        :param status: The status.
+        :param error: The error.
+        :return: None
+        """
+
+        if error:
+            self.logger.error("Error writing configuration: {}".format(error.get("message", "<Unknown>")))
+            return
+
+        if status.get('restart_required', False):
+            self.log_command_received("rebooting...")
 
     def get_status(self):
         """

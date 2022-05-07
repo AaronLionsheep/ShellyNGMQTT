@@ -6,7 +6,7 @@ class System(Component):
     The Input component handles external SW input terminals of a device.
     """
 
-    component_type = "system"
+    component_type = "sys"
     device_type_id = ""
 
     def __init__(self, shelly):
@@ -59,9 +59,9 @@ class System(Component):
 
     def set_config(self, config):
         """
-        Set the configuration for the input.
+        Set the configuration for the system.
 
-        :param config: An InputConfig object to upload to the device.
+        :param config: A system config to upload to the device.
         :return: None
         """
 

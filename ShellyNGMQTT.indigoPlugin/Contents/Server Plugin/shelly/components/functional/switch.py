@@ -74,7 +74,7 @@ class Switch(Component):
             'current-limit': config.get("current_limit", ""),
         }
 
-        props = self.shelly.device.pluginProps
+        props = self.device.pluginProps
         props.update(self.latest_config)
         self.device.replacePluginPropsOnServer(props)
 
