@@ -4,11 +4,23 @@ import logging
 from Queue import Queue
 
 from shelly.devices.ShellyPlus1 import ShellyPlus1
+from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
+from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
 from shelly.devices.ShellyPlusI4 import ShellyPlusI4
+from shelly.devices.ShellyPro1 import ShellyPro1
+from shelly.devices.ShellyPro1PM import ShellyPro1PM
+from shelly.devices.ShellyPro2 import ShellyPro2
+from shelly.devices.ShellyPro2PM import ShellyPro2PM
 
 shelly_model_classes = {
     'shelly-plus-1': ShellyPlus1,
-    'shelly-plus-i-4': ShellyPlusI4
+    'shelly-plus-1-pm': ShellyPlus1PM,
+    'shelly-plus-2-pm': ShellyPlus2PM,
+    'shelly-plus-i-4': ShellyPlusI4,
+    'shelly-pro-1': ShellyPro1,
+    'shelly-pro-1-pm': ShellyPro1PM,
+    'shelly-pro-2': ShellyPro2,
+    'shelly-pro-2-pm': ShellyPro2PM,
 }
 
 
@@ -467,11 +479,26 @@ class Plugin(indigo.PluginBase):
                 component.handle_action(action)
 
     def getDeviceStateList(self, device):
+        """
+        Generate a list of states for the Indigo device.
+
+        The method ``get_device_state_list()`` is called on the Shelly or
+        Component associated with the device. If the device was not found to be
+        associated with an object, then a default state list is returned.
+
+        :param device: The Indigo device.
+        :return: A list of states for the device.
+        """
+
         shelly = self.shellies.get(device.id, None)
         if shelly:
             return shelly.get_device_state_list()
         else:
-            return indigo.PluginBase.getDeviceStateList(self, device)
+            component = self.get_component(device)
+            if component:
+                return component.get_device_state_list()
+            else:
+                return indigo.PluginBase.getDeviceStateList(self, device)
 
     #
     # Plugin utilities
@@ -489,14 +516,14 @@ class Plugin(indigo.PluginBase):
         if userCancelled is False:
             self.setLogLevel(valuesDict.get('log-level', "info"))
 
-    def get_broker_devices(self, filter="", valuesDict=None, typeId="", targetId=0):
+    def get_broker_devices(self, filter="", values_dict=None, type_id="", target_id=0):
         """
         Gets a list of available broker devices.
 
-        :param filter:
-        :param valuesDict:
-        :param typeId:
-        :param targetId:
+        :param filter: A filter to apply to get device classes.
+        :param values_dict: The current state of the UI.
+        :param type_id: Unused.
+        :param target_id: Unused.
         :return: A list of brokers.
         """
 
