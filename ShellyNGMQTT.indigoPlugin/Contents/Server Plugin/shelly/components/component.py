@@ -57,6 +57,24 @@ class Component(object):
                 device_name = self.shelly.device.name
             self.logger.info("received \"{}\" {}".format(device_name, message))
 
+    def get_device_state_list(self):
+        """
+        Build the device state list for the device.
+
+        Possible state helpers are:
+        - getDeviceStateDictForNumberType
+        - getDeviceStateDictForRealType
+        - getDeviceStateDictForStringType
+        - getDeviceStateDictForBoolOnOffType
+        - getDeviceStateDictForBoolYesNoType
+        - getDeviceStateDictForBoolOneZeroType
+        - getDeviceStateDictForBoolTrueFalseType
+
+        :return: The device state list.
+        """
+
+        return []
+
     def handle_action(self, action):
         """
         The default handler for an action.
@@ -65,7 +83,8 @@ class Component(object):
         :return: None
         """
 
-        pass
+        if action.deviceAction == indigo.kDeviceAction.RequestStatus:
+            self.get_status()
 
     def handle_notify_event(self, event):
         """
@@ -94,7 +113,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def get_status(self):
         """
@@ -102,7 +121,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def process_status(self, status):
         """
@@ -112,7 +131,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def get_config(self):
         """
@@ -120,7 +139,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def process_config(self, config, error=None):
         """
@@ -130,7 +149,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def set_config(self, config):
         """
@@ -139,7 +158,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def process_set_config(self, status, error=None):
         """
@@ -149,4 +168,4 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
