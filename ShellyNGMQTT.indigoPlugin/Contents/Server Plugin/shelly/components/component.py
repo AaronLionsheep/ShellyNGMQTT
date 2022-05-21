@@ -73,7 +73,7 @@ class Component(object):
         :return: The device state list.
         """
 
-        return []
+        return indigo.PluginBase.getDeviceStateList(indigo.activePlugin, self.device)
 
     def handle_action(self, action):
         """

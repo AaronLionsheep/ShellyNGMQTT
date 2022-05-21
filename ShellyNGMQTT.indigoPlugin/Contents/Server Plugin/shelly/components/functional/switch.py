@@ -206,6 +206,8 @@ class Switch(Component):
             energy_total_kwh = energy_total / 1000
             updated_states.append({'key': "accumEnergyTotal", 'value': energy_total, 'uiValue': "{:.3f} W".format(energy_total_kwh)})
 
+        # self.logger.info(updated_states)
+        # self.logger.info(self.device.states)
         self.device.updateStatesOnServer(updated_states)
 
     def set(self, on, toggle_after=None):
