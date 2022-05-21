@@ -11,7 +11,7 @@ from ..components.system.mqtt import MQTT
 
 class ShellyPlus1PM(Shelly):
     """
-    Creates a Shelly Plus 1 device class.
+    Creates a Shelly Plus 1 PM device class.
     """
 
     display_name = "Shelly Plus 1 PM"
