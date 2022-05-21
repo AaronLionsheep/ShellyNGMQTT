@@ -40,10 +40,7 @@ class ShellyPlusI4(Shelly):
         :return: None
         """
 
-        self.logger.debug("handleNotifyStatus({}, {}, {})".format(component_type, instance_id, status))
-        component = self.get_component(component_type=component_type, comp_id=instance_id)
-        if component:
-            component.process_status(status)
+        super(ShellyPlusI4, self).handle_notify_status(component_type, instance_id, status)
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -55,8 +52,7 @@ class ShellyPlusI4(Shelly):
         :return: None
         """
 
-        self.logger.debug("handleNotifyEvent({}, {}, {})".format(component_type, instance_id, event))
-        Shelly.handle_notify_event(self, component_type=component_type, instance_id=instance_id, event=event)
+        super(ShellyPlusI4, self).handle_notify_event(component_type, instance_id, event)
 
     def handle_action(self, action):
         """
@@ -66,4 +62,4 @@ class ShellyPlusI4(Shelly):
         :return: None
         """
 
-        Shelly.handle_action(self, action)
+        super(ShellyPlusI4, self).handle_action(action)
