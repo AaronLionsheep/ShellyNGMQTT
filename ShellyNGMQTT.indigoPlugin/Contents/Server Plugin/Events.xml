@@ -1,3 +1,55 @@
 <?xml version="1.0"?>
 <Events>
+
+    <!-- Button push events -->
+
+    <Event id="btn-down">
+        <Name>Button Down</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="indigo.devices" filter="self.component-input"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="btn-up">
+        <Name>Button Up</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="indigo.devices" filter="self.component-input"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="single-push">
+        <Name>Single Push</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="indigo.devices" filter="self.component-input"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="double-push">
+        <Name>Double Push</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="indigo.devices" filter="self.component-input"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="long-push">
+        <Name>Long Push</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="indigo.devices" filter="self.component-input"/>
+            </Field>
+        </ConfigUI>
+    </Event>
 </Events>

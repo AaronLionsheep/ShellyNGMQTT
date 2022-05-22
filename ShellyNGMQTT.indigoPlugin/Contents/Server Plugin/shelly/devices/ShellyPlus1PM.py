@@ -9,15 +9,15 @@ from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
 
 
-class ShellyPlus1(Shelly):
+class ShellyPlus1PM(Shelly):
     """
-    Creates a Shelly Plus 1 device class.
+    Creates a Shelly Plus 1 PM device class.
     """
 
-    display_name = "Shelly Plus 1"
+    display_name = "Shelly Plus 1 PM"
 
     def __init__(self, device):
-        super(ShellyPlus1, self).__init__(device)
+        super(ShellyPlus1PM, self).__init__(device)
 
         self.system_components = {
             'system': System(self),
@@ -26,7 +26,11 @@ class ShellyPlus1(Shelly):
             'mqtt': MQTT(self)
         }
 
-        self.switch = self.register_component(Switch, "Switch")
+        self.switch = self.register_component(Switch, "Switch", props={
+            "SupportsPowerMeter": "true",
+            "SupportsEnergyMeter": "true",
+            "SupportsEnergyMeterCurPower": "true"
+        })
         self.input = self.register_component(Input, "Input")
 
     def handle_notify_status(self, component_type, instance_id, status):
@@ -39,7 +43,7 @@ class ShellyPlus1(Shelly):
         :return: None
         """
 
-        super(ShellyPlus1, self).handle_notify_status(component_type, instance_id, status)
+        super(ShellyPlus1PM, self).handle_notify_status(component_type, instance_id, status)
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -51,7 +55,7 @@ class ShellyPlus1(Shelly):
         :return: None
         """
 
-        super(ShellyPlus1, self).handle_notify_event(component_type, instance_id, event)
+        super(ShellyPlus1PM, self).handle_notify_event(component_type, instance_id, event)
 
     def handle_action(self, action):
         """
@@ -61,4 +65,4 @@ class ShellyPlus1(Shelly):
         :return: None
         """
 
-        super(ShellyPlus1, self).handle_action(action)
+        super(ShellyPlus1PM, self).handle_action(action)
