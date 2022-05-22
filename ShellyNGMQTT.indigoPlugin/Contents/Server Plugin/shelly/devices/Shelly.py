@@ -238,7 +238,6 @@ class Shelly(object):
         """
 
         if topic == "{}/online".format(self.get_address()):
-            self.logger.info("online: {}".format(payload))
             is_online = (payload == "true")
             self.device.updateStateOnServer(key='online', value=is_online)
         elif topic == "{}/rpc".format(self.get_address()):
