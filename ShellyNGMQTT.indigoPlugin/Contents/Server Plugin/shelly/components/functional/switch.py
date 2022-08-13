@@ -12,7 +12,7 @@ class Switch(Component):
     component_type = "switch"
     device_type_id = "component-switch"
 
-    def __init__(self, shelly, device, comp_id=0):
+    def __init__(self, shelly, device_id, comp_id=0):
         """
         Create a Switch component and assign it to a ShellyNG device.
 
@@ -20,7 +20,7 @@ class Switch(Component):
         :param comp_id: The integer identifier for the component
         """
 
-        super(Switch, self).__init__(shelly, device, comp_id)
+        super(Switch, self).__init__(shelly, device_id, comp_id)
 
     def get_device_state_list(self):
         """
@@ -197,17 +197,15 @@ class Switch(Component):
 
         # Process Power Factor
         power_factor = status.get('pf', None)
-        if power_factor is not None and "pf" in self.device.states:
-            updated_states.append({'key': "pf", 'value': power_factor})
+        if power_factor is not None and "power_factor" in self.device.states:
+            updated_states.append({'key': "power_factor", 'value': power_factor})
 
         # Process Energy
         energy_total = status.get('aenergy', {}).get('total', None)
         if energy_total is not None and "accumEnergyTotal" in self.device.states:
             energy_total_kwh = energy_total / 1000
-            updated_states.append({'key': "accumEnergyTotal", 'value': energy_total, 'uiValue': "{:.3f} W".format(energy_total_kwh)})
+            updated_states.append({'key': "accumEnergyTotal", 'value': energy_total, 'uiValue': "{:.3f} kWh".format(energy_total_kwh)})
 
-        # self.logger.info(updated_states)
-        # self.logger.info(self.device.states)
         self.device.updateStatesOnServer(updated_states)
 
     def set(self, on, toggle_after=None):

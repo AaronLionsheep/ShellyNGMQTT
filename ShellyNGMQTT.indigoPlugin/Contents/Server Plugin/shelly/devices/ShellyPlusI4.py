@@ -15,8 +15,8 @@ class ShellyPlusI4(Shelly):
 
     display_name = "Shelly Plus I4"
 
-    def __init__(self, device):
-        super(ShellyPlusI4, self).__init__(device)
+    def __init__(self, device_id):
+        super(ShellyPlusI4, self).__init__(device_id)
 
         self.system_components = {
             'system': System(self),

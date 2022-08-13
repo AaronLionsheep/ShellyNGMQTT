@@ -145,7 +145,7 @@ class Plugin(indigo.PluginBase):
 
         if device.deviceTypeId in shelly_model_classes:
             model_class = shelly_model_classes[device.deviceTypeId]
-            shelly = model_class(device)
+            shelly = model_class(device.id)
             self.shellies[device.id] = shelly
 
             # Check that the device has a broker and an address
@@ -312,7 +312,7 @@ class Plugin(indigo.PluginBase):
             # Ensure the main model is not changing
             main_models = set(group_device_types).intersection(set(shelly_model_classes.keys()))
             if len(main_models) == 1:
-                # The selected model bust be the same
+                # The selected model must be the same
                 main_model = main_models.pop()
                 if values_dict['shelly-model'] != main_model:
                     valid = False
@@ -402,7 +402,7 @@ class Plugin(indigo.PluginBase):
         main_device.replacePluginPropsOnServer(device_props)
 
         # Initialize the device and its components to populate the already opened UI
-        model_class(main_device)
+        model_class(main_device.id)
 
         return
 

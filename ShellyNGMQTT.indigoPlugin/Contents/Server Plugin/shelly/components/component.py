@@ -9,7 +9,7 @@ class Component(object):
     component_type = None
     device_type_id = None
 
-    def __init__(self, shelly, device=None, comp_id=0):
+    def __init__(self, shelly, device_id=None, comp_id=0):
         """
 
         :param shelly:
@@ -23,9 +23,18 @@ class Component(object):
             self.comp_id = int(comp_id)
 
         self.shelly = shelly
-        self.device = device
+        self.device_id = device_id
         self.logger = shelly.logger
         self.latest_config = {}
+
+    @property
+    def device(self):
+        """
+        Getter for the indigo device object.
+
+        :return: Indigo device
+        """
+        return indigo.devices[self.device_id]
 
     def log_command_sent(self, message):
         """

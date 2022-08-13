@@ -17,8 +17,8 @@ class ShellyPro2PM(Shelly):
 
     display_name = "Shelly Pro 2 PM"
 
-    def __init__(self, device):
-        super(ShellyPro2PM, self).__init__(device)
+    def __init__(self, device_id):
+        super(ShellyPro2PM, self).__init__(device_id)
 
         self.system_components = {
             'system': System(self),

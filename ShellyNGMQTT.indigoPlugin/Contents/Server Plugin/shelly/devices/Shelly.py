@@ -11,13 +11,13 @@ class Shelly(object):
 
     display_name = "ShellyBase"
 
-    def __init__(self, device):
+    def __init__(self, device_id):
         """Create a new Shelly device.
 
         :param device: The indigo device.
         """
 
-        self.device = device
+        self.device_id = device_id
         self.functional_components = []
         self.system_components = {}
         self.component_devices = {}
@@ -32,6 +32,15 @@ class Shelly(object):
                 self.component_devices[device.model] = device
 
         self.device.updateStateImageOnServer(indigo.kStateImageSel.None)
+
+    @property
+    def device(self):
+        """
+        Getter for the Indigo device.
+
+        :return: Indigo device
+        """
+        return indigo.devices[self.device_id]
 
     @property
     def components(self):
@@ -104,7 +113,7 @@ class Shelly(object):
         """
 
         for component in self.components:
-            if component.device and component.device.id == device.id:
+            if component.device_id and component.device_id == device.id:
                 return component
         return None
 
@@ -150,6 +159,7 @@ class Shelly(object):
             indigo.activePlugin.getDeviceStateDictForNumberType("uptime", "Uptime (seconds)", "Uptime (seconds)"),
             indigo.activePlugin.getDeviceStateDictForStringType("available-firmware", "Available Firmware Version", "Available Firmware Version"),
             indigo.activePlugin.getDeviceStateDictForStringType("available-beta-firmware", "Available Beta Firmware Version", "Available Beta Firmware Version"),
+            indigo.activePlugin.getDeviceStateDictForStringType("current-firmware", "Current Firmware Version", "Current Firmware Version"),
         ]
 
     #
@@ -405,7 +415,7 @@ class Shelly(object):
             device.stateListOrDisplayStateIdChanged()
 
         # Create the component
-        component = component_class(self, device, comp_id)
+        component = component_class(self, device.id, comp_id)
         self.functional_components.append(component)
         return component
 
