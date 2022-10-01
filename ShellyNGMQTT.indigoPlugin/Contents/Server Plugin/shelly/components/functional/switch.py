@@ -1,3 +1,4 @@
+# coding=utf-8
 import indigo
 
 from ..component import Component
@@ -11,7 +12,7 @@ class Switch(Component):
     component_type = "switch"
     device_type_id = "component-switch"
 
-    def __init__(self, shelly, device, comp_id=0):
+    def __init__(self, shelly, device_id, comp_id=0):
         """
         Create a Switch component and assign it to a ShellyNG device.
 
@@ -19,7 +20,39 @@ class Switch(Component):
         :param comp_id: The integer identifier for the component
         """
 
-        super(Switch, self).__init__(shelly, device, comp_id)
+        super(Switch, self).__init__(shelly, device_id, comp_id)
+
+    def get_device_state_list(self):
+        """
+        Build the device state list for the device.
+
+        Possible state helpers are:
+        - getDeviceStateDictForNumberType
+        - getDeviceStateDictForRealType
+        - getDeviceStateDictForStringType
+        - getDeviceStateDictForBoolOnOffType
+        - getDeviceStateDictForBoolYesNoType
+        - getDeviceStateDictForBoolOneZeroType
+        - getDeviceStateDictForBoolTrueFalseType
+
+        :return: The device state list.
+        """
+
+        states = super(Switch, self).get_device_state_list()
+
+        states.extend([
+            indigo.activePlugin.getDeviceStateDictForNumberType("temperature_c", "Temperature", "Temperature"),
+            indigo.activePlugin.getDeviceStateDictForNumberType("temperature_f", "Temperature", "Temperature")
+        ])
+
+        if self.device.pluginProps.get("SupportsPowerMeter", "false") == "true":
+            states.extend([
+                indigo.activePlugin.getDeviceStateDictForNumberType("voltage", "Voltage (volts)", "Voltage (volts)"),
+                indigo.activePlugin.getDeviceStateDictForNumberType("current", "Current (Amps)", "Current (Amps)"),
+                indigo.activePlugin.getDeviceStateDictForNumberType("power_factor", "Power Factor", "Power Factor")
+            ])
+
+        return states
 
     def handle_action(self, action):
         """
@@ -29,12 +62,12 @@ class Switch(Component):
         :return: None
         """
 
+        super(Switch, self).handle_action(action)
+
         if action.deviceAction == indigo.kDeviceAction.TurnOn:
             self.set(True)
         elif action.deviceAction == indigo.kDeviceAction.TurnOff:
             self.set(False)
-        elif action.deviceAction == indigo.kDeviceAction.RequestStatus:
-            self.get_status()
         elif action.deviceAction == indigo.kDeviceAction.Toggle:
             self.toggle()
 
@@ -128,16 +161,52 @@ class Switch(Component):
         :return:
         """
 
+        updated_states = []
+
+        # Process output
         output = status.get('output', None)
         if output is True and self.device.states.get('onOffState', None) is not True:
-            self.device.updateStateOnServer(key='onOffState', value=True)
+            updated_states.append({'key': "onOffState", 'value': True})
             self.log_command_received("on")
         elif output is False and self.device.states.get('onOffState', None) is not False:
-            self.device.updateStateOnServer(key='onOffState', value=False)
+            updated_states.append({'key': "onOffState", 'value': False})
             self.log_command_received("off")
-        else:
-            # Do nothing on unknown value
-            pass
+
+        # Process temperature
+        temp_c = status.get('temperature', {}).get('tC', None)
+        if temp_c is not None and "temperature_c" in self.device.states:
+            updated_states.append({'key': "temperature_c", 'value': temp_c, 'uiValue': "{} °C".format(temp_c)})
+        temp_f = status.get('temperature', {}).get('tF', None)
+        if temp_f is not None and "temperature_f" in self.device.states:
+            updated_states.append({'key': "temperature_f", 'value': temp_f, 'uiValue': "{} °C".format(temp_f)})
+
+        # Process Power
+        power = status.get('apower', None)
+        if power is not None and "curEnergyLevel" in self.device.states:
+            updated_states.append({'key': "curEnergyLevel", 'value': power, 'uiValue': "{} W".format(power)})
+
+        # Process Voltage
+        voltage = status.get('voltage', None)
+        if voltage is not None and "voltage" in self.device.states:
+            updated_states.append({'key': "voltage", 'value': voltage, 'uiValue': "{} V".format(voltage)})
+
+        # Process Current
+        current = status.get('current', None)
+        if current is not None and "current" in self.device.states:
+            updated_states.append({'key': "current", 'value': current, 'uiValue': "{} A".format(current)})
+
+        # Process Power Factor
+        power_factor = status.get('pf', None)
+        if power_factor is not None and "power_factor" in self.device.states:
+            updated_states.append({'key': "power_factor", 'value': power_factor})
+
+        # Process Energy
+        energy_total = status.get('aenergy', {}).get('total', None)
+        if energy_total is not None and "accumEnergyTotal" in self.device.states:
+            energy_total_kwh = energy_total / 1000
+            updated_states.append({'key': "accumEnergyTotal", 'value': energy_total, 'uiValue': "{:.3f} kWh".format(energy_total_kwh)})
+
+        self.device.updateStatesOnServer(updated_states)
 
     def set(self, on, toggle_after=None):
         """

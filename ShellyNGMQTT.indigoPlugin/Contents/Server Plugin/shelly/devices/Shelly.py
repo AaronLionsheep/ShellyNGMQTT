@@ -11,13 +11,13 @@ class Shelly(object):
 
     display_name = "ShellyBase"
 
-    def __init__(self, device):
+    def __init__(self, device_id):
         """Create a new Shelly device.
 
         :param device: The indigo device.
         """
 
-        self.device = device
+        self.device_id = device_id
         self.functional_components = []
         self.system_components = {}
         self.component_devices = {}
@@ -30,6 +30,17 @@ class Shelly(object):
             if dev_id != self.device.id:
                 device = indigo.devices[dev_id]
                 self.component_devices[device.model] = device
+
+        self.device.updateStateImageOnServer(indigo.kStateImageSel.None)
+
+    @property
+    def device(self):
+        """
+        Getter for the Indigo device.
+
+        :return: Indigo device
+        """
+        return indigo.devices[self.device_id]
 
     @property
     def components(self):
@@ -102,7 +113,7 @@ class Shelly(object):
         """
 
         for component in self.components:
-            if component.device and component.device.id == device.id:
+            if component.device_id and component.device_id == device.id:
                 return component
         return None
 
@@ -148,6 +159,7 @@ class Shelly(object):
             indigo.activePlugin.getDeviceStateDictForNumberType("uptime", "Uptime (seconds)", "Uptime (seconds)"),
             indigo.activePlugin.getDeviceStateDictForStringType("available-firmware", "Available Firmware Version", "Available Firmware Version"),
             indigo.activePlugin.getDeviceStateDictForStringType("available-beta-firmware", "Available Beta Firmware Version", "Available Beta Firmware Version"),
+            indigo.activePlugin.getDeviceStateDictForStringType("current-firmware", "Current Firmware Version", "Current Firmware Version"),
         ]
 
     #
@@ -236,13 +248,8 @@ class Shelly(object):
         """
 
         if topic == "{}/online".format(self.get_address()):
-            self.logger.info("online: {}".format(payload))
             is_online = (payload == "true")
             self.device.updateStateOnServer(key='online', value=is_online)
-            if is_online:
-                self.device.updateStateImageOnServer(indigo.kStateImageSel.PowerOn)
-            else:
-                self.device.updateStateImageOnServer(indigo.kStateImageSel.PowerOff)
         elif topic == "{}/rpc".format(self.get_address()):
             rpc = json.loads(payload)
             # Only process a response, which does not have a method
@@ -310,7 +317,9 @@ class Shelly(object):
         :return: None
         """
 
-        pass
+        component = self.get_component(component_type=component_type, comp_id=instance_id)
+        if component:
+            component.process_status(status)
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -366,7 +375,7 @@ class Shelly(object):
         if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
             self.logger.info("received \"{}\" {}".format(self.device.name, message))
 
-    def register_component(self, component_class, name, comp_id=0):
+    def register_component(self, component_class, name, comp_id=0, props={}):
         """
         Find or create the Indigo device for the functional component.
 
@@ -377,9 +386,12 @@ class Shelly(object):
         :param component_class: The class of the component to create.
         :param name: The name of the component (device model).
         :param comp_id: The identifier for the component.
+        :param props: Properties to set for the device.
         :return: The created component object.
         """
 
+        if props is None:
+            props = {}
         if name not in self.component_devices:
             # The component name we are trying to register is new, so we did
             # not find a device with that name already in the group. Create it
@@ -391,7 +403,19 @@ class Shelly(object):
             device.replaceOnServer()
             self.component_devices[name] = device
 
-        component = component_class(self, self.component_devices[name], comp_id)
+        device = self.component_devices.get(name, None)
+        if device is None:
+            raise KeyError("component '{}' not found in '{}' when it should...".format(name, self.device.name))
+
+        # Force any device properties
+        if len(props) > 0:
+            device_props = device.pluginProps
+            device_props.update(props)
+            device.replacePluginPropsOnServer(device_props)
+            device.stateListOrDisplayStateIdChanged()
+
+        # Create the component
+        component = component_class(self, device.id, comp_id)
         self.functional_components.append(component)
         return component
 

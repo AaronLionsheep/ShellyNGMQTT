@@ -50,12 +50,14 @@ class System(Component):
             'system-location-lon': config.get("location", {}).get("lon", ""),
             'system-debug-mqtt':  config.get("debug", {}).get("mqtt", {}).get("enable", ""),
             'system-debug-websocket': config.get("debug", {}).get("websocket", {}).get("enable", ""),
-            'system-debug-udp-address': config.get("debug", {}).get("udp", {}).get("addr", "")
+            'system-debug-udp-address': config.get("debug", {}).get("udp", {}).get("addr", ""),
+            'version': config.get("device", {}).get("fw_id", "").split("/")[-1]
         }
 
         props = self.shelly.device.pluginProps
         props.update(self.latest_config)
         self.shelly.device.replacePluginPropsOnServer(props)
+        self.shelly.device.updateStateOnServer("current-firmware", config.get("device", {}).get("fw_id", ""))
 
     def set_config(self, config):
         """

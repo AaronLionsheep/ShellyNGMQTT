@@ -11,7 +11,7 @@ class Input(Component):
     component_type = "input"
     device_type_id = "component-input"
 
-    def __init__(self, shelly, device, comp_id=0):
+    def __init__(self, shelly, device_id, comp_id=0):
         """
         Create an Input component and assign it to a Shelly device.
 
@@ -19,7 +19,7 @@ class Input(Component):
         :param comp_id: The integer identifier for the component
         """
 
-        super(Input, self).__init__(shelly, device, comp_id)
+        super(Input, self).__init__(shelly, device_id, comp_id)
 
     def handle_action(self, action):
         """

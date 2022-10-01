@@ -9,7 +9,7 @@ class Component(object):
     component_type = None
     device_type_id = None
 
-    def __init__(self, shelly, device=None, comp_id=0):
+    def __init__(self, shelly, device_id=None, comp_id=0):
         """
 
         :param shelly:
@@ -23,9 +23,18 @@ class Component(object):
             self.comp_id = int(comp_id)
 
         self.shelly = shelly
-        self.device = device
+        self.device_id = device_id
         self.logger = shelly.logger
         self.latest_config = {}
+
+    @property
+    def device(self):
+        """
+        Getter for the indigo device object.
+
+        :return: Indigo device
+        """
+        return indigo.devices[self.device_id]
 
     def log_command_sent(self, message):
         """
@@ -57,6 +66,24 @@ class Component(object):
                 device_name = self.shelly.device.name
             self.logger.info("received \"{}\" {}".format(device_name, message))
 
+    def get_device_state_list(self):
+        """
+        Build the device state list for the device.
+
+        Possible state helpers are:
+        - getDeviceStateDictForNumberType
+        - getDeviceStateDictForRealType
+        - getDeviceStateDictForStringType
+        - getDeviceStateDictForBoolOnOffType
+        - getDeviceStateDictForBoolYesNoType
+        - getDeviceStateDictForBoolOneZeroType
+        - getDeviceStateDictForBoolTrueFalseType
+
+        :return: The device state list.
+        """
+
+        return indigo.PluginBase.getDeviceStateList(indigo.activePlugin, self.device)
+
     def handle_action(self, action):
         """
         The default handler for an action.
@@ -65,7 +92,8 @@ class Component(object):
         :return: None
         """
 
-        pass
+        if action.deviceAction == indigo.kDeviceAction.RequestStatus:
+            self.get_status()
 
     def handle_notify_event(self, event):
         """
@@ -78,10 +106,14 @@ class Component(object):
         :return: None
         """
 
+        # Fire any triggers matching this event for the device associated with the component
+        for trigger in indigo.activePlugin.triggers.values():
+            if trigger.pluginTypeId == event.replace('_', '-') and int(trigger.pluginProps.get('device-id', -1)) == self.device.id:
+                indigo.trigger.execute(trigger)
+
+        # Handle base events
         if event == "config_changed":
             self.get_config()
-        else:
-            self.logger.info("no main component handler for event '{}'".format(event))
 
     def handle_notify_status(self, status):
         """
@@ -90,7 +122,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def get_status(self):
         """
@@ -98,7 +130,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def process_status(self, status):
         """
@@ -108,7 +140,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def get_config(self):
         """
@@ -116,7 +148,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def process_config(self, config, error=None):
         """
@@ -126,7 +158,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def set_config(self, config):
         """
@@ -135,7 +167,7 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
 
     def process_set_config(self, status, error=None):
         """
@@ -145,4 +177,4 @@ class Component(object):
         :return:
         """
 
-        pass
+        raise NotImplementedError
