@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Template>
+    <Field id="ht-ui-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="ht-ui"/>
+
+    <Field id="ht-ui" type="label" alignText="center" visibleBindingId="settings-section" visibleBindingValue="ht-ui">
+		<Label>H&amp;T UI</Label>
+	</Field>
+
+    <Field id="ht-ui-temperature-unit" type="menu" defaultValue="F" visibleBindingId="settings-section" visibleBindingValue="ht-ui">
+        <Label>Temperature Unit:</Label>
+        <List>
+            <Option value="F">Fahrenheit</Option>
+            <Option value="C">Celsius</Option>
+        </List>
+    </Field>
+
+	<Field id="ht-ui-config-write-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="ht-ui"/>
+
+	<Field id="ht-ui-config-write-help" type="label" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="ht-ui">
+		<Label>Write the current configuration to the device for this section only. Be mindful about empty fields and check the log for error messages.</Label>
+	</Field>
+
+	<Field id="ht-ui-config-write" type="button" tooltip="Click this button to write the ht-ui configuration" visibleBindingId="settings-section" visibleBindingValue="ht-ui">
+		<Title>Write Configuration</Title>
+		<CallbackMethod>_write_htui_configuration</CallbackMethod>
+	</Field>
+</Template>
