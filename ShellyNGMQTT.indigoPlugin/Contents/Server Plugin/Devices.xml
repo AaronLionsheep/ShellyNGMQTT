@@ -11,7 +11,7 @@
 					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM</Option>
 					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
 					<Option value="-1">%%separator%%</Option>
-					<Option value="shelly-plus-i-4">Shelly Plus I4</Option>
+					<Option value="shelly-plus-i-4">Shelly Plus I4/I4DC</Option>
 					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-ht">Shelly Plus H&amp;T</Option>
 					<Option value="-1">%%separator%%</Option>
