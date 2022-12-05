@@ -178,7 +178,7 @@ class Switch(Component):
             updated_states.append({'key': "temperature_c", 'value': temp_c, 'uiValue': "{} °C".format(temp_c)})
         temp_f = status.get('temperature', {}).get('tF', None)
         if temp_f is not None and "temperature_f" in self.device.states:
-            updated_states.append({'key': "temperature_f", 'value': temp_f, 'uiValue': "{} °C".format(temp_f)})
+            updated_states.append({'key': "temperature_f", 'value': temp_f, 'uiValue': "{} °F".format(temp_f)})
 
         # Process Power
         power = status.get('apower', None)
