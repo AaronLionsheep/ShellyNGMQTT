@@ -81,8 +81,15 @@ class Component(object):
 
         :return: The device state list.
         """
-
         return indigo.PluginBase.getDeviceStateList(indigo.activePlugin, self.device)
+
+    def get_device_display_state_id(self):
+        """
+        Determine which device state should be shown in the device list.
+
+        :return: The state name.
+        """
+        return indigo.PluginBase.getDeviceDisplayStateId(indigo.activePlugin, self.device)
 
     def handle_action(self, action):
         """

@@ -1,4 +1,4 @@
-import indigo
+import indigo # noqa
 import json
 import logging
 import uuid
@@ -18,6 +18,7 @@ class Shelly(object):
         """
 
         self.device_id = device_id
+        self._device = None
         self.functional_components = []
         self.system_components = {}
         self.component_devices = {}
@@ -40,7 +41,11 @@ class Shelly(object):
 
         :return: Indigo device
         """
-        return indigo.devices[self.device_id]
+        device = indigo.devices.get(self.device_id, None)
+        # Keep track of the last known device object
+        if device is not None:
+            self._device = device
+        return self._device
 
     @property
     def components(self):
@@ -162,6 +167,23 @@ class Shelly(object):
             indigo.activePlugin.getDeviceStateDictForStringType("current-firmware", "Current Firmware Version", "Current Firmware Version"),
         ]
 
+    def get_device_display_state_id(self):
+        """
+        Determine which device state should be shown in the device list.
+
+        :return: The state name.
+        """
+        return indigo.PluginBase.getDeviceDisplayStateId(indigo.activePlugin, self.device)
+
+    def update_state_image(self):
+        """
+        A function that can be called to inspect the current device state and
+        update the state image accordingly.
+
+        :return:
+        """
+        return None
+
     #
     # MQTT Utilities
     #
@@ -266,7 +288,7 @@ class Shelly(object):
             method = rpc.get('method', None)
             params = rpc.get('params', {})
 
-            if method == "NotifyStatus":
+            if method in ("NotifyStatus", "NotifyFullStatus"):
                 for component in params.keys():
                     # Ignore the timestamp since it is not a component
                     if component == "ts":
@@ -428,6 +450,8 @@ class Shelly(object):
         :param comp_id: Only return components with this id.
         :return: The matching component.
         """
+        if comp_id is None:
+            comp_id = 0
 
         for component in self.components:
             if component_class is not None and not isinstance(component, component_class):
