@@ -1,6 +1,6 @@
 import indigo
 
-from Shelly import Shelly
+from .Shelly import Shelly
 from ..components.functional.input import Input
 from ..components.system.system import System
 from ..components.system.wifi import WiFi

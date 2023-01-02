@@ -1,6 +1,6 @@
 import indigo
 
-from Shelly import Shelly
+from .Shelly import Shelly
 from ..components.functional.temperature import Temperature
 from ..components.functional.humidity import Humidity
 from ..components.system.system import System
