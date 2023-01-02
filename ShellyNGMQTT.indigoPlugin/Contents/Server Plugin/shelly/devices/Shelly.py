@@ -14,7 +14,7 @@ class Shelly(object):
     def __init__(self, device_id):
         """Create a new Shelly device.
 
-        :param device: The indigo device.
+        :param device_id: The indigo device id.
         """
 
         self.device_id = device_id

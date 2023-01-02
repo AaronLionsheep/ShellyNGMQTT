@@ -15,6 +15,8 @@
 					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-ht">Shelly Plus H&amp;T</Option>
 					<Option value="-1">%%separator%%</Option>
+					<Option value="shelly-plus-plug">Shelly Plus Plug</Option>
+					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-pro-1">Shelly Pro 1</Option>
 					<Option value="shelly-pro-1-pm">Shelly Pro 1 PM</Option>
 					<Option value="shelly-pro-2">Shelly Pro 2</Option>
@@ -286,6 +288,55 @@
 
 			<!-- HT_UI -->
 			<Template file="ConfigTemplates/ConfigureHTUI.xml"/>
+
+		</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" id="shelly-plus-plug">
+		<Name>Shelly Plus Plug (US/IT)</Name>
+		<ConfigUI>
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
+            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+
+			<Field id="settings-section" type="menu" defaultValue="indigo">
+				<Label>Configuration Section:</Label>
+				<List>
+					<Option value="indigo">Indigo</Option>
+					<Option value="-1">%%separator%%</Option>
+					<Option value="system">System</Option>
+					<Option value="wifi">WiFi</Option>
+					<Option value="ble">BLE</Option>
+				</List>
+			</Field>
+
+			<!-- Indigo -->
+
+			<Field id="indigo-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="indigo"/>
+
+			<Field id="broker-id" type="menu" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>MQTT Broker:</Label>
+				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			</Field>
+
+			<Field id="address" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>Base MQTT Topic:</Label>
+			</Field>
+
+			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>Message Type:</Label>
+			</Field>
+
+			<!-- System -->
+			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
+
+			<!-- WiFi -->
+			<Template file="ConfigTemplates/ConfigureWifi.xml"/>
+
+			<!-- BLE -->
+			<Template file="ConfigTemplates/ConfigureBLE.xml"/>
 
 		</ConfigUI>
 		<States>
