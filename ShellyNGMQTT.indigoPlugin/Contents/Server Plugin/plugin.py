@@ -7,6 +7,8 @@ from shelly.devices.ShellyPlus1 import ShellyPlus1
 from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
 from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
 from shelly.devices.ShellyPlusI4 import ShellyPlusI4
+from shelly.devices.ShellyPlusHT import ShellyPlusHT
+from shelly.devices.ShellyPlusPlug import ShellyPlusPlug
 from shelly.devices.ShellyPro1 import ShellyPro1
 from shelly.devices.ShellyPro1PM import ShellyPro1PM
 from shelly.devices.ShellyPro2 import ShellyPro2
@@ -17,6 +19,8 @@ shelly_model_classes = {
     'shelly-plus-1-pm': ShellyPlus1PM,
     'shelly-plus-2-pm': ShellyPlus2PM,
     'shelly-plus-i-4': ShellyPlusI4,
+    'shelly-plus-ht': ShellyPlusHT,
+    'shelly-plus-plug': ShellyPlusPlug,
     'shelly-pro-1': ShellyPro1,
     'shelly-pro-1-pm': ShellyPro1PM,
     'shelly-pro-2': ShellyPro2,
@@ -450,7 +454,6 @@ class Plugin(indigo.PluginBase):
         :param device: The device that was acted on.
         :return: None
         """
-
         shelly = self.shellies.get(device.id, None)
         if shelly is not None:
             shelly.handle_action(action)
@@ -469,7 +472,6 @@ class Plugin(indigo.PluginBase):
         :param device: The device that was acted on.
         :return: None
         """
-
         shelly = self.shellies.get(device.id, None)
         if shelly is not None:
             shelly.handle_action(action)
@@ -489,7 +491,6 @@ class Plugin(indigo.PluginBase):
         :param device: The Indigo device.
         :return: A list of states for the device.
         """
-
         shelly = self.shellies.get(device.id, None)
         if shelly:
             return shelly.get_device_state_list()
@@ -499,6 +500,29 @@ class Plugin(indigo.PluginBase):
                 return component.get_device_state_list()
             else:
                 return indigo.PluginBase.getDeviceStateList(self, device)
+
+    def getDeviceDisplayStateId(self, device):
+        """
+        Generate the state to show for the Indigo device in the devices list.
+
+        The method ``get_device_display_state_id()`` is called on the Shelly or
+        Component associated with the device. If the device was not found to be
+        associated with an object, then a default state list is returned.
+
+        The default state will be used if the device does not implement the method.
+
+        :param device: The Indigo device.
+        :return: A list of states for the device.
+        """
+        shelly = self.shellies.get(device.id, None)
+        if shelly:
+            return shelly.get_device_display_state_id()
+        else:
+            component = self.get_component(device)
+            if component:
+                return component.get_device_display_state_id()
+            else:
+                return indigo.PluginBase.getDeviceDisplayStateId(self, device)
 
     #
     # Plugin utilities
@@ -729,6 +753,26 @@ class Plugin(indigo.PluginBase):
         }
 
         shelly.system_components['ble'].set_config(config)
+
+    def _write_htui_configuration(self, values_dict, type_id, dev_id):
+        """
+        Handler for writing the HT_UI component's configuration.
+
+        :param values_dict:
+        :param type_id:
+        :param dev_id:
+        :return:
+        """
+
+        shelly = self.shellies.get(dev_id, None)
+        if not shelly:
+            return
+
+        config = {
+            'temperature_unit': values_dict.get("ht-ui-temperature-unit")
+        }
+
+        shelly.system_components['ht-ui'].set_config(config)
 
     def _write_switch_configuration(self, values_dict, type_id, dev_id):
         """
