@@ -1,7 +1,7 @@
 import indigo
 import logging
 
-from Queue import Queue
+from queue import Queue
 
 from shelly.devices.ShellyPlus1 import ShellyPlus1
 from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
