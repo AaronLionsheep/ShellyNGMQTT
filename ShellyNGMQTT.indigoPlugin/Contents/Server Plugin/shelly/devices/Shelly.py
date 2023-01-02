@@ -32,7 +32,7 @@ class Shelly(object):
                 device = indigo.devices[dev_id]
                 self.component_devices[device.model] = device
 
-        self.device.updateStateImageOnServer(indigo.kStateImageSel.None)
+        self.device.updateStateImageOnServer(indigo.kStateImageSel.NoImage)
 
     @property
     def device(self):
@@ -54,8 +54,7 @@ class Shelly(object):
 
         :return: A list of all functional and system components.
         """
-
-        return self.functional_components + self.system_components.values()
+        return self.functional_components + list(self.system_components.values())
 
     def get_config(self):
         """
@@ -397,7 +396,7 @@ class Shelly(object):
         if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
             self.logger.info("received \"{}\" {}".format(self.device.name, message))
 
-    def register_component(self, component_class, name, comp_id=0, props={}):
+    def register_component(self, component_class, name, comp_id=0, props=None):
         """
         Find or create the Indigo device for the functional component.
 
