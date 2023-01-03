@@ -3,6 +3,7 @@ import logging
 
 from queue import Queue
 
+from shelly.devices.Shelly import Shelly
 from shelly.devices.ShellyPlus1 import ShellyPlus1
 from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
 from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
@@ -540,14 +541,24 @@ class Plugin(indigo.PluginBase):
         if userCancelled is False:
             self.setLogLevel(valuesDict.get('log-level', "info"))
 
-    def get_broker_devices(self, filter="", values_dict=None, type_id="", target_id=0):
+    def get_shelly_devices(self, filter="", valuesDict=None, typeId="", targetId=0):
+        """
+
+        :return:
+        """
+        _shellies = []
+        for dev in indigo.devices.iter("self"):
+            device = self.shellies.get(dev.id, None)
+            if device and isinstance(device, Shelly):
+                _shellies.append((dev.id, dev.name))
+
+        _shellies.sort(key=lambda tup: tup[1])
+        return _shellies
+
+    def get_broker_devices(self, filter="", valuesDict=None, typeId="", targetId=0):
         """
         Gets a list of available broker devices.
 
-        :param filter: A filter to apply to get device classes.
-        :param values_dict: The current state of the UI.
-        :param type_id: Unused.
-        :param target_id: Unused.
         :return: A list of brokers.
         """
 
@@ -827,3 +838,32 @@ class Plugin(indigo.PluginBase):
             config['name'] = None
 
         input_component.set_config(config)
+
+    def action_handler(self, pluginAction=None, device=None, callerWaitingForResult=False):
+        """
+
+        :param pluginAction:
+        :param device:
+        :param callerWaitingForResult:
+        :return:
+        """
+        action = pluginAction.pluginTypeId
+
+        # Helper code to extract a shelly device from a menu
+        device_id = pluginAction.props.get("device-id", None)
+        if device_id:
+            try:
+                device_id = int(device_id)
+            except TypeError:
+                device_id = None
+        shelly = self.shellies.get(device_id, None)
+
+        # Handle individual actions
+        if action == "Shelly.CheckForUpdate":
+            if shelly:
+                shelly.check_for_update()
+        elif action == "Shelly.Update":
+            if shelly:
+                stage = pluginAction.props.get("stage")
+
+                shelly.update(stage)
