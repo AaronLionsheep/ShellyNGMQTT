@@ -147,6 +147,10 @@ class Plugin(indigo.PluginBase):
         :param device:
         :return:
         """
+        # Catch main devices that have already been started by a component
+        if device.id in self.shellies:
+            self.logger.debug("{} not starting again...".format(device.name))
+            return
 
         if device.deviceTypeId in shelly_model_classes:
             model_class = shelly_model_classes[device.deviceTypeId]
@@ -175,6 +179,25 @@ class Plugin(indigo.PluginBase):
 
             # Store the message type
             self.message_types.append(shelly.get_message_type())
+        else:
+            # This is a component device starting
+            # if none of the devices in the device group are in self.shellies yet,
+            # then the main device has not tarted
+            grouped_with = indigo.device.getGroupList(device)
+            main_device_has_started = False
+            for grouped_with_device_id in grouped_with:
+                if grouped_with_device_id in self.shellies:
+                    main_device_has_started = True
+                    break
+
+            # go through all the grouped devices and see if any are main devices
+            # and start any that are before starting the component
+            if not main_device_has_started:
+                for grouped_with_device_id in grouped_with:
+                    grouped_with_device = indigo.devices[grouped_with_device_id]
+                    if grouped_with_device.deviceTypeId in shelly_model_classes:
+                        self.logger.debug("{} needs it's main device started, starting '{}' manually...".format(device.name, grouped_with_device.name))
+                        self.deviceStartComm(grouped_with_device)
 
         # Refresh the device's state list and properties that may have changed between plugin versions
         device = indigo.device.changeDeviceTypeId(device, device.deviceTypeId)
