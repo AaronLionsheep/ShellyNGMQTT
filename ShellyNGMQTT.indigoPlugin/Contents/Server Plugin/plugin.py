@@ -315,7 +315,7 @@ class Plugin(indigo.PluginBase):
             values_dict['broker-id'] = main_device.pluginProps['broker-id']
             values_dict['address'] = main_device.pluginProps['address']
             values_dict['message-type'] = main_device.pluginProps['message-type']
-            values_dict['is-initial-setup'] = main_device.pluginProps['is-initial-setup']
+            values_dict['is-initial-setup'] = main_device.pluginProps.get('is-initial-setup', False)
 
         return values_dict, errors_dict
 
