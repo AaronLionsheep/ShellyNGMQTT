@@ -46,10 +46,8 @@ class Input(Component):
 
         if event == "btn_down":
             self.device.updateStateOnServer(key='onOffState', value=True)
-            # TODO: Fire any triggers
         elif event == "btn_up":
             self.device.updateStateOnServer(key='onOffState', value=False)
-            # TODO: Fire any triggers
 
     def get_config(self):
         """
