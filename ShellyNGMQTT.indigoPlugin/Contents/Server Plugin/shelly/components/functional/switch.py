@@ -37,7 +37,6 @@ class Switch(Component):
 
         :return: The device state list.
         """
-
         states = super(Switch, self).get_device_state_list()
 
         states.extend([

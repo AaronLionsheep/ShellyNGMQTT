@@ -1,3 +1,32 @@
 <?xml version="1.0"?>
 <Actions>
+    <Action id="Shelly.CheckForUpdate">
+        <Name>Check for Device Updates</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Shelly Device:</Label>
+                <List class="self" method="get_shelly_devices" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>action_handler</CallbackMethod>
+    </Action>
+
+    <Action id="Shelly.Update">
+        <Name>Update Device</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Shelly Device:</Label>
+                <List class="self" method="get_shelly_devices" dynamicReload="true"/>
+            </Field>
+
+            <Field id="stage" type="menu" defaultValue="stable">
+                <Label>Firmware Stage:</Label>
+                <List>
+                    <Option value="stable">Stable</Option>
+                    <Option value="beta">Beta (who knows what will happen)</Option>
+                </List>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>action_handler</CallbackMethod>
+    </Action>
 </Actions>

@@ -237,13 +237,15 @@ class Shelly(object):
             mqtt.executeAction("publish", deviceId=self.get_broker_id(), props=props, waitUntilDone=False)
             self.logger.debug("\"%s\" published \"%s\" to \"%s\"", self.device.name, payload, topic)
 
-    def publish_rpc(self, method, params, callback=None):
+    def publish_rpc(self, method: str, params: dict = None, callback=None) -> None:
         """
 
         :return:
         """
 
         rpc_id = uuid.uuid4().hex
+        if not params:
+            params = {}
         if callback:
             self.rpc_callbacks[rpc_id] = callback
         rpc = {
@@ -461,3 +463,40 @@ class Shelly(object):
                 continue
             # Made it this far, so all criteria matched
             return component
+
+    def check_for_update(self):
+        """
+        Execute the Shelly.CheckForUpdate RPC command.
+
+        :return:
+        """
+        def _response(response, error=None):
+            if error:
+                self.logger.error(error)
+                return
+
+            if "stable" in response:
+                stable_version = response["stable"].get("version", "Unknown")
+                self.logger.info("Newer stable version ({}) found for {}".format(stable_version, self.device.name))
+
+            if "beta" in response:
+                beta_version = response["stable"].get("version", "Unknown")
+                self.logger.info("Newer beta version ({}) found for {}".format(beta_version, self.device.name))
+
+            if "stable" not in response and "beta" not in response:
+                self.logger.info("{} is on the latest firmware".format(self.device.name))
+
+        self.publish_rpc("Shelly.CheckForUpdate", callback=_response)
+
+    def update(self, stage="stable"):
+        """
+
+        :return:
+        """
+        def _response(response, error=None):
+            if error:
+                self.logger.error(error)
+                return
+
+        self.publish_rpc("Shelly.Update", {"stage": stage}, callback=_response)
+        self.logger.info("Updating {}...".format(self.device.name))
