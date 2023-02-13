@@ -29,13 +29,35 @@
 				<Label>MQTT Broker:</Label>
 				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
 			</Field>
+			<Field id="broker-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>The broker that this device communicates with
+				</Label>
+			</Field>
 
 			<Field id="address" type="textfield">
 				<Label>Base MQTT Topic:</Label>
 			</Field>
+			<Field id="address-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>The base address of the device
+				</Label>
+			</Field>
 
 			<Field id="message-type" type="textfield">
 				<Label>Message Type:</Label>
+			</Field>
+			<Field id="message-type-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>The message type from an MQTTConnector trigger that will be delivering messages for this device
+				</Label>
+			</Field>
+
+			<Field id="is-initial-setup" type="checkbox" defaultValue="true" hidden="true" />
+
+			<Field id="initial-name" type="textfield" visibleBindingId="is-initial-setup" visibleBindingValue="true">
+				<Label>Initial Name:</Label>
+			</Field>
+			<Field id="initial-name-description" type="label" visibleBindingId="is-initial-setup" visibleBindingValue="true" alignWithControl="true" fontColor="darkgray">
+				<Label>The base name for the device (ex: Living Room Light) that can be used to create friendly default component names
+				</Label>
 			</Field>
 
 			<Field id="model-specific-sep" type="separator" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm"/>

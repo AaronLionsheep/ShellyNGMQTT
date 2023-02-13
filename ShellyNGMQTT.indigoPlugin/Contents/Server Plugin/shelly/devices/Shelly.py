@@ -419,9 +419,12 @@ class Shelly(object):
             # The component name we are trying to register is new, so we did
             # not find a device with that name already in the group. Create it
             # and add it to the group.
-            device = indigo.device.create(indigo.kProtocol.Plugin,
-                                          deviceTypeId=component_class.device_type_id,
-                                          groupWithDevice=self.device.id)
+            ui_name = "{} {}".format(self.device.name, name)
+            device = indigo.device.create(
+                indigo.kProtocol.Plugin,
+                name=ui_name,
+                deviceTypeId=component_class.device_type_id,
+                groupWithDevice=self.device.id)
             device.model = name
             device.replaceOnServer()
             self.component_devices[name] = device
