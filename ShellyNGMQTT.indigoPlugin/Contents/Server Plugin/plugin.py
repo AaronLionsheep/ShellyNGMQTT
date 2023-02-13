@@ -315,6 +315,7 @@ class Plugin(indigo.PluginBase):
             values_dict['broker-id'] = main_device.pluginProps['broker-id']
             values_dict['address'] = main_device.pluginProps['address']
             values_dict['message-type'] = main_device.pluginProps['message-type']
+            values_dict['is-initial-setup'] = main_device.pluginProps['is-initial-setup']
 
         return values_dict, errors_dict
 
@@ -407,11 +408,17 @@ class Plugin(indigo.PluginBase):
         device_props = {
             'broker-id': values_dict["broker-id"],
             'address': values_dict["address"],
-            'message-type': values_dict["message-type"]
+            'message-type': values_dict["message-type"],
+            'is-initial-setup': False
         }
         if model_class.display_name not in group_models:
             # The main device is not in the group, so create one
-            main_device = indigo.device.create(indigo.kProtocol.Plugin, deviceTypeId=shelly_model, props=device_props)
+            main_device = indigo.device.create(
+                indigo.kProtocol.Plugin,
+                name=values_dict["initial-name"] or None,
+                deviceTypeId=shelly_model,
+                props=device_props
+            )
             main_device.model = model_class.display_name
             main_device.replaceOnServer()
         else:
