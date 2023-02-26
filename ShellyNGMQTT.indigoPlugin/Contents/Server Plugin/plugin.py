@@ -869,6 +869,31 @@ class Plugin(indigo.PluginBase):
 
         input_component.set_config(config)
 
+    def _check_dependencies(self, values_dict, type_id, device_id):
+        """
+        Handler for checking the dependencies of the components in a device factory.
+
+        :param values_dict:
+        :param type_id:
+        :param device_id:
+        :return:
+        """
+        # Get all devices in the group (excluding the main device)
+        device_group_ids = list(indigo.device.getGroupList(device_id))
+        device = indigo.devices[device_id]
+        self.logger.info("Dependencies for '{}':".format(device.name))
+        dependencies = indigo.device.getDependencies(device_id)
+        for category, items in dependencies.items():
+            for item in items:
+                if item["ID"] in device_group_ids:
+                    continue
+
+                self.logger.info("    {}: {} ({})".format(
+                    category,
+                    item["Name"],
+                    item["ID"]
+                ))
+
     def action_handler(self, pluginAction=None, device=None, callerWaitingForResult=False):
         """
 

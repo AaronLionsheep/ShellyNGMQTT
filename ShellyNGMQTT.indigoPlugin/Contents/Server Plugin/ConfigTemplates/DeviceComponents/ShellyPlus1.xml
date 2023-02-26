@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<Template>
+    <Field id="shelly-plus-1-component-switch" type="checkbox" defaultValue="true" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-1">
+		<Label>Switch:</Label>
+		<Description>Enable the switched relay component</Description>
+	</Field>
+
+	<Field id="shelly-plus-1-component-input" type="checkbox" defaultValue="true" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-1">
+		<Label>Input:</Label>
+		<Description>Enable the input component</Description>
+	</Field>
+</Template>

@@ -60,6 +60,32 @@
 				</Label>
 			</Field>
 
+			<Field id="components-sep" type="separator"/>
+
+			<Field id="components-title" type="label" alignText="center">
+				<Label>Components</Label>
+			</Field>
+
+			<Field id="components-description-1" type="label" fontColor="darkgray">
+				<Label>Shelly devices use a component-based architecture. The Shelly device is represented by a "main" device in Indigo and an additional device for each component.
+				</Label>
+			</Field>
+			<Field id="components-description-2" type="label" fontColor="darkgray">
+				<Label>You can select which components you would like represented in Indigo if you are not utilizing the entire Shelly device.
+				</Label>
+			</Field>
+
+			<Template file="ConfigTemplates/DeviceComponents/ShellyPlus1.xml"/>
+
+			<Field id="components-dependencies-check" type="button" tooltip="Click this button to check for component dependencies">
+				<Title>Check Dependencies</Title>
+				<CallbackMethod>_check_dependencies</CallbackMethod>
+			</Field>
+
+			<Field id="components-dependencies-check-warning" type="label" fontColor="red">
+				<Label>If you uncheck a component and submit this dialog, it WILL be deleted (even if it has dependencies)</Label>
+			</Field>
+
 			<Field id="model-specific-sep" type="separator" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm"/>
 
 			<!-- Shelly Plus 2 PM / Shelly Pro 2 PM-->
