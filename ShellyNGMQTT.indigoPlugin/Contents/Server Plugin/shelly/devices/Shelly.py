@@ -483,7 +483,7 @@ class Shelly(object):
                 self.logger.info("Newer stable version ({}) found for {}".format(stable_version, self.device.name))
 
             if "beta" in response:
-                beta_version = response["stable"].get("version", "Unknown")
+                beta_version = response["beta"].get("version", "Unknown")
                 self.logger.info("Newer beta version ({}) found for {}".format(beta_version, self.device.name))
 
             if "stable" not in response and "beta" not in response:
