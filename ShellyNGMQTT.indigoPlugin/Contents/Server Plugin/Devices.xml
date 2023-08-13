@@ -10,18 +10,24 @@
 					<Option value="shelly-plus-1">Shelly Plus 1</Option>
 					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM</Option>
 					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
+					<Option value="shelly-plus-walldimmer">%%disabled:Shelly Plus WallDimmer (Coming Soon!)%%</Option>
 					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-i-4">Shelly Plus I4/I4DC</Option>
 					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-ht">Shelly Plus H&amp;T</Option>
+					<Option value="shelly-plus-smoke">%%disabled:Shelly Plus Smoke (Coming Soon!)%%</Option>
 					<Option value="-1">%%separator%%</Option>
-					<Option value="shelly-plus-plug">Shelly Plus Plug</Option>
+					<Option value="shelly-plus-plug">Shelly Plus Plug US/IT</Option>
+					<Option value="shelly-plus-plug-s">%%disabled:Shelly Plus Plug S (Coming Soon!)%%</Option>
+					<Option value="shelly-plus-plug-uk">%%disabled:Shelly Plus Plug UK (Coming Soon!)%%</Option>
 					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-pro-1">Shelly Pro 1</Option>
 					<Option value="shelly-pro-1-pm">Shelly Pro 1 PM</Option>
 					<Option value="shelly-pro-2">Shelly Pro 2</Option>
 					<Option value="shelly-pro-2-pm">Shelly Pro 2 PM</Option>
-					<Option value="shelly-pro-4-pm">%%disabled:Shelly Pro 4 PM%%</Option>
+					<Option value="shelly-pro-3">%%disabled:Shelly Pro 3 (Coming Soon!)%%</Option>
+					<Option value="shelly-pro-3-em">%%disabled:Shelly Pro 3 EM (Coming Soon!)%%</Option>
+					<Option value="shelly-pro-4-pm">%%disabled:Shelly Pro 4 PM (Coming Soon!)%%</Option>
 				</List>
 			</Field>
 
@@ -29,13 +35,35 @@
 				<Label>MQTT Broker:</Label>
 				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
 			</Field>
+			<Field id="broker-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>The broker that this device communicates with
+				</Label>
+			</Field>
 
 			<Field id="address" type="textfield">
 				<Label>Base MQTT Topic:</Label>
 			</Field>
+			<Field id="address-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>The base address of the device
+				</Label>
+			</Field>
 
 			<Field id="message-type" type="textfield">
 				<Label>Message Type:</Label>
+			</Field>
+			<Field id="message-type-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>The message type from an MQTTConnector trigger that will be delivering messages for this device
+				</Label>
+			</Field>
+
+			<Field id="is-initial-setup" type="checkbox" defaultValue="true" hidden="true" />
+
+			<Field id="initial-name" type="textfield" visibleBindingId="is-initial-setup" visibleBindingValue="true">
+				<Label>Initial Name:</Label>
+			</Field>
+			<Field id="initial-name-description" type="label" visibleBindingId="is-initial-setup" visibleBindingValue="true" alignWithControl="true" fontColor="darkgray">
+				<Label>The base name for the device (ex: Living Room Light) that can be used to create friendly default component names
+				</Label>
 			</Field>
 
 			<Field id="model-specific-sep" type="separator" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm"/>

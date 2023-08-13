@@ -1,6 +1,6 @@
 import indigo
 
-from Shelly import Shelly
+from .Shelly import Shelly
 from ..components.functional.switch import Switch
 from ..components.functional.input import Input
 from ..components.system.system import System

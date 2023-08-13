@@ -1,8 +1,9 @@
 import indigo
 import logging
 
-from Queue import Queue
+from queue import Queue
 
+from shelly.devices.Shelly import Shelly
 from shelly.devices.ShellyPlus1 import ShellyPlus1
 from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
 from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
@@ -146,6 +147,10 @@ class Plugin(indigo.PluginBase):
         :param device:
         :return:
         """
+        # Catch main devices that have already been started by a component
+        if device.id in self.shellies:
+            self.logger.debug("{} not starting again...".format(device.name))
+            return
 
         if device.deviceTypeId in shelly_model_classes:
             model_class = shelly_model_classes[device.deviceTypeId]
@@ -174,6 +179,25 @@ class Plugin(indigo.PluginBase):
 
             # Store the message type
             self.message_types.append(shelly.get_message_type())
+        else:
+            # This is a component device starting
+            # if none of the devices in the device group are in self.shellies yet,
+            # then the main device has not tarted
+            grouped_with = indigo.device.getGroupList(device)
+            main_device_has_started = False
+            for grouped_with_device_id in grouped_with:
+                if grouped_with_device_id in self.shellies:
+                    main_device_has_started = True
+                    break
+
+            # go through all the grouped devices and see if any are main devices
+            # and start any that are before starting the component
+            if not main_device_has_started:
+                for grouped_with_device_id in grouped_with:
+                    grouped_with_device = indigo.devices[grouped_with_device_id]
+                    if grouped_with_device.deviceTypeId in shelly_model_classes:
+                        self.logger.debug("{} needs it's main device started, starting '{}' manually...".format(device.name, grouped_with_device.name))
+                        self.deviceStartComm(grouped_with_device)
 
         # Refresh the device's state list and properties that may have changed between plugin versions
         device = indigo.device.changeDeviceTypeId(device, device.deviceTypeId)
@@ -291,6 +315,7 @@ class Plugin(indigo.PluginBase):
             values_dict['broker-id'] = main_device.pluginProps['broker-id']
             values_dict['address'] = main_device.pluginProps['address']
             values_dict['message-type'] = main_device.pluginProps['message-type']
+            values_dict['is-initial-setup'] = main_device.pluginProps.get('is-initial-setup', False)
 
         return values_dict, errors_dict
 
@@ -383,11 +408,17 @@ class Plugin(indigo.PluginBase):
         device_props = {
             'broker-id': values_dict["broker-id"],
             'address': values_dict["address"],
-            'message-type': values_dict["message-type"]
+            'message-type': values_dict["message-type"],
+            'is-initial-setup': False
         }
         if model_class.display_name not in group_models:
             # The main device is not in the group, so create one
-            main_device = indigo.device.create(indigo.kProtocol.Plugin, deviceTypeId=shelly_model, props=device_props)
+            main_device = indigo.device.create(
+                indigo.kProtocol.Plugin,
+                name=values_dict["initial-name"] or None,
+                deviceTypeId=shelly_model,
+                props=device_props
+            )
             main_device.model = model_class.display_name
             main_device.replaceOnServer()
         else:
@@ -540,14 +571,24 @@ class Plugin(indigo.PluginBase):
         if userCancelled is False:
             self.setLogLevel(valuesDict.get('log-level', "info"))
 
-    def get_broker_devices(self, filter="", values_dict=None, type_id="", target_id=0):
+    def get_shelly_devices(self, filter="", valuesDict=None, typeId="", targetId=0):
+        """
+
+        :return:
+        """
+        _shellies = []
+        for dev in indigo.devices.iter("self"):
+            device = self.shellies.get(dev.id, None)
+            if device and isinstance(device, Shelly):
+                _shellies.append((dev.id, dev.name))
+
+        _shellies.sort(key=lambda tup: tup[1])
+        return _shellies
+
+    def get_broker_devices(self, filter="", valuesDict=None, typeId="", targetId=0):
         """
         Gets a list of available broker devices.
 
-        :param filter: A filter to apply to get device classes.
-        :param values_dict: The current state of the UI.
-        :param type_id: Unused.
-        :param target_id: Unused.
         :return: A list of brokers.
         """
 
@@ -827,3 +868,32 @@ class Plugin(indigo.PluginBase):
             config['name'] = None
 
         input_component.set_config(config)
+
+    def action_handler(self, pluginAction=None, device=None, callerWaitingForResult=False):
+        """
+
+        :param pluginAction:
+        :param device:
+        :param callerWaitingForResult:
+        :return:
+        """
+        action = pluginAction.pluginTypeId
+
+        # Helper code to extract a shelly device from a menu
+        device_id = pluginAction.props.get("device-id", None)
+        if device_id:
+            try:
+                device_id = int(device_id)
+            except TypeError:
+                device_id = None
+        shelly = self.shellies.get(device_id, None)
+
+        # Handle individual actions
+        if action == "Shelly.CheckForUpdate":
+            if shelly:
+                shelly.check_for_update()
+        elif action == "Shelly.Update":
+            if shelly:
+                stage = pluginAction.props.get("stage")
+
+                shelly.update(stage)

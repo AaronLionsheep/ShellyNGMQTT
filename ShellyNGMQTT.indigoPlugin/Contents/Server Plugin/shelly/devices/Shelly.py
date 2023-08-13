@@ -32,7 +32,7 @@ class Shelly(object):
                 device = indigo.devices[dev_id]
                 self.component_devices[device.model] = device
 
-        self.device.updateStateImageOnServer(indigo.kStateImageSel.None)
+        self.device.updateStateImageOnServer(indigo.kStateImageSel.NoImage)
 
     @property
     def device(self):
@@ -54,8 +54,7 @@ class Shelly(object):
 
         :return: A list of all functional and system components.
         """
-
-        return self.functional_components + self.system_components.values()
+        return self.functional_components + list(self.system_components.values())
 
     def get_config(self):
         """
@@ -63,7 +62,6 @@ class Shelly(object):
 
         :return: None
         """
-
         for component in self.components:
             component.get_config()
 
@@ -238,13 +236,15 @@ class Shelly(object):
             mqtt.executeAction("publish", deviceId=self.get_broker_id(), props=props, waitUntilDone=False)
             self.logger.debug("\"%s\" published \"%s\" to \"%s\"", self.device.name, payload, topic)
 
-    def publish_rpc(self, method, params, callback=None):
+    def publish_rpc(self, method: str, params: dict = None, callback=None) -> None:
         """
 
         :return:
         """
 
         rpc_id = uuid.uuid4().hex
+        if not params:
+            params = {}
         if callback:
             self.rpc_callbacks[rpc_id] = callback
         rpc = {
@@ -368,6 +368,7 @@ class Shelly(object):
         """
 
         if action.deviceAction == indigo.kDeviceAction.RequestStatus:
+            self.get_config()
             for component in self.system_components.values():
                 component.get_status()
 
@@ -397,7 +398,7 @@ class Shelly(object):
         if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
             self.logger.info("received \"{}\" {}".format(self.device.name, message))
 
-    def register_component(self, component_class, name, comp_id=0, props={}):
+    def register_component(self, component_class, name, comp_id=0, props=None):
         """
         Find or create the Indigo device for the functional component.
 
@@ -418,9 +419,12 @@ class Shelly(object):
             # The component name we are trying to register is new, so we did
             # not find a device with that name already in the group. Create it
             # and add it to the group.
-            device = indigo.device.create(indigo.kProtocol.Plugin,
-                                          deviceTypeId=component_class.device_type_id,
-                                          groupWithDevice=self.device.id)
+            ui_name = "{} {}".format(self.device.name, name)
+            device = indigo.device.create(
+                indigo.kProtocol.Plugin,
+                name=ui_name,
+                deviceTypeId=component_class.device_type_id,
+                groupWithDevice=self.device.id)
             device.model = name
             device.replaceOnServer()
             self.component_devices[name] = device
@@ -462,3 +466,40 @@ class Shelly(object):
                 continue
             # Made it this far, so all criteria matched
             return component
+
+    def check_for_update(self):
+        """
+        Execute the Shelly.CheckForUpdate RPC command.
+
+        :return:
+        """
+        def _response(response, error=None):
+            if error:
+                self.logger.error(error)
+                return
+
+            if "stable" in response:
+                stable_version = response["stable"].get("version", "Unknown")
+                self.logger.info("Newer stable version ({}) found for {}".format(stable_version, self.device.name))
+
+            if "beta" in response:
+                beta_version = response["beta"].get("version", "Unknown")
+                self.logger.info("Newer beta version ({}) found for {}".format(beta_version, self.device.name))
+
+            if "stable" not in response and "beta" not in response:
+                self.logger.info("{} is on the latest firmware".format(self.device.name))
+
+        self.publish_rpc("Shelly.CheckForUpdate", callback=_response)
+
+    def update(self, stage="stable"):
+        """
+
+        :return:
+        """
+        def _response(response, error=None):
+            if error:
+                self.logger.error(error)
+                return
+
+        self.publish_rpc("Shelly.Update", {"stage": stage}, callback=_response)
+        self.logger.info("Updating {}...".format(self.device.name))

@@ -1,3 +1,14 @@
 <?xml version="1.0"?>
 <MenuItems>
+    <MenuItem id="Shelly.CheckForUpdate">
+        <Name>Check for Device Updates...</Name>
+        <ConfigUI actionId="Shelly.CheckForUpdate"/>
+        <ButtonTitle>Check</ButtonTitle>
+    </MenuItem>
+
+    <MenuItem id="Shelly.Update">
+        <Name>Update Device...</Name>
+        <ConfigUI actionId="Shelly.Update"/>
+        <ButtonTitle>Update!</ButtonTitle>
+    </MenuItem>
 </MenuItems>

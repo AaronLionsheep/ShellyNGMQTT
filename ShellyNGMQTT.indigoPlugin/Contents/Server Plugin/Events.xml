@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <Events>
 
-    <!-- Button push events -->
-
     <Event id="btn-down">
         <Name>Button Down</Name>
         <ConfigUI>
@@ -22,6 +20,8 @@
             </Field>
         </ConfigUI>
     </Event>
+
+    <Event id="sep-push"/>
 
     <Event id="single-push">
         <Name>Single Push</Name>
@@ -43,12 +43,98 @@
         </ConfigUI>
     </Event>
 
+    <Event id="triple-push">
+        <Name>Triple Push</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="indigo.devices" filter="self.component-input"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
     <Event id="long-push">
         <Name>Long Push</Name>
         <ConfigUI>
             <Field id="device-id" type="menu">
                 <Label>Device:</Label>
                 <List class="indigo.devices" filter="self.component-input"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="sep-ota"/>
+
+    <Event id="ota-begin">
+        <Name>OTA Begin</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="self" method="get_shelly_devices"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="ota-success">
+        <Name>OTA Success</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="self" method="get_shelly_devices"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="ota-error">
+        <Name>OTA Error</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="self" method="get_shelly_devices"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="sep-sta"/>
+
+    <Event id="sta-connect-fail">
+        <Name>WiFi Connection Failure</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="self" method="get_shelly_devices"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="sta-disconnected">
+        <Name>WiFi Disconnected</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="self" method="get_shelly_devices"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="sep-power"/>
+
+    <Event id="sleep">
+        <Name>Sleep</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="self" method="get_shelly_devices"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="scheduled-restart">
+        <Name>Scheduled Restart</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="self" method="get_shelly_devices"/>
             </Field>
         </ConfigUI>
     </Event>
