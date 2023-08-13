@@ -62,7 +62,6 @@ class Shelly(object):
 
         :return: None
         """
-
         for component in self.components:
             component.get_config()
 
@@ -369,6 +368,7 @@ class Shelly(object):
         """
 
         if action.deviceAction == indigo.kDeviceAction.RequestStatus:
+            self.get_config()
             for component in self.system_components.values():
                 component.get_status()
 
