@@ -14,6 +14,7 @@ from shelly.devices.ShellyPro1 import ShellyPro1
 from shelly.devices.ShellyPro1PM import ShellyPro1PM
 from shelly.devices.ShellyPro2 import ShellyPro2
 from shelly.devices.ShellyPro2PM import ShellyPro2PM
+from shelly.devices.ShellyPro4PM import ShellyPro4PM
 
 shelly_model_classes = {
     'shelly-plus-1': ShellyPlus1,
@@ -26,6 +27,7 @@ shelly_model_classes = {
     'shelly-pro-1-pm': ShellyPro1PM,
     'shelly-pro-2': ShellyPro2,
     'shelly-pro-2-pm': ShellyPro2PM,
+    'shelly-pro-4-pm': ShellyPro4PM,
 }
 
 
