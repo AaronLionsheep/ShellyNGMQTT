@@ -7,8 +7,8 @@
 			￼<Field type="menu" id="shelly-model" defaultValue="shelly-plus-1">
 				<Label>Shelly Model:</Label>
 				<List>
-					<Option value="shelly-plus-1">Shelly Plus 1</Option>
-					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM</Option>
+					<Option value="shelly-plus-1">Shelly Plus 1 (mini)</Option>
+					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM (mini)</Option>
 					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
 					<Option value="shelly-plus-walldimmer">%%disabled:Shelly Plus WallDimmer (Coming Soon!)%%</Option>
 					<Option value="-1">%%separator%%</Option>
