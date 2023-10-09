@@ -10,6 +10,7 @@ from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
 from shelly.devices.ShellyPlusI4 import ShellyPlusI4
 from shelly.devices.ShellyPlusHT import ShellyPlusHT
 from shelly.devices.ShellyPlusPlug import ShellyPlusPlug
+from shelly.devices.ShellyPlusPlugS import ShellyPlusPlugS
 from shelly.devices.ShellyPro1 import ShellyPro1
 from shelly.devices.ShellyPro1PM import ShellyPro1PM
 from shelly.devices.ShellyPro2 import ShellyPro2
@@ -23,6 +24,7 @@ shelly_model_classes = {
     'shelly-plus-i-4': ShellyPlusI4,
     'shelly-plus-ht': ShellyPlusHT,
     'shelly-plus-plug': ShellyPlusPlug,
+    'shelly-plus-plug-s': ShellyPlusPlugS,
     'shelly-pro-1': ShellyPro1,
     'shelly-pro-1-pm': ShellyPro1PM,
     'shelly-pro-2': ShellyPro2,
