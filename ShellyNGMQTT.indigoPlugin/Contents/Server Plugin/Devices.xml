@@ -94,6 +94,7 @@
 					<Option value="system">System</Option>
 					<Option value="wifi">WiFi</Option>
 					<Option value="ble">BLE</Option>
+					<Option value="sensor-addon">Sensor Addon</Option>
 				</List>
 			</Field>
 
@@ -122,6 +123,9 @@
 
 			<!-- BLE -->
 			<Template file="ConfigTemplates/ConfigureBLE.xml"/>
+
+			<!-- Sensor Addon -->
+			<Template file="ConfigTemplates/ConfigureSensorAddon.xml"/>
 
 		</ConfigUI>
 		<States>

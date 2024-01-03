@@ -40,7 +40,7 @@ class Plugin(indigo.PluginBase):
         super(Plugin, self).__init__(pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
         self.setLogLevel(pluginPrefs.get('log-level', "info"))
 
-        self.shellies = {}
+        self.shellies: dict[int, Shelly] = {}
         self.triggers = {}
         self.message_types = []
         self.message_queue = Queue()
@@ -903,3 +903,18 @@ class Plugin(indigo.PluginBase):
                 stage = pluginAction.props.get("stage")
 
                 shelly.update(stage)
+
+    def _sensor_addon_one_wire_scan(self, values_dict, type_id, dev_id):
+        """
+        Perform a one wire scan on the target device.
+        """
+        shelly = self.shellies.get(dev_id)
+        if not shelly:
+            self.logger.error(f"Unable to get Shelly object for device: {dev_id}!")
+            return
+        
+        if not shelly.sensor_addon:
+            self.logger.error(f"Target device has no SensorAddon defined!")
+            return
+        
+        shelly.sensor_addon.one_wire_scan()

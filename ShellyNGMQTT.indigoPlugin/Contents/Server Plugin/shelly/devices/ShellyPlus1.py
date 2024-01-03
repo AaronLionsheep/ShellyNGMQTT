@@ -7,6 +7,7 @@ from ..components.system.system import System
 from ..components.system.wifi import WiFi
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
+from ..sensor_addon import SensorAddon
 
 
 class ShellyPlus1(Shelly):
@@ -25,6 +26,7 @@ class ShellyPlus1(Shelly):
             'ble': BLE(self),
             'mqtt': MQTT(self)
         }
+        self.sensor_addon = SensorAddon(self)
 
         self.switch = self.register_component(Switch, "Switch")
         self.input = self.register_component(Input, "Input")

@@ -1,7 +1,10 @@
+from typing import Optional, Callable
 import indigo # noqa
 import json
 import logging
 import uuid
+
+from ..sensor_addon import SensorAddon
 
 
 class Shelly(object):
@@ -11,7 +14,7 @@ class Shelly(object):
 
     display_name = "ShellyBase"
 
-    def __init__(self, device_id):
+    def __init__(self, device_id: int):
         """Create a new Shelly device.
 
         :param device_id: The indigo device id.
@@ -21,6 +24,7 @@ class Shelly(object):
         self._device = None
         self.functional_components = []
         self.system_components = {}
+        self.sensor_addon: SensorAddon | None = None
         self.component_devices = {}
         self.logger = logging.getLogger("Plugin.ShellyNGMQTT")
         self.rpc_callbacks = {}
@@ -236,7 +240,7 @@ class Shelly(object):
             mqtt.executeAction("publish", deviceId=self.get_broker_id(), props=props, waitUntilDone=False)
             self.logger.debug("\"%s\" published \"%s\" to \"%s\"", self.device.name, payload, topic)
 
-    def publish_rpc(self, method: str, params: dict = None, callback=None) -> None:
+    def publish_rpc(self, method: str, params: dict = None, callback: Callable | None = None) -> None:
         """
 
         :return:

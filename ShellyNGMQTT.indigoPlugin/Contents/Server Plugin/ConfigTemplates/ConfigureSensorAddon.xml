@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Template>
+    <Field id="sensor-addon-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="sensor-addon"/>
+
+	<Field id="sensor-addon-one-wire-scan" type="button" tooltip="Click this button to scan the one wire bus" visibleBindingId="settings-section" visibleBindingValue="sensor-addon">
+		<Title>Scan One Wire</Title>
+		<Label>Identify connected one wire sensors</Label>
+		<CallbackMethod>_sensor_addon_one_wire_scan</CallbackMethod>
+	</Field>
+
+    <Field id="sensor-addon-temperature-unit" type="menu" defaultValue="F" visibleBindingId="settings-section" visibleBindingValue="sensor-addon">
+        <Label>Temperature Unit:</Label>
+        <List>
+            <Option value="F">Fahrenheit</Option>
+            <Option value="C">Celsius</Option>
+        </List>
+    </Field>
+
+	<Field id="sensor-addon-config-write-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="sensor-addon"/>
+
+	<Field id="sensor-addon-config-write-help" type="label" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="sensor-addon">
+		<Label>Write the current configuration to the device for this section only. Be mindful about empty fields and check the log for error messages.</Label>
+	</Field>
+
+	<Field id="sensor-addon-config-write" type="button" tooltip="Click this button to write the sensor-addon configuration" visibleBindingId="settings-section" visibleBindingValue="sensor-addon">
+		<Title>Write Configuration</Title>
+		<CallbackMethod>_write_htui_configuration</CallbackMethod>
+	</Field>
+</Template>
