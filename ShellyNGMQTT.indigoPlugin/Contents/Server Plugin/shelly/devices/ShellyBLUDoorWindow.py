@@ -39,7 +39,7 @@ class ShellyBLUDoorWindow(ShellyBLU):
         state_updates.append({'key': "batteryLevel", 'value': packet.get("battery", 0)})
 
         is_open = packet.get("window", 0) == 1
-        state_updates.append({'key': "onOffState", 'value': is_open})
+        state_updates.append({'key': "onOffState", 'value': is_open, "uiValue": "open" if is_open else "closed"})
 
         self.device.updateStatesOnServer(state_updates)
 
