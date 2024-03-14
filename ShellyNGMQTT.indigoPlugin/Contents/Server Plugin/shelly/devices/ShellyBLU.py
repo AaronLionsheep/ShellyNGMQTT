@@ -75,6 +75,10 @@ class ShellyBLU(object):
         return indigo.PluginBase.getDeviceDisplayStateId(indigo.activePlugin, self.device)
     
     def process_packet(self, packet: dict):
+        if packet.get("pid", -1) == self.device.states.get("pid", -1):
+            self.logger.debug(f"Not processing duplicated packet: {packet}")
+            return
+
         state_updates = []
 
         state_updates.append({'key': "encryption", 'value': packet.get("encryption", False)})
