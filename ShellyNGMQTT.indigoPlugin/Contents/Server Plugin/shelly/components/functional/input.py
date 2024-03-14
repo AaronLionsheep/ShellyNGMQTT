@@ -44,9 +44,9 @@ class Input(Component):
 
         super(Input, self).handle_notify_event(event)
 
-        if event == "btn_down":
+        if event["name"] == "btn_down":
             self.device.updateStateOnServer(key='onOffState', value=True)
-        elif event == "btn_up":
+        elif event["name"] == "btn_up":
             self.device.updateStateOnServer(key='onOffState', value=False)
 
     def get_config(self):

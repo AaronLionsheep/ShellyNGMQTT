@@ -28,31 +28,57 @@
 					<Option value="shelly-pro-3">%%disabled:Shelly Pro 3 (Coming Soon!)%%</Option>
 					<Option value="shelly-pro-3-em">%%disabled:Shelly Pro 3 EM (Coming Soon!)%%</Option>
 					<Option value="shelly-pro-4-pm">Shelly Pro 4 PM</Option>
+					<Option value="-1">%%separator%%</Option>
+					<Option value="shelly-blu-doorwindow">Shelly BLU Door/Window</Option>
 				</List>
+				<CallbackMethod>deviceFactoryModelChanged</CallbackMethod>
 			</Field>
 
-			<Field id="broker-id" type="menu">
+			<Field id="is-mqtt-model" type="checkbox" defaultValue="true" hidden="true" />
+			<Field id="is-blu-model" type="checkbox" defaultValue="false" hidden="true" />
+
+			<Field id="broker-id" type="menu" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
 				<Label>MQTT Broker:</Label>
 				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
 			</Field>
-			<Field id="broker-description" type="label" alignWithControl="true" fontColor="darkgray">
+			<Field id="broker-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
 				<Label>The broker that this device communicates with
 				</Label>
 			</Field>
 
-			<Field id="address" type="textfield">
+			<Field id="address" type="textfield" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
 				<Label>Base MQTT Topic:</Label>
 			</Field>
-			<Field id="address-description" type="label" alignWithControl="true" fontColor="darkgray">
+			<Field id="address-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
 				<Label>The base address of the device
 				</Label>
 			</Field>
 
-			<Field id="message-type" type="textfield">
+			<Field id="message-type" type="textfield" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
 				<Label>Message Type:</Label>
 			</Field>
-			<Field id="message-type-description" type="label" alignWithControl="true" fontColor="darkgray">
+			<Field id="message-type-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
 				<Label>The message type from an MQTTConnector trigger that will be delivering messages for this device
+				</Label>
+			</Field>
+
+			<Field id="discovered-mac-address" type="menu" visibleBindingId="is-blu-model" visibleBindingValue="true">
+				<Label>Discovered MAC Addresses:</Label>
+				<List class="self" method="get_discovered_blu_addresses" dynamicReload="true"/>
+				<CallbackMethod>select_discovered_blu_address</CallbackMethod>
+			</Field>
+
+			<Field id="refresh" type="button" visibleBindingId="is-blu-model" visibleBindingValue="true">
+				<Title>Refresh</Title>
+				<Label>Refresh discovery data:</Label>
+				<CallbackMethod>refresh</CallbackMethod>
+			</Field>
+
+			<Field id="mac-address" type="textfield" visibleBindingId="is-blu-model" visibleBindingValue="true">
+				<Label>MAC Address:</Label>
+			</Field>
+			<Field id="mac-address-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="is-blu-model" visibleBindingValue="true">
+				<Label>The device's MAC address. This value will override a discovered address selection.
 				</Label>
 			</Field>
 
@@ -112,6 +138,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -355,6 +386,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -971,6 +1007,18 @@
 				<Title>Write Configuration</Title>
 				<CallbackMethod>_write_humidity_configuration</CallbackMethod>
 			</Field>
+		</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.DoorWindow" id="shelly-blu-doorwindow">
+		<Name>Shelly BLU Door/Window</Name>
+		<ConfigUI>
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsOnState" defaultValue="true" hidden="true" />
+            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
 		</ConfigUI>
 		<States>
 		</States>
