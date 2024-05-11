@@ -30,6 +30,7 @@
 					<Option value="shelly-pro-4-pm">Shelly Pro 4 PM</Option>
 					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-blu-doorwindow">Shelly BLU Door/Window</Option>
+					<Option value="shelly-blu-button1">Shelly BLU Button1</Option>
 				</List>
 				<CallbackMethod>deviceFactoryModelChanged</CallbackMethod>
 			</Field>
@@ -1012,6 +1013,13 @@
 		</States>
 	</Device>
 
+	<Device type="dimmer" id="component-cover">
+		<Name>Cover Component</Name>
+		<ConfigUI>
+
+		</ConfigUI>
+	</Device>
+
 	<Device type="sensor" subType="kSensorDeviceSubType.DoorWindow" id="shelly-blu-doorwindow">
 		<Name>Shelly BLU Door/Window</Name>
 		<ConfigUI>
@@ -1024,10 +1032,15 @@
 		</States>
 	</Device>
 
-	<Device type="dimmer" id="component-cover">
-		<Name>Cover Component</Name>
+	<Device type="sensor" id="shelly-blu-button1">
+		<Name>Shelly BLU Button1</Name>
 		<ConfigUI>
-
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
 		</ConfigUI>
+		<States>
+		</States>
 	</Device>
 </Devices>
