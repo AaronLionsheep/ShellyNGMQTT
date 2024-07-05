@@ -10,7 +10,7 @@
 					<Option value="shelly-plus-1">Shelly Plus 1 (mini)</Option>
 					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM (mini)</Option>
 					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
-					<Option value="shelly-plus-walldimmer">%%disabled:Shelly Plus WallDimmer (Coming Soon!)%%</Option>
+					<Option value="shelly-plus-walldimmer">Shelly Plus WallDimmer (Coming Soon!)</Option>
 					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-i-4">Shelly Plus I4/I4DC</Option>
 					<Option value="-1">%%separator%%</Option>
@@ -179,6 +179,55 @@
 
 	<Device type="sensor" id="shelly-plus-2-pm">
 		<Name>Shelly Plus 2 PM</Name>
+		<ConfigUI>
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
+            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+
+			<Field id="settings-section" type="menu" defaultValue="indigo">
+				<Label>Configuration Section:</Label>
+				<List>
+					<Option value="indigo">Indigo</Option>
+					<Option value="-1">%%separator%%</Option>
+					<Option value="system">System</Option>
+					<Option value="wifi">WiFi</Option>
+					<Option value="ble">BLE</Option>
+				</List>
+			</Field>
+
+			<!-- Indigo -->
+
+			<Field id="indigo-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="indigo"/>
+
+			<Field id="broker-id" type="menu" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>MQTT Broker:</Label>
+				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
+			</Field>
+
+			<Field id="address" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>Base MQTT Topic:</Label>
+			</Field>
+
+			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>Message Type:</Label>
+			</Field>
+
+			<!-- System -->
+			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
+
+			<!-- WiFi -->
+			<Template file="ConfigTemplates/ConfigureWifi.xml"/>
+
+			<!-- BLE -->
+			<Template file="ConfigTemplates/ConfigureBLE.xml"/>
+
+		</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" id="shelly-plus-walldimmer">
+		<Name>Shelly Plus WallDimmer</Name>
 		<ConfigUI>
             <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
             <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
@@ -981,5 +1030,110 @@
 		<ConfigUI>
 
 		</ConfigUI>
+	</Device>
+
+	<Device type="dimmer" id="component-light">
+		<Name>Light Component</Name>
+		<ConfigUI>
+			<Field type="checkbox" id="SupportsEnergyMeter" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsPowerMeter" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsEnergyMeterCurPower" defaultValue="false" hidden="true" />
+
+			<Field id="name" type="textfield">
+				<Label>Name:</Label>
+			</Field>
+
+			<Field id="in-mode" type="menu" defaultValue="follow">
+				<Label>Input Mode:</Label>
+				<List>
+					<Option value="follow">Follow</Option>
+					<Option value="flip">Flip</Option>
+					<Option value="activate">Activate</Option>
+					<Option value="detached">Detached</Option>
+					<Option value="dim">Dim</Option>
+				</List>
+			</Field>
+
+			<Field id="in-mode-follow-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Follow: the state of the switch is the same as the state of the input (e.g. when the input is off then the switch is off)</Label>
+			</Field>
+			<Field id="in-mode-flip-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Flip: change of the state of the input causes change of the state of the switch (e.g. when input is toggled the switch is also)</Label>
+			</Field>
+			<Field id="in-mode-detached-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Detached: the state of the input doesn't affect the state of the switch (fully independent)</Label>
+			</Field>
+
+			<Field id="initial-state" type="menu" defaultValue="follow">
+				<Label>Initial State:</Label>
+				<List>
+					<Option value="off">Off</Option>
+					<Option value="on">On</Option>
+					<Option value="restore_last">Restore Last</Option>
+				</List>
+			</Field>
+
+			<Field id="light-sep-1" type="separator"/>
+
+			<Field type="checkbox" id="auto-on" defaultValue="false">
+				<Label>Auto-On:</Label>
+				<Description>if the "Automatic On" function is enabled</Description>
+			</Field>
+
+			<Field id="auto-on-delay" type="textfield">
+				<Label>Auto-On Delay:</Label>
+			</Field>
+			<Field id="auto-on-delay-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>seconds to pass until the component is switched back on</Label>
+			</Field>
+
+			<Field type="checkbox" id="auto-off" defaultValue="false">
+				<Label>Auto-Off:</Label>
+				<Description>if the "Automatic Off" function is enabled</Description>
+			</Field>
+
+			<Field id="auto-off-delay" type="textfield">
+				<Label>Auto-Off Delay:</Label>
+			</Field>
+			<Field id="auto-off-delay-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Seconds to pass until the component is switched back off</Label>
+			</Field>
+
+			<Field id="light-sep-2" type="separator"/>
+
+			<Field id="power-limit" type="textfield">
+				<Label>Power Limit:</Label>
+			</Field>
+			<Field id="power-limit-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Limit (in Watts) over which overpower condition occurs (PM devices only)</Label>
+			</Field>
+
+			<Field id="voltage-limit" type="textfield">
+				<Label>Voltage Limit:</Label>
+			</Field>
+			<Field id="voltage-limit-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Limit (in Volts) over which overvoltage condition occurs (PM devices only)</Label>
+			</Field>
+
+			<Field id="current-limit" type="textfield">
+				<Label>Current Limit:</Label>
+			</Field>
+			<Field id="current-limit-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Limit (in Amperes) over which overcurrent condition occurs (PM devices only)</Label>
+			</Field>
+
+			<Field id="light-config-write-sep" type="separator"/>
+
+			<Field id="light-config-write-help" type="label" fontColor="darkgray">
+				<Label>Write the current configuration to the device for this switch only. Be mindful about empty fields and check the log for error messages.</Label>
+			</Field>
+
+			<Field id="light-config-write" type="button" tooltip="Click this button to write the switch configuration">
+				<Title>Write Configuration</Title>
+				<CallbackMethod>_write_light_configuration</CallbackMethod>
+			</Field>
+		</ConfigUI>
+		<States>
+		</States>
 	</Device>
 </Devices>
