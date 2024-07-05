@@ -11,6 +11,7 @@ from shelly.devices.ShellyBLUButton1 import ShellyBLUButton1
 from shelly.devices.ShellyPlus1 import ShellyPlus1
 from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
 from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
+from shelly.devices.ShellyPlusWallDimmer import ShellyPlusWallDimmer
 from shelly.devices.ShellyPlusI4 import ShellyPlusI4
 from shelly.devices.ShellyPlusHT import ShellyPlusHT
 from shelly.devices.ShellyPlusPlug import ShellyPlusPlug
@@ -28,6 +29,7 @@ shelly_model_classes = {
     'shelly-plus-1': ShellyPlus1,
     'shelly-plus-1-pm': ShellyPlus1PM,
     'shelly-plus-2-pm': ShellyPlus2PM,
+    'shelly-plus-walldimmer': ShellyPlusWallDimmer,
     'shelly-plus-i-4': ShellyPlusI4,
     'shelly-plus-ht': ShellyPlusHT,
     'shelly-plus-plug': ShellyPlusPlug,
