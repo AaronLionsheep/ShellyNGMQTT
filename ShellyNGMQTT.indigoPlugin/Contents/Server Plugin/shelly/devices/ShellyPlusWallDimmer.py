@@ -6,6 +6,7 @@ from ..components.system.system import System
 from ..components.system.wifi import WiFi
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
+from ..components.system.script import Script
 
 
 class ShellyPlusWallDimmer(Shelly):
@@ -22,7 +23,8 @@ class ShellyPlusWallDimmer(Shelly):
             'system': System(self),
             'wifi': WiFi(self),
             'ble': BLE(self),
-            'mqtt': MQTT(self)
+            'mqtt': MQTT(self),
+            'script': Script(self)
         }
 
         self.switch = self.register_component(Light, "Light", props={
