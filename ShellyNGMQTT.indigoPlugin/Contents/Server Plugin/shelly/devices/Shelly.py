@@ -324,8 +324,9 @@ class Shelly(object):
                     else:
                         component_type = component
 
-                    event = e.get('event', None)
-                    self.handle_notify_event(component_type, instance_id, event)
+                    e["name"] = e["event"]
+                    del e["event"]
+                    self.handle_notify_event(component_type, instance_id, e)
 
         return None
 
@@ -357,7 +358,7 @@ class Shelly(object):
         if component:
             component.handle_notify_event(event)
         else:
-            self.logger.warning("'{}': Unable to find component (component_type={}, comp_id={}) to pass event '{}' to!".format(self.device.name, component_type, instance_id, event))
+            self.logger.warning("'{}': Unable to find component (component_type={}, comp_id={}) to pass event '{}' to!".format(self.device.name, component_type, instance_id, event["name"]))
 
     def handle_action(self, action):
         """
@@ -462,7 +463,8 @@ class Shelly(object):
                 continue
             if component_type is not None and component.component_type != component_type:
                 continue
-            if component.comp_id != comp_id:
+            # Special case: let a component with id -1 handle any comp_id message
+            if component.comp_id != -1 and component.comp_id != comp_id:
                 continue
             # Made it this far, so all criteria matched
             return component

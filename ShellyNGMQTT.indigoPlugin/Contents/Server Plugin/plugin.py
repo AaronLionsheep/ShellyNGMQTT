@@ -1,9 +1,13 @@
 import indigo
 import logging
+import re
 
 from queue import Queue
 
 from shelly.devices.Shelly import Shelly
+from shelly.devices.ShellyBLU import ShellyBLU
+from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
+from shelly.devices.ShellyBLUButton1 import ShellyBLUButton1
 from shelly.devices.ShellyPlus1 import ShellyPlus1
 from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
 from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
@@ -20,6 +24,8 @@ from shelly.devices.ShellyPro2PM import ShellyPro2PM
 from shelly.devices.ShellyPro4PM import ShellyPro4PM
 
 shelly_model_classes = {
+    'shelly-blu-doorwindow': ShellyBLUDoorWindow,
+    'shelly-blu-button1': ShellyBLUButton1,
     'shelly-plus-1': ShellyPlus1,
     'shelly-plus-1-pm': ShellyPlus1PM,
     'shelly-plus-2-pm': ShellyPlus2PM,
@@ -60,6 +66,12 @@ class Plugin(indigo.PluginBase):
         # }
         self.broker_device_topics = {}
 
+        self.discovered_blu_addresses = set()
+        """The set of discovered BLU addresses"""
+
+        self.blu_address_device: dict[str, int] = {}
+        """Mapping from a BLU address to the indigo device id"""
+
     def startup(self):
         """
 
@@ -71,6 +83,7 @@ class Plugin(indigo.PluginBase):
             exit(-1)
         indigo.server.subscribeToBroadcast("com.flyingdiver.indigoplugin.mqtt",
                                            "com.flyingdiver.indigoplugin.mqtt-message_queued", "message_handler")
+        self.logger.info(self.pluginFolderPath)
 
     def shutdown(self):
         pass
@@ -165,28 +178,37 @@ class Plugin(indigo.PluginBase):
             shelly = model_class(device.id)
             self.shellies[device.id] = shelly
 
-            # Check that the device has a broker and an address
-            if shelly.get_broker_id() is None or shelly.get_address() is None:
-                # Ensure the device has a broker and address
-                self.logger.error("broker-id: \"{}\" address: \"{}\"".format(shelly.get_broker_id(), shelly.get_address()))
-                self.logger.error("\"{}\" is not properly setup! Check the broker and topic root.".format(device.name))
-                return False
+            if device.deviceTypeId.startswith("shelly-blu"):
+                # Ensure the BLU device has a MAC address defined
+                if shelly.get_address() is None:
+                    self.logger.error(f"'{device.name}' is not properly setup! Address is unknown.")
+                    return
+                
+                # Track the device associated with the BLU address
+                self.blu_address_device[shelly.get_address()] = device.id
+            else:
+                # Check that the device has a broker and an address
+                if shelly.get_broker_id() is None or shelly.get_address() is None:
+                    # Ensure the device has a broker and address
+                    self.logger.error("broker-id: \"{}\" address: \"{}\"".format(shelly.get_broker_id(), shelly.get_address()))
+                    self.logger.error("\"{}\" is not properly setup! Check the broker and topic root.".format(device.name))
+                    return False
 
-            # ensure that deviceSubscriptions has a dictionary of subscriptions for the broker
-            if shelly.get_broker_id() not in self.broker_device_topics:
-                self.broker_device_topics[shelly.get_broker_id()] = {}
+                # ensure that deviceSubscriptions has a dictionary of subscriptions for the broker
+                if shelly.get_broker_id() not in self.broker_device_topics:
+                    self.broker_device_topics[shelly.get_broker_id()] = {}
 
-            # Add the device id to each topic list
-            broker_topics = self.broker_device_topics[shelly.get_broker_id()]
-            for topic in shelly.get_topics():
-                # See if there is a list of devices already listening to this subscription
-                if topic not in broker_topics:
-                    # initialize a new list of devices for this subscription
-                    broker_topics[topic] = []
-                broker_topics[topic].append(shelly.device.id)
+                # Add the device id to each topic list
+                broker_topics = self.broker_device_topics[shelly.get_broker_id()]
+                for topic in shelly.get_topics():
+                    # See if there is a list of devices already listening to this subscription
+                    if topic not in broker_topics:
+                        # initialize a new list of devices for this subscription
+                        broker_topics[topic] = []
+                    broker_topics[topic].append(shelly.device.id)
 
-            # Store the message type
-            self.message_types.append(shelly.get_message_type())
+                # Store the message type
+                self.message_types.append(shelly.get_message_type())
         else:
             # This is a component device starting
             # if none of the devices in the device group are in self.shellies yet,
@@ -217,6 +239,8 @@ class Plugin(indigo.PluginBase):
         # Update the config at the end if it is the main device
         if device.id in self.shellies:
             shelly = self.shellies[device.id]
+            if isinstance(shelly, ShellyBLU):
+                return
             shelly.get_config()
 
             # Get the status of all components across sub-devices
@@ -233,18 +257,19 @@ class Plugin(indigo.PluginBase):
         if device.id in self.shellies:
             shelly = self.shellies[device.id]
 
-            # make sure that the device's broker has subscriptions
-            if shelly.get_broker_id() in self.broker_device_topics:
-                broker_topics = self.broker_device_topics[shelly.get_broker_id()]
-                for topic in shelly.get_topics():
-                    if topic in broker_topics and shelly.device.id in broker_topics[topic]:
-                        broker_topics[topic].remove(shelly.device.id)
+            if isinstance(shelly, Shelly):
+                # make sure that the device's broker has subscriptions
+                if shelly.get_broker_id() in self.broker_device_topics:
+                    broker_topics = self.broker_device_topics[shelly.get_broker_id()]
+                    for topic in shelly.get_topics():
+                        if topic in broker_topics and shelly.device.id in broker_topics[topic]:
+                            broker_topics[topic].remove(shelly.device.id)
 
-                # remove the broker key if there are no more devices using it
-                if len(broker_topics) == 0:
-                    del self.broker_device_topics[shelly.get_broker_id()]
+                    # remove the broker key if there are no more devices using it
+                    if len(broker_topics) == 0:
+                        del self.broker_device_topics[shelly.get_broker_id()]
 
-            self.message_types.remove(shelly.get_message_type())
+                self.message_types.remove(shelly.get_message_type())
 
             try:
                 del self.shellies[device.id]
@@ -269,7 +294,7 @@ class Plugin(indigo.PluginBase):
         if new_dev.deviceTypeId in shelly_model_classes:
             # The final device is a main device, so it needs to be restarted
             # if any of the MQTT information changes
-            restart_fields = ["broker-id", "address", "message-type"]
+            restart_fields = ["broker-id", "address", "message-type", "blu-relay"]
             for field in restart_fields:
                 if new_dev.pluginProps.get(field, None) != orig_dev.pluginProps.get(field, None):
                     return True
@@ -318,12 +343,22 @@ class Plugin(indigo.PluginBase):
                 main_device = device
                 break
 
-        if main_device is not None:
-            values_dict['shelly-model'] = main_device.deviceTypeId
-            values_dict['broker-id'] = main_device.pluginProps['broker-id']
-            values_dict['address'] = main_device.pluginProps['address']
-            values_dict['message-type'] = main_device.pluginProps['message-type']
-            values_dict['is-initial-setup'] = main_device.pluginProps.get('is-initial-setup', False)
+        if main_device is None:
+            return values_dict, errors_dict
+        
+        values_dict['shelly-model'] = main_device.deviceTypeId
+        values_dict['is-initial-setup'] = main_device.pluginProps.get('is-initial-setup', False)
+
+        if main_device.deviceTypeId.startswith("shelly-blu"):
+            values_dict['is-mqtt-model'] = False
+            values_dict['is-blu-model'] = True
+            values_dict['mac-address'] = main_device.pluginProps.get('address')
+        else:
+            values_dict['is-mqtt-model'] = True
+            values_dict['is-blu-model'] = False
+            values_dict['broker-id'] = main_device.pluginProps.get('broker-id')
+            values_dict['address'] = main_device.pluginProps.get('address')
+            values_dict['message-type'] = main_device.pluginProps.get('message-type')
 
         return values_dict, errors_dict
 
@@ -355,20 +390,29 @@ class Plugin(indigo.PluginBase):
                     valid = False
                     errors_dict['shelly-model'] = "You can not change the main model!"
 
-        # Ensure a broker is selected
-        if values_dict['broker-id'] == "":
-            valid = False
-            errors_dict['broker-id'] = "You must select the broker the device will connect to!"
+        if values_dict.get("is-mqtt-model", True):
+            # Ensure a broker is selected
+            if values_dict['broker-id'] == "":
+                valid = False
+                errors_dict['broker-id'] = "You must select the broker the device will connect to!"
 
-        # Ensure the device address is supplied
-        if values_dict['address'] == "":
-            valid = False
-            errors_dict['address'] = "You must specify the base device address!"
+            # Ensure the device address is supplied
+            if values_dict['address'] == "":
+                valid = False
+                errors_dict['address'] = "You must specify the base device address!"
 
-        # Ensure the message type is supplied
-        if values_dict['message-type'] == "":
-            valid = False
-            errors_dict['message-type'] = "You must specify the message type for the device!"
+            # Ensure the message type is supplied
+            if values_dict['message-type'] == "":
+                valid = False
+                errors_dict['message-type'] = "You must specify the message type for the device!"
+        elif values_dict.get("is-blu-model", False):
+            address = values_dict.get("mac-address", None)
+            if not address:
+                errors_dict["mac-address"] = "You must specify a MAC address!"
+                valid = False
+            elif not re.match(r"^[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}$", address.lower()):
+                errors_dict["mac-address"] = "MAC address does not match format! ex: 38:39:8f:a0:1d:a6"
+                valid = False
 
         return valid, values_dict, errors_dict
 
@@ -412,42 +456,85 @@ class Plugin(indigo.PluginBase):
         if model_class is None:
             self.logger.error("Unable to find class for device with type: '{}'".format(shelly_model))
 
-        main_device = None
-        device_props = {
-            'broker-id': values_dict["broker-id"],
-            'address': values_dict["address"],
-            'message-type': values_dict["message-type"],
-            'is-initial-setup': False
-        }
-        if model_class.display_name not in group_models:
-            # The main device is not in the group, so create one
-            main_device = indigo.device.create(
-                indigo.kProtocol.Plugin,
-                name=values_dict["initial-name"] or None,
-                deviceTypeId=shelly_model,
-                props=device_props
-            )
-            main_device.model = model_class.display_name
-            main_device.replaceOnServer()
+        if shelly_model.startswith("shelly-blu"):
+            main_device = None
+            device_props = {
+                'address': values_dict["mac-address"],
+                'is-initial-setup': False
+            }
+            if model_class.display_name not in group_models:
+                # The main device is not in the group, so create one
+                main_device = indigo.device.create(
+                    indigo.kProtocol.Plugin,
+                    name=values_dict["initial-name"] or None,
+                    deviceTypeId=shelly_model,
+                    props=device_props
+                )
+                main_device.model = model_class.display_name
+                main_device.replaceOnServer()
+            else:
+                # Find the main device in the group
+                for dev_id in dev_id_list:
+                    main_device = indigo.devices[dev_id]
+                    if main_device.deviceTypeId == shelly_model:
+                        break
+            
+            # Make sure we actually have a main device
+            if main_device is None:
+                self.logger.error("Unable to create or find the main device!")
+                return
+
+            # Update the device properties from the factory UI
+            main_device.replacePluginPropsOnServer(device_props)
+
+            # Initialize the device and its components to populate the already opened UI
+            model_class(main_device.id)
         else:
-            # Find the main device in the group
-            for dev_id in dev_id_list:
-                main_device = indigo.devices[dev_id]
-                if main_device.deviceTypeId == shelly_model:
-                    break
+            main_device = None
+            device_props = {
+                'broker-id': values_dict["broker-id"],
+                'address': values_dict["address"],
+                'message-type': values_dict["message-type"],
+                'is-initial-setup': False
+            }
+            if model_class.display_name not in group_models:
+                # The main device is not in the group, so create one
+                main_device = indigo.device.create(
+                    indigo.kProtocol.Plugin,
+                    name=values_dict["initial-name"] or None,
+                    deviceTypeId=shelly_model,
+                    props=device_props
+                )
+                main_device.model = model_class.display_name
+                main_device.replaceOnServer()
+            else:
+                # Find the main device in the group
+                for dev_id in dev_id_list:
+                    main_device = indigo.devices[dev_id]
+                    if main_device.deviceTypeId == shelly_model:
+                        break
 
-        # Make sure we actually have a main device
-        if main_device is None:
-            self.logger.error("Unable to create or find the main device!")
-            return
+            # Make sure we actually have a main device
+            if main_device is None:
+                self.logger.error("Unable to create or find the main device!")
+                return
 
-        # Update the device properties from the factory UI
-        main_device.replacePluginPropsOnServer(device_props)
+            # Update the device properties from the factory UI
+            main_device.replacePluginPropsOnServer(device_props)
 
-        # Initialize the device and its components to populate the already opened UI
-        model_class(main_device.id)
-
-        return
+            # Initialize the device and its components to populate the already opened UI
+            model_class(main_device.id)
+    
+    def deviceFactoryModelChanged(self, valuesDict, typeId, devId):
+        model:str = valuesDict.get("shelly-model", "")
+        if model.startswith("shelly-blu"):
+            valuesDict["is-mqtt-model"] = False
+            valuesDict["is-blu-model"] = True
+        else:
+            valuesDict["is-mqtt-model"] = True
+            valuesDict["is-blu-model"] = False
+        
+        return valuesDict
 
     def validateDeviceConfigUi(self, values_dict, type_id, dev_id):
         """
@@ -609,6 +696,22 @@ class Plugin(indigo.PluginBase):
 
         brokers.sort(key=lambda tup: tup[1])
         return brokers
+    
+    def get_discovered_blu_addresses(self, filter="", valuesDict=None, typeId="", targetId=0):
+        addresses = []
+        if len(self.discovered_blu_addresses) == 0:
+            addresses.append(("none", "%%disabled:No discovered BLU devices%%"))
+        else:
+            for address in self.discovered_blu_addresses:
+                addresses.append((address, address))
+        return addresses
+    
+    def refresh(self, valuesDict, typeId, devId):
+        return valuesDict
+    
+    def select_discovered_blu_address(self, valuesDict, typeId, devId):
+        valuesDict["mac-address"] = valuesDict.get("discovered-mac-address", "")
+        return valuesDict
 
     def get_component(self, device):
         """
@@ -619,6 +722,8 @@ class Plugin(indigo.PluginBase):
         """
 
         for shelly in self.shellies.values():
+            if not isinstance(shelly, Shelly):
+                continue
             component = shelly.get_component_for_device(device)
             if component is not None:
                 return component
