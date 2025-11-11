@@ -38,29 +38,29 @@ class Script(Component):
                 script_data = script_file.read()
 
             if not script_data:
-                self.logger.error("Problem reading script data!")
+                self.logger.error("Problem reading script data from plugin!")
                 return
             else:
-                self.logger.info(f"Read {len(script_data)} bytes of script data")
+                self.logger.debug(f"Read {len(script_data)} bytes of script data")
 
             def inspect_scripts(list_response, error=None):
                 if error:
-                    self.logger.error(f"Unable to get current device scripts: {error['message']}")
+                    self.logger.error(f"Unable to get current device scripts for {self.shelly.device.name}: {error['message']}")
                     return
 
                 scripts = list_response.get("scripts", [])
                 for script in scripts:
                     if script["name"] == script_name:
-                        self.logger.info(f"Found existing script {script}")
+                        self.logger.debug(f"Found existing BLU Relay script for {self.shelly.device.name}: {script}")
                         upload(script)
                         return
                 
-                self.logger.info("Creating new script...")
+                self.logger.info(f"Creating new BLU Relay script on {self.shelly.device.name}...")
                 self.create(script_name, upload)
 
             def upload(script, error=None):
                 if error:
-                    self.logger.error(f"Unable to get/create script: {error['message']}")
+                    self.logger.error(f"Unable to get/create script for {self.shelly.device.name}: {error['message']}")
                     return
                 
                 id = script["id"]
@@ -68,15 +68,15 @@ class Script(Component):
 
             def enable_and_start(script, error=None):
                 if error:
-                    self.logger.error(f"Unable to upload script: {error['message']}")
+                    self.logger.error(f"Unable to upload script to {self.shelly.device.name}: {error['message']}")
                     return
                 
                 id = script["id"]
-                self.logger.info("Configuring script...")
+                self.logger.debug(f"Configuring BLU Relay script on {self.shelly.device.name}...")
 
                 def start(response, error=None):
                     if error:
-                        self.logger.error(f"Unable to set script config: {error['message']}")
+                        self.logger.error(f"Unable to set BLU Relay script config on {self.shelly.device.name}: {error['message']}")
                         return
                     
                     self.start(id, callback=complete)
@@ -85,10 +85,10 @@ class Script(Component):
 
             def complete(response, error=None):
                 if error:
-                    self.logger.error(f"Error occurred during script management: {error['message']}")
+                    self.logger.error(f"Error occurred during BLU Relay script management on {self.shelly.device.name}: {error['message']}")
                     return
                 
-                self.logger.info("Script is synced, running, and configured to run at device boot")
+                self.logger.info(f"BLU Relay script is synced, running, and configured to run at device boot for {self.shelly.device.name}")
 
             self.list(inspect_scripts)
 
@@ -178,7 +178,7 @@ class Script(Component):
         Multiple chunks must be uploaded if the total code length is greater than 1024
         bytes. The script must also be stopped.
         """
-        self.logger.info(f"Uploading {len(code)} bytes to script:{id}...")
+        self.logger.debug(f"Uploading {len(code)} bytes to script:{id} on {self.shelly.device.name}...")
         self.shelly.publish_rpc(
             "Script.PutCode",
             {
@@ -201,6 +201,11 @@ class Script(Component):
                 "code": code[i:i+chunk_size]
             })
 
+        progress = {
+            "total_bytes": len(code),
+            "uploaded_bytes": 0
+        }
+
         def upload_chunks(status, error=None):
             if error:
                 self.logger.error(f"Unable to upload script data chunk: {error['message']}")
@@ -212,6 +217,10 @@ class Script(Component):
                 append = chunk_id != 0
                 code = chunk["code"]
                 self.put_code(id, code=code, append=append, callback=upload_chunks)
+
+                progress["uploaded_bytes"] += len(code)
+                progress_pct = progress["uploaded_bytes"] / progress["total_bytes"]
+                self.logger.info(f"Syncing script:{id} on {self.shelly.device.name}... ({progress_pct:.0f}%)")
             elif callback:
                 callback({"id": id})
 
