@@ -3,7 +3,7 @@ import os
 
 from ..component import Component
 
-from ...devices.ShellyBLU import ShellyBLU
+from ...devices.ShellyBLU import ShellyBLU, BLEPacketAlreadyProcessed
 
 from typing import TypedDict
 
@@ -234,4 +234,7 @@ class Script(Component):
             if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
                 return
 
-            shelly_blu.process_packet(packet)
+            try:
+                shelly_blu.process_packet(packet)
+            except BLEPacketAlreadyProcessed:
+                return

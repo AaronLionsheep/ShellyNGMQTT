@@ -4,6 +4,10 @@ import logging
 import uuid
 
 
+class BLEPacketAlreadyProcessed(Exception):
+    """A BLE Packet was already processed."""
+    ...
+
 class ShellyBLU(object):
     """
     Base class used by all Shelly BLU model classes.
@@ -75,9 +79,10 @@ class ShellyBLU(object):
         return indigo.PluginBase.getDeviceDisplayStateId(indigo.activePlugin, self.device)
     
     def process_packet(self, packet: dict):
-        if packet.get("pid", -1) == self.device.states.get("pid", -1):
+        pid = packet.get("pid", -1)
+        if pid == self.device.states.get("pid", -1):
             self.logger.debug(f"Not processing duplicated packet: {packet}")
-            return
+            raise BLEPacketAlreadyProcessed(f"BLE packet (pid={pid}) already processed!")
 
         state_updates = []
 
