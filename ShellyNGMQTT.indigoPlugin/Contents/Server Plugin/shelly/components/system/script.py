@@ -222,7 +222,7 @@ class Script(Component):
 
         if event.get("name", "") == "shelly-blu":
             packet = event.get("data", {})
-            self.logger.info(f"{self.shelly.device.name}:{event['name']}: {packet}")
+            self.logger.debug(f"{self.shelly.device.name}:{event['name']}: {packet}")
             address = packet.get("address", None)
             indigo.activePlugin.discovered_blu_addresses.add(address)
 
