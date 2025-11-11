@@ -672,12 +672,18 @@ class Plugin(indigo.PluginBase):
         :return:
         """
         _shellies = []
-        for dev in indigo.devices.iter("self"):
-            device = self.shellies.get(dev.id, None)
-            if device and isinstance(device, Shelly):
-                _shellies.append((dev.id, dev.name))
+        if filter:
+            types = [cat.strip() for cat in filter.split(",")]
+            for dev_type in types:
+                for dev in indigo.devices.iter(dev_type):
+                    _shellies.append((dev.id, dev.name))
+        else:
+            for dev in indigo.devices.iter("self"):
+                device = self.shellies.get(dev.id, None)
+                if device and isinstance(device, Shelly):
+                    _shellies.append((dev.id, dev.name))
 
-        _shellies.sort(key=lambda tup: tup[1])
+        _shellies.sort(key=lambda d: d[1])
         return _shellies
 
     def get_broker_devices(self, filter="", valuesDict=None, typeId="", targetId=0):
