@@ -30,7 +30,7 @@ class Script(Component):
         super(Script, self).__init__(shelly, comp_id=-1)
 
         if shelly.device.pluginProps.get("blu-relay", False):
-            self.logger.info(f"Enabling relay for {shelly.device.name}...")
+            self.logger.info(f"Enabling BLU Relay on {shelly.device.name}...")
             script_name = "indigo-blu-relay.js"
             script_path = os.path.join(indigo.activePlugin.pluginFolderPath, "Contents", "Resources", script_name)
             script_data = None
@@ -125,7 +125,7 @@ class Script(Component):
         self.shelly.publish_rpc("Script.GetStatus", {"id": id}, callback)
 
     def process_status(self, status):
-        self.logger.info(f"{self.shelly.device.name} script status: {status}")
+        self.logger.debug(f"{self.shelly.device.name} script status: {status}")
 
     def get_config(self, id: int = -1, callback=None):
         """
@@ -219,7 +219,7 @@ class Script(Component):
                 self.put_code(id, code=code, append=append, callback=upload_chunks)
 
                 progress["uploaded_bytes"] += len(code)
-                progress_pct = progress["uploaded_bytes"] / progress["total_bytes"]
+                progress_pct = progress["uploaded_bytes"] / progress["total_bytes"] * 100
                 self.logger.info(f"Syncing script:{id} on {self.shelly.device.name}... ({progress_pct:.0f}%)")
             elif callback:
                 callback({"id": id})
