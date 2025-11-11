@@ -38,7 +38,7 @@
         <ConfigUI>
             <Field id="device-id" type="menu">
                 <Label>Device:</Label>
-                <List class="indigo.devices" filter="self.component-input"/>
+                <List class="indigo.devices" filter="self.component-input,self.shelly-blu-button1"/>
             </Field>
         </ConfigUI>
     </Event>
@@ -48,7 +48,7 @@
         <ConfigUI>
             <Field id="device-id" type="menu">
                 <Label>Device:</Label>
-                <List class="indigo.devices" filter="self.component-input"/>
+                <List class="indigo.devices" filter="self.component-input,self.shelly-blu-button1"/>
             </Field>
         </ConfigUI>
     </Event>
@@ -58,7 +58,7 @@
         <ConfigUI>
             <Field id="device-id" type="menu">
                 <Label>Device:</Label>
-                <List class="indigo.devices" filter="self.component-input"/>
+                <List class="indigo.devices" filter="self.component-input,self.shelly-blu-button1"/>
             </Field>
         </ConfigUI>
     </Event>
