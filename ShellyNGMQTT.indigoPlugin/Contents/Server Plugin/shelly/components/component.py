@@ -112,14 +112,13 @@ class Component(object):
         :param event: The event from the device.
         :return: None
         """
-
         # Fire any triggers matching this event for the device associated with the component
         for trigger in indigo.activePlugin.triggers.values():
-            if trigger.pluginTypeId == event.replace('_', '-') and int(trigger.pluginProps.get('device-id', -1)) == self.device.id:
+            if trigger.pluginTypeId == event["name"].replace('_', '-') and int(trigger.pluginProps.get('device-id', -1)) == self.device.id:
                 indigo.trigger.execute(trigger)
 
         # Handle base events
-        if event == "config_changed":
+        if event["name"] == "config_changed":
             self.get_config()
 
     def handle_notify_status(self, status):
@@ -129,7 +128,7 @@ class Component(object):
         :return:
         """
 
-        raise NotImplementedError
+        raise NotImplementedError("No default implementation for handle_notify_status")
 
     def get_status(self):
         """
@@ -137,7 +136,7 @@ class Component(object):
         :return:
         """
 
-        raise NotImplementedError
+        raise NotImplementedError("No default implementation for get_status")
 
     def process_status(self, status):
         """
@@ -147,7 +146,7 @@ class Component(object):
         :return:
         """
 
-        raise NotImplementedError
+        raise NotImplementedError("No default implementation for process_status")
 
     def get_config(self):
         """
@@ -155,7 +154,7 @@ class Component(object):
         :return:
         """
 
-        raise NotImplementedError
+        raise NotImplementedError("No default implementation for get_config")
 
     def process_config(self, config, error=None):
         """
@@ -165,7 +164,7 @@ class Component(object):
         :return:
         """
 
-        raise NotImplementedError
+        raise NotImplementedError("No default implementation for process_config")
 
     def set_config(self, config):
         """
@@ -174,7 +173,7 @@ class Component(object):
         :return:
         """
 
-        raise NotImplementedError
+        raise NotImplementedError("No default implementation for set_config")
 
     def process_set_config(self, status, error=None):
         """
@@ -184,4 +183,4 @@ class Component(object):
         :return:
         """
 
-        raise NotImplementedError
+        raise NotImplementedError("No default implementation for process_set_config")
