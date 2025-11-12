@@ -42,8 +42,8 @@ class ShellyBLUDistance(ShellyBLU):
         state_updates.append({'key': "batteryLevel", 'value': packet.get("battery", 0)})
 
         if self.device.pluginProps.get("measure-contents-level"):
-            container_height = self.device.pluginProps.get("measure-contents-level-container-height", 0)
-            sensor_height = self.device.pluginProps.get("measure-contents-level-sensor-height", 0)            
+            container_height = int(self.device.pluginProps.get("measure-contents-level-container-height", 0))
+            sensor_height = int(self.device.pluginProps.get("measure-contents-level-sensor-height", 0))
 
             contents_height = sensor_height - distance
             contents_level = round(contents_height / container_height * 100)
