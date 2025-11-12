@@ -219,7 +219,8 @@ let CONFIG = {
   
     unpackedData.rssi = result.rssi;
     unpackedData.address = result.addr;
-    unpackedData._raw = data;
+    unpackedData.service_data = btoh(data);
+    unpackedData.local_name = result.local_name;
   
     emitData(unpackedData);
   }
