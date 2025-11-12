@@ -31,6 +31,7 @@
 					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-blu-doorwindow">Shelly BLU Door/Window</Option>
 					<Option value="shelly-blu-button1">Shelly BLU Button1</Option>
+					<Option value="shelly-blu-distance">Shelly BLU Distance</Option>
 				</List>
 				<CallbackMethod>deviceFactoryModelChanged</CallbackMethod>
 			</Field>
@@ -1098,7 +1099,48 @@
             <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
             <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
 			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
-    </ConfigUI>
+    	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" id="shelly-blu-distance">
+		<Name>Shelly BLU Distance</Name>
+		<ConfigUI>
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsSensorValue" defaultValue="true" hidden="true" />
+			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
+
+			<Field id="offset" type="textfield">
+				<Label>Offset (mm):</Label>
+			</Field>
+			<Field id="adjustment-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>A positive or negative integer (in mm) to adjust the sensor reading by.</Label>
+			</Field>
+
+			<Field id="measure-contents-level" type="checkbox" defaultValue="false">
+				<Label>Measure Level:</Label>
+				<Description>Measure the level of contents in a container</Description>
+			</Field>
+			<Field id="measure-contents-level-help" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>Instead of measuring the distance to the contents in a container, measure how full the container is.</Label>
+			</Field>
+
+			<Field id="measure-contents-level-container-height" type="textfield" visibleBindingId="measure-contents-level" visibleBindingValue="true">
+				<Label>Container Height (mm):</Label>
+			</Field>
+			<Field id="measure-contents-level-container-height-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="measure-contents-level-container-height" visibleBindingValue="true">
+				<Label>The height of the container</Label>
+			</Field>
+
+			<Field id="measure-contents-level-sensor-height" type="textfield" visibleBindingId="measure-contents-level" visibleBindingValue="true">
+				<Label>Sensor Height (mm):</Label>
+			</Field>
+			<Field id="measure-contents-level-sensor-height-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="measure-contents-level-container-height" visibleBindingValue="true">
+				<Label>The height of the sensor above the bottom of the container. This will be the same value as "Container Height" unless the sensor is mounted above the top of the container.</Label>
+			</Field>
+    	</ConfigUI>
 		<States>
 		</States>
 	</Device>
