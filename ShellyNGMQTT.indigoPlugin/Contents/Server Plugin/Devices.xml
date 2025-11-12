@@ -1127,17 +1127,17 @@
 				<Label>Instead of measuring the distance to the contents in a container, measure how full the container is.</Label>
 			</Field>
 
-			<Field id="measure-contents-level-container-height" type="textfield" visibleBindingId="measure-contents-level" visibleBindingValue="true">
+			<Field id="measure-contents-level-container-height" type="textfield" visibleBindingId="measure-contents-level" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
 				<Label>Container Height (mm):</Label>
 			</Field>
-			<Field id="measure-contents-level-container-height-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="measure-contents-level-container-height" visibleBindingValue="true">
+			<Field id="measure-contents-level-container-height-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="measure-contents-level" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
 				<Label>The height of the container</Label>
 			</Field>
 
-			<Field id="measure-contents-level-sensor-height" type="textfield" visibleBindingId="measure-contents-level" visibleBindingValue="true">
+			<Field id="measure-contents-level-sensor-height" type="textfield" visibleBindingId="measure-contents-level" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
 				<Label>Sensor Height (mm):</Label>
 			</Field>
-			<Field id="measure-contents-level-sensor-height-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="measure-contents-level-container-height" visibleBindingValue="true">
+			<Field id="measure-contents-level-sensor-height-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="measure-contents-level" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
 				<Label>The height of the sensor above the bottom of the container. This will be the same value as "Container Height" unless the sensor is mounted above the top of the container.</Label>
 			</Field>
     	</ConfigUI>
