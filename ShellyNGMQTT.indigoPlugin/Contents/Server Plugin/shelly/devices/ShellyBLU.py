@@ -1,7 +1,4 @@
 import indigo # noqa
-import json
-import logging
-import uuid
 
 from .Shelly import Shelly
 
@@ -10,7 +7,7 @@ class BLEPacketAlreadyProcessed(Exception):
     """A BLE Packet was already processed."""
     ...
 
-class ShellyBLU(object):
+class ShellyBLU(Shelly):
     """
     Base class used by all Shelly BLU model classes.
     """
@@ -22,7 +19,7 @@ class ShellyBLU(object):
 
         :param device_id: The indigo device id.
         """
-        super(Shelly, self).__init__(device_id)
+        super(ShellyBLU, self).__init__(device_id)
 
     @property
     def device(self):

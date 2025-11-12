@@ -18,7 +18,7 @@ class ShellyMQTT(Shelly):
 
         :param device_id: The indigo device id.
         """
-        super(Shelly, self).__init__(device_id)
+        super(ShellyMQTT, self).__init__(device_id)
 
         self.functional_components = []
         self.system_components = {}
