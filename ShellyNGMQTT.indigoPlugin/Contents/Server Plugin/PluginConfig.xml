@@ -16,4 +16,12 @@
     <Field id="notice-log-device-activity" type="label" fontSize="small" fontColor="darkGrey">
         <Label>Device activity includes turning on/off a device, adjusting brightness, and similar actions.</Label>
     </Field>
+
+    <Field type="checkbox" id="debug-ble-activity" defaultValue="false">
+	    <Label>Debug BLE Activity:</Label>
+	    <Description>Enable log entries related to BLE activity</Description>
+    </Field>
+    <Field id="notice-debug-ble-activity" type="label" fontSize="small" fontColor="darkGrey">
+        <Label>Print all BLE messages to the info log for easier BLE debugging.</Label>
+    </Field>
 </PluginConfig>
