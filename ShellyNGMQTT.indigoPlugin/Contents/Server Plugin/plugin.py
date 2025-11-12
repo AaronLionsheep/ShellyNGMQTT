@@ -622,7 +622,9 @@ class Plugin(indigo.PluginBase):
         """
         shelly = self.shellies.get(device.id, None)
         if shelly:
-            return shelly.get_device_state_list()
+            states = shelly.get_device_state_list()
+            self.logger.info(f"getDeviceStateList() for '{device.name}': {states}")
+            return states
         else:
             component = self.get_component(device)
             if component:
