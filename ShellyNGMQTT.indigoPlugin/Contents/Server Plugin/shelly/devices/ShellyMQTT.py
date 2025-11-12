@@ -91,7 +91,7 @@ class ShellyMQTT(Shelly):
 
         :return: The device state list.
         """
-        states = super(Shelly, self).get_device_state_list()
+        states = super(ShellyMQTT, self).get_device_state_list()
         states.extend([
             indigo.activePlugin.getDeviceStateDictForBoolYesNoType("online", "Online", "Online"),
             indigo.activePlugin.getDeviceStateDictForStringType("ip-address", "IP Address", "IP Address"),

@@ -49,7 +49,7 @@ class ShellyBLU(Shelly):
 
         :return: The device state list.
         """
-        states = super(Shelly, self).get_device_state_list()
+        states = super(ShellyBLU, self).get_device_state_list()
         states.extend ([
             indigo.activePlugin.getDeviceStateDictForBoolTrueFalseType("encryption", "Encryption", "Encryption"),
             indigo.activePlugin.getDeviceStateDictForNumberType("bthome-version", "BTHome Version", "BTHome Version"),
