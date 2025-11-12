@@ -1,6 +1,6 @@
 import indigo
 
-from .Shelly import Shelly
+from .ShellyMQTT import ShellyMQTT
 from ..components.functional.temperature import Temperature
 from ..components.functional.humidity import Humidity
 from ..components.system.system import System
@@ -11,7 +11,7 @@ from ..components.system.device_power import DevicePower
 from ..components.system.ht_ui import HT_UI
 
 
-class ShellyPlusHT(Shelly):
+class ShellyPlusHT(ShellyMQTT):
     """
     Creates a Shelly Plus HT device class.
     """

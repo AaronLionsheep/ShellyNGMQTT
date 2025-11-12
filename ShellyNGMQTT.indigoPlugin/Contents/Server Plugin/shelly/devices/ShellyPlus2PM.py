@@ -1,6 +1,6 @@
 import indigo
 
-from .Shelly import Shelly
+from .ShellyMQTT import ShellyMQTT
 from ..components.functional.switch import Switch
 from ..components.functional.input import Input
 from ..components.system.system import System
@@ -10,7 +10,7 @@ from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
 
 
-class ShellyPlus2PM(Shelly):
+class ShellyPlus2PM(ShellyMQTT):
     """
     Creates a Shelly Plus 1 PM device class.
     """

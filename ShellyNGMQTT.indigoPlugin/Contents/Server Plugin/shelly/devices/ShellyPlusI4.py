@@ -1,6 +1,6 @@
 import indigo
 
-from .Shelly import Shelly
+from .ShellyMQTT import ShellyMQTT
 from ..components.functional.input import Input
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
@@ -8,7 +8,7 @@ from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
 
 
-class ShellyPlusI4(Shelly):
+class ShellyPlusI4(ShellyMQTT):
     """
     Creates a Shelly Plus I4 device class.
     """

@@ -3,6 +3,8 @@ import json
 import logging
 import uuid
 
+from .Shelly import Shelly
+
 
 class BLEPacketAlreadyProcessed(Exception):
     """A BLE Packet was already processed."""
@@ -20,12 +22,7 @@ class ShellyBLU(object):
 
         :param device_id: The indigo device id.
         """
-
-        self.device_id = device_id
-        self._device = None
-        self.logger = logging.getLogger("Plugin.ShellyNGMQTT")
-
-        self.device.updateStateImageOnServer(indigo.kStateImageSel.NoImage)
+        super(Shelly, self).__init__(device_id)
 
     @property
     def device(self):
@@ -39,13 +36,6 @@ class ShellyBLU(object):
         if device is not None:
             self._device = device
         return self._device
-    
-    def get_address(self):
-        address = self.device.pluginProps.get('address', None)
-        if not address or address == '':
-            return None
-
-        return address
     
     def get_device_state_list(self):
         """
@@ -62,21 +52,15 @@ class ShellyBLU(object):
 
         :return: The device state list.
         """
-        return [
+        states = super(Shelly, self).get_device_state_list()
+        states.extend ([
             indigo.activePlugin.getDeviceStateDictForBoolTrueFalseType("encryption", "Encryption", "Encryption"),
             indigo.activePlugin.getDeviceStateDictForNumberType("bthome-version", "BTHome Version", "BTHome Version"),
             indigo.activePlugin.getDeviceStateDictForNumberType("pid", "Last Packet ID", "Last Packet ID"),
             indigo.activePlugin.getDeviceStateDictForNumberType("rssi", "rssi", "rssi"),
             indigo.activePlugin.getDeviceStateDictForStringType("address", "MAC Address", "MAC Address")
-        ]
-    
-    def get_device_display_state_id(self):
-        """
-        Determine which device state should be shown in the device list.
-
-        :return: The state name.
-        """
-        return indigo.PluginBase.getDeviceDisplayStateId(indigo.activePlugin, self.device)
+        ])
+        return states
     
     def process_packet(self, packet: dict):
         pid = packet.get("pid", -1)

@@ -5,6 +5,7 @@ import re
 from queue import Queue
 
 from shelly.devices.Shelly import Shelly
+from shelly.devices.ShellyMQTT import ShellyMQTT
 from shelly.devices.ShellyBLU import ShellyBLU
 from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
 from shelly.devices.ShellyBLUButton1 import ShellyBLUButton1
@@ -259,7 +260,7 @@ class Plugin(indigo.PluginBase):
         if device.id in self.shellies:
             shelly = self.shellies[device.id]
 
-            if isinstance(shelly, Shelly):
+            if isinstance(shelly, ShellyMQTT):
                 # make sure that the device's broker has subscriptions
                 if shelly.get_broker_id() in self.broker_device_topics:
                     broker_topics = self.broker_device_topics[shelly.get_broker_id()]

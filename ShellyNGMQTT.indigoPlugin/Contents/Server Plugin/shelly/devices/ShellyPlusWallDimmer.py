@@ -1,6 +1,6 @@
 import indigo
 
-from .Shelly import Shelly
+from .ShellyMQTT import ShellyMQTT
 from ..components.functional.light import Light
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
@@ -9,7 +9,7 @@ from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
 
 
-class ShellyPlusWallDimmer(Shelly):
+class ShellyPlusWallDimmer(ShellyMQTT):
     """
     Creates a Shelly Plus WallDimmer device class.
     """
