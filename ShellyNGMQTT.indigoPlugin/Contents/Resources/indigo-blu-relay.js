@@ -84,9 +84,12 @@ let CONFIG = {
   BTH[0x03] = { n: "humidity", t: uint16, f: 0.01, u: "%" };
   BTH[0x05] = { n: "illuminance", t: uint24, f: 0.01 };
   BTH[0x21] = { n: "motion", t: uint8 };
+  BTH[0x2c] = { n: "vibration", t: uint8 };
   BTH[0x2d] = { n: "window", t: uint8 };
   BTH[0x3a] = { n: "button", t: uint8 };
   BTH[0x3f] = { n: "rotation", t: int16, f: 0.1 };
+  BTH[0x40] = { n: "distance_mm", t: int16 };
+  BTH[0x41] = { n: "distance_m", t: int16, f: 0.1 };
   
   function getByteSize(type) {
     if (type === uint8 || type === int8) return 1;
@@ -194,9 +197,8 @@ let CONFIG = {
       return;
     }
   
-    let unpackedData = BTHomeDecoder.unpack(
-      result.service_data[BTHOME_SVC_ID_STR]
-    );
+    let data = result.service_data[BTHOME_SVC_ID_STR];
+    let unpackedData = BTHomeDecoder.unpack(data);
   
     //exit if unpacked data is null or the device is encrypted
     if (
@@ -217,6 +219,8 @@ let CONFIG = {
   
     unpackedData.rssi = result.rssi;
     unpackedData.address = result.addr;
+    unpackedData.service_data = btoh(data);
+    unpackedData.local_name = result.local_name;
   
     emitData(unpackedData);
   }

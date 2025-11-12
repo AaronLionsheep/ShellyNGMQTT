@@ -231,7 +231,11 @@ class Script(Component):
 
         if event.get("name", "") == "shelly-blu":
             packet = event.get("data", {})
+
+            if indigo.activePlugin.pluginPrefs.get('debug-ble-activity', False):
+                self.logger.info(f"BLE activity relayed via {self.shelly.device.name}: {packet}")
             self.logger.debug(f"{self.shelly.device.name}:{event['name']}: {packet}")
+            
             address = packet.get("address", None)
             indigo.activePlugin.discovered_blu_addresses.add(address)
 
