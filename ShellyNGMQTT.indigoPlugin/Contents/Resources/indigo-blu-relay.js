@@ -86,10 +86,12 @@ let CONFIG = {
   BTH[0x21] = { n: "motion", t: uint8 };
   BTH[0x2c] = { n: "vibration", t: uint8 };
   BTH[0x2d] = { n: "window", t: uint8 };
+  BTH[0x2e] = { n: "humidity", t: uint8, u: "%" };
   BTH[0x3a] = { n: "button", t: uint8 };
   BTH[0x3f] = { n: "rotation", t: int16, f: 0.1 };
   BTH[0x40] = { n: "distance_mm", t: int16 };
   BTH[0x41] = { n: "distance_m", t: int16, f: 0.1 };
+  BTH[0x45] = { n: "temperature", t: int16, f: 0.1, u: "tC" };
   
   function getByteSize(type) {
     if (type === uint8 || type === int8) return 1;
