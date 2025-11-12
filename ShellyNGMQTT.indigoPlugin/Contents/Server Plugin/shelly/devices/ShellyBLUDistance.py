@@ -35,7 +35,7 @@ class ShellyBLUDistance(ShellyBLU):
         state_updates = []
 
         distance = packet.get("distance_mm", 0)
-        distance += int(self.device.pluginProps.get("offset", 0))
+        distance += int(self.device.pluginProps.get("offset") or 0)
 
         state_updates.append({'key': "vibration", 'value': packet.get("vibration", 0) == 1})
         state_updates.append({'key': "distance", 'value': distance, 'uiValue': f"{distance} mm"})
