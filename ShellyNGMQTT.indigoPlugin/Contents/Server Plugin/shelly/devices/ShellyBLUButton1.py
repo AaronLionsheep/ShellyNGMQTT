@@ -39,10 +39,18 @@ class ShellyBLUButton1(ShellyBLU):
         self.device.updateStatesOnServer(state_updates)
 
         # Fire any triggers matching this event for the device associated with the component
+        button_code = packet.get("button")
+        if button_code is None:
+            self.logger.error(f"Malformed packet data: 'button' key was not present!")
+        if not isinstance(button_code, int):
+            self.logger.error(f"Malformed packet data: 'button' key did not contain an integer! Found: {button_code} ({type(button_code)})")
+        if button_code < 0:
+            self.logger.error(f"Malformed packet data: 'button' key found unexpected value ({button_code})!")
+
         try:
-            trigger_type = ["single-push", "double-push", "triple-push", "long-push"][packet.get("button", -999) - 1]
+            trigger_type = [None, "single-push", "double-push", "triple-push", "long-push"][button_code]
             for trigger in indigo.activePlugin.triggers.values():
                 if trigger.pluginTypeId == trigger_type and int(trigger.pluginProps.get('device-id', -1)) == self.device.id:
                     indigo.trigger.execute(trigger)
         except IndexError:
-            self.logger.error(f"Unknown button event for button value: {packet.get('button', -1)}")
+            self.logger.error(f"Unknown button event for button value: {button_code}")
