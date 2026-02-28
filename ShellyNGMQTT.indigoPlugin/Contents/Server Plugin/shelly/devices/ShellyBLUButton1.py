@@ -42,10 +42,13 @@ class ShellyBLUButton1(ShellyBLU):
         button_code = packet.get("button")
         if button_code is None:
             self.logger.error(f"Malformed packet data: 'button' key was not present!")
+            return
         if not isinstance(button_code, int):
             self.logger.error(f"Malformed packet data: 'button' key did not contain an integer! Found: {button_code} ({type(button_code)})")
+            return
         if button_code < 0:
             self.logger.error(f"Malformed packet data: 'button' key found unexpected value ({button_code})!")
+            return
 
         try:
             trigger_type = [None, "single-push", "double-push", "triple-push", "long-push"][button_code]
