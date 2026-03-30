@@ -28,7 +28,7 @@ class Shelly(object):
                 device = indigo.devices[dev_id]
                 self.component_devices[device.model] = device
 
-        self.device.updateStateImageOnServer(indigo.kStateImageSel.NoImage)
+        self.update_state_image()
 
     @property
     def device(self):
@@ -124,7 +124,7 @@ class Shelly(object):
 
         :return:
         """
-        return None
+        self.device.updateStateImageOnServer(indigo.kStateImageSel.NoImage)
 
     def handle_action(self, action):
         """
