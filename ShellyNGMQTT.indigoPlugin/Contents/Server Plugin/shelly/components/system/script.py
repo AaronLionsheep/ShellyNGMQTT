@@ -3,7 +3,7 @@ import os
 
 from ..component import Component
 
-from ...devices.ShellyBLU import ShellyBLU, BLEPacketAlreadyProcessed
+from ...devices.ShellyBLU import ShellyBLU, BLEPacketAlreadyProcessed, BLERelayPacket
 
 from typing import TypedDict
 
@@ -229,25 +229,25 @@ class Script(Component):
     def handle_notify_event(self, event):
         super(Script, self).handle_notify_event(event)
 
-        if event.get("name", "") == "shelly-blu":
-            packet = event.get("data", {})
+        if event.get("name") == "shelly-blu":
+            event_data = event.get("data", {})
+            address = event_data.get("address")
+            timestamp = event["ts"]
 
-            if indigo.activePlugin.pluginPrefs.get('debug-ble-activity', False):
-                self.logger.info(f"BLE activity relayed via {self.shelly.device.name}: {packet}")
-            self.logger.debug(f"{self.shelly.device.name}:{event['name']}: {packet}")
-            
-            address = packet.get("address", None)
             indigo.activePlugin.discovered_blu_addresses.add(address)
 
-            shelly_blu_dev_id = indigo.activePlugin.blu_address_device.get(address, None)
+            if indigo.activePlugin.pluginPrefs.get('debug-ble-activity', False):
+                self.logger.info(f"BLE activity relayed via {self.shelly.device.name}: {event_data}")
+            self.logger.debug(f"{self.shelly.device.name}:{event['name']}: {event_data}")
+            
+
+            shelly_blu_dev_id = indigo.activePlugin.blu_address_device.get(address)
             if not shelly_blu_dev_id:
                 return
             
-            shelly_blu = indigo.activePlugin.shellies.get(shelly_blu_dev_id, None)
+            shelly_blu = indigo.activePlugin.shellies.get(shelly_blu_dev_id)
             if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
                 return
 
-            try:
-                shelly_blu.process_packet(packet)
-            except BLEPacketAlreadyProcessed:
-                return
+            packet = BLERelayPacket.from_mqtt_event(timestamp=timestamp, event_data=event_data)
+            shelly_blu.handle_ble_relay_packet(packet)

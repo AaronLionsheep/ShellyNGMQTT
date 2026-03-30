@@ -1,0 +1,10 @@
+name: shellyngmqtt-dev
+channels:
+  - conda-forge
+dependencies:
+  - python ~=3.11.0
+  - ruff
+  - pytest
+  - pip
+  - pip:
+    - -r ShellyNGMQTT.indigoPlugin/Contents/Server\ Plugin/requirements.txt
