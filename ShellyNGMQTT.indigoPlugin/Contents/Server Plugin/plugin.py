@@ -156,7 +156,6 @@ class Plugin(indigo.PluginBase):
                 dev_ids = device_topics.get(topic, list())  # get devices listening on this broker for this topic
                 for dev_id in dev_ids:
                     shelly = self.shellies.get(dev_id, None)
-                    self.logger.debug(shelly)
                     if shelly is not None and message_type == shelly.get_message_type():
                         # Send this message data to the shelly object
                         shelly.handle_message(topic, payload)
@@ -529,7 +528,7 @@ class Plugin(indigo.PluginBase):
             model_class(main_device.id)
     
     def deviceFactoryModelChanged(self, valuesDict, typeId, devId):
-        model:str = valuesDict.get("shelly-model", "")
+        model: str = valuesDict.get("shelly-model", "")
         if model.startswith("shelly-blu"):
             valuesDict["is-mqtt-model"] = False
             valuesDict["is-blu-model"] = True
@@ -707,13 +706,33 @@ class Plugin(indigo.PluginBase):
         return brokers
     
     def get_discovered_blu_addresses(self, filter="", valuesDict=None, typeId="", targetId=0):
-        addresses = []
         if len(self.discovered_blu_addresses) == 0:
-            addresses.append(("none", "%%disabled:No discovered BLU devices%%"))
-        else:
-            for address in self.discovered_blu_addresses:
-                addresses.append((address, address))
-        return addresses
+            return [("none", "%%disabled:No discovered BLU devices%%")]
+        
+        identified_addresses = []
+        unidentified_addresses = []
+
+        for address in self.discovered_blu_addresses:
+            blu_device_id = self.blu_address_device.get(address)
+            if not blu_device_id:
+                unidentified_addresses.append((address, address))
+                continue
+
+            shelly = self.shellies[blu_device_id]
+            identified_addresses.append((address, f"{address} - {shelly.device.name}"))
+
+        if len(identified_addresses) == 0:
+            identified_addresses = [("none", "%%disabled:None%%")]
+        if len(unidentified_addresses) == 0:
+            unidentified_addresses = [("none", "%%disabled:None%%")]
+
+        return [
+            ("none", "%%disabled:Unidentified BLE Addresses%%"),
+            *unidentified_addresses,
+            ("none", "%%separator%%"),
+            ("none", "%%disabled:Identified BLE Addresses%%"),
+            *identified_addresses
+        ]
     
     def refresh(self, valuesDict, typeId, devId):
         return valuesDict
