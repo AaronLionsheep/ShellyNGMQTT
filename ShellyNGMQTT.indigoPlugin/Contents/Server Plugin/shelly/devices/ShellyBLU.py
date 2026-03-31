@@ -2,11 +2,13 @@ import indigo # noqa
 
 from bthome_ble.parser import BTHomeBluetoothDeviceData, UuidType
 from habluetooth import BluetoothServiceInfoBleak
-from typing import Any
+from typing import Any, Final
 from dataclasses import dataclass
+from contextlib import contextmanager
 
 from .Shelly import Shelly
 
+_UNSET: Final = object()
 
 @dataclass
 class BLERelayPacket:
@@ -44,6 +46,17 @@ class BLEData:
     rssi: int
     sensors: dict[str, Any]
     events: dict[str, Any]
+
+    @contextmanager
+    def sensor(self, name: str, required: bool = False, default: Any = _UNSET):
+        if name not in self.sensors:
+            if required:
+                raise KeyError(f"Sensor '{name}' not found in BLE Data")
+            
+            if default is not _UNSET:
+                yield default
+        else:
+            yield self.sensors[name]
 
 
 class BLEPacketAlreadyProcessed(Exception):
@@ -146,6 +159,8 @@ class ShellyBLU(Shelly):
         """
         Process BLE data.
         """
+        self.logger.info(data)
+
         state_updates = []
         state_updates.append({'key': "pid", 'value': data.sensors.get("packet_id", -1)})
         state_updates.append({'key': "rssi", 'value': data.rssi})
