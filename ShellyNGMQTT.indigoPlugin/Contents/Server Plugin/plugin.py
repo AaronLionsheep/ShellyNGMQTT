@@ -492,7 +492,9 @@ class Plugin(indigo.PluginBase):
                 return
 
             # Update the device properties from the factory UI
-            main_device.replacePluginPropsOnServer(device_props)
+            props = main_device.pluginProps
+            props.update(device_props)
+            main_device.replacePluginPropsOnServer(props)
 
             # Initialize the device and its components to populate the already opened UI
             model_class(main_device.id)
