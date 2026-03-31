@@ -79,6 +79,11 @@ class ShellyBLU(Shelly):
         super(ShellyBLU, self).__init__(device_id)
         self.ble = BTHomeBluetoothDeviceData()
 
+    @classmethod
+    def plugin_props(cls) -> dict[str, Any]:
+        """Default pluginProps that all devices of this class will have."""
+        return {}
+
     @property
     def device(self):
         """

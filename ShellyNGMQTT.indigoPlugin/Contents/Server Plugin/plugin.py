@@ -180,7 +180,7 @@ class Plugin(indigo.PluginBase):
             shelly = model_class(device.id)
             self.shellies[device.id] = shelly
 
-            if device.deviceTypeId.startswith("shelly-blu"):
+            if issubclass(model_class, ShellyBLU):
                 # Ensure the BLU device has a MAC address defined
                 if shelly.get_address() is None:
                     self.logger.error(f"'{device.name}' is not properly setup! Address is unknown.")
@@ -188,6 +188,11 @@ class Plugin(indigo.PluginBase):
                 
                 # Track the device associated with the BLU address
                 self.blu_address_device[shelly.get_address()] = device.id
+
+                # Update any plugin props on the device
+                props = device.pluginProps
+                props.update(model_class.plugin_props())
+                device.replacePluginPropsOnServer(props)
             else:
                 # Check that the device has a broker and an address
                 if shelly.get_broker_id() is None or shelly.get_address() is None:
@@ -458,7 +463,7 @@ class Plugin(indigo.PluginBase):
         if model_class is None:
             self.logger.error("Unable to find class for device with type: '{}'".format(shelly_model))
 
-        if shelly_model.startswith("shelly-blu"):
+        if issubclass(model_class, ShellyBLU):
             main_device = None
             device_props = {
                 'address': values_dict["mac-address"],
