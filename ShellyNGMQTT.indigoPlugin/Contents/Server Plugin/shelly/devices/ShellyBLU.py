@@ -1,4 +1,4 @@
-import indigo # noqa
+import indigo # pyright: ignore[reportMissingModuleSource]
 
 from bthome_ble.parser import BTHomeBluetoothDeviceData, UuidType
 from habluetooth import BluetoothServiceInfoBleak
