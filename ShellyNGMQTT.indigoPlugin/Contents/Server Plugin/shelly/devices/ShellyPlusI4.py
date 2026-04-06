@@ -1,4 +1,4 @@
-import indigo
+import indigo # pyright: ignore[reportMissingModuleSource]
 
 from .ShellyMQTT import ShellyMQTT
 from ..components.functional.input import Input

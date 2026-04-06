@@ -1,4 +1,4 @@
-import indigo # noqa
+import indigo # pyright: ignore[reportMissingModuleSource]
 import json
 import logging
 import uuid
