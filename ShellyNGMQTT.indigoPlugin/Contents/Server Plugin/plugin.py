@@ -10,6 +10,7 @@ from shelly.devices.ShellyBLU import ShellyBLU
 from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
 from shelly.devices.ShellyBLUButton1 import ShellyBLUButton1
 from shelly.devices.ShellyBLUDistance import ShellyBLUDistance
+from shelly.devices.ShellyBLUHT import ShellyBLUHT
 from shelly.devices.ShellyBLUMotion import ShellyBLUMotion
 from shelly.devices.ShellyPlus1 import ShellyPlus1
 from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
@@ -30,6 +31,7 @@ shelly_model_classes = {
     'shelly-blu-doorwindow': ShellyBLUDoorWindow,
     'shelly-blu-button1': ShellyBLUButton1,
     'shelly-blu-distance': ShellyBLUDistance,
+    'shelly-blu-ht': ShellyBLUHT,
     'shelly-blu-motion': ShellyBLUMotion,
     'shelly-plus-1': ShellyPlus1,
     'shelly-plus-1-pm': ShellyPlus1PM,
