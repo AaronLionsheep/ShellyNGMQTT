@@ -49,11 +49,11 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" --log install.log
+        pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" --report install.json
 
     # Require all packages from from pre-build wheels, except for bluetooth-data-tools and PyRIC
     # - A package that no longer provides a binary should be investigated (ex: openssl dropping macos-x64 support)
     # - A new package that does not include a binary should be known since this may complicate plugin installation
     - name: Audit dependencies built from source
       run: |
-        grep "Created wheel for" install.log
+        jq '.install[] | select(.download_info.vcs_info != null) | .metadata.name' install.json
