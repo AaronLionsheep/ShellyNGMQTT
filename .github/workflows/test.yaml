@@ -35,7 +35,7 @@ jobs:
     name: Install Dependencies
     strategy:
       matrix:
-        os: [macos-26, macos-26-intel]
+        os: [macos-15, macos-15-intel, macos-26, macos-26-intel]
         python: [3.11, 3.13]
     runs-on: ${{ matrix.os }}
     steps:
@@ -46,10 +46,7 @@ jobs:
       uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
       with:
         python-version: ${{ matrix.python }}
-    
-    # Require all packages from from pre-build wheels, except for bluetooth-data-tools and PyRIC
-    # - A package that no longer provides a binary should be investigated (ex: openssl dropping macos-x64 support)
-    # - A new package that does not include a binary should be known since this may complicate plugin installation
+
     - name: Install dependencies
       run: |
-        pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" --only-binary :all: --no-binary=bluetooth-data-tools,PyRIC
+        pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" --log install.log
