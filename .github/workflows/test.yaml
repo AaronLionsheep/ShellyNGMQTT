@@ -56,4 +56,4 @@ jobs:
     # - A new package that does not include a binary should be known since this may complicate plugin installation
     - name: Audit dependencies built from source
       run: |
-        grep "Building wheel for" install.log
+        grep "Created wheel for" install.log
