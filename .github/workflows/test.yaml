@@ -54,4 +54,4 @@ jobs:
     - name: Check for compiled dependencies
       run: |
         # Compiling cryptography can be messy
-        grep -v "Building wheel for cryptography" install.log
+        grep -v -q "Created wheel for cryptography" install.log
