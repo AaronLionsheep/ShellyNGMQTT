@@ -47,7 +47,9 @@ jobs:
       with:
         python-version: ${{ matrix.python }}
     
+    # Require all packages from from pre-build wheels, except for bluetooth-data-tools and PyRIC
+    # - A package that no longer provides a binary should be investigated (ex: openssl dropping macos-x64 support)
+    # - A new package that does not include a binary should be known since this may complicate plugin installation
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt"
+        pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" --only-binary :all: --no-binary=bluetooth-data-tools,PyRIC
