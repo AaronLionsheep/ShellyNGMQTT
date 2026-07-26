@@ -50,3 +50,8 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" --log install.log
+
+    - name: Check for compiled dependencies
+      run: |
+        # Compiling cryptography can be messy
+        grep -v "Building wheel for cryptography" install.log
