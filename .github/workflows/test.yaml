@@ -56,4 +56,5 @@ jobs:
     # - A new package that does not include a binary should be known since this may complicate plugin installation
     - name: Audit dependencies built from source
       run: |
+        jq install.json
         jq '.install[] | select(.download_info.vcs_info != null) | .metadata.name' install.json
