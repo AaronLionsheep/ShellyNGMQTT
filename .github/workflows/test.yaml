@@ -5,7 +5,7 @@ on:
 
 defaults:
   run:
-    shell: bash -el {0}
+    shell: bash
 
 jobs:
   unit:
@@ -28,10 +28,10 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        run: python -m pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" pytest-cov git+https://github.com/AaronLionsheep/pytest-indigo.git@skeleton
+        run: pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" pytest-cov git+https://github.com/AaronLionsheep/pytest-indigo.git@skeleton
       
       - name: Test
-        run: python -m pytest
+        run: pytest
 
   install-dependencies:
     name: Install Dependencies
