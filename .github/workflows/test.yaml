@@ -69,5 +69,5 @@ jobs:
           ]
         ' install.json)
         
-        echo Compiled packages: $COMPILED
+        echo "Packages compiled unexpectedly: $COMPILED"
         echo "$COMPILED" | jq -e '. == []'

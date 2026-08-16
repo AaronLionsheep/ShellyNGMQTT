@@ -8,8 +8,6 @@ from contextlib import contextmanager
 
 from .Shelly import Shelly
 
-_UNSET: Final = object()
-
 @dataclass
 class BLERelayPacket:
     """A BLE packet relayed from another device."""
@@ -47,14 +45,15 @@ class BLEData:
     sensors: dict[str, Any]
     events: dict[str, Any]
 
+    # I don't recall why this is a contextmanager.
+    # I think it was only to make readability better when parsing each sensor value.
     @contextmanager
     def sensor(self, name: str, required: bool = False, default: Any = _UNSET):
         if name not in self.sensors:
             if required:
                 raise KeyError(f"Sensor '{name}' not found in BLE Data")
             
-            if default is not _UNSET:
-                yield default
+            yield default
         else:
             yield self.sensors[name]
 
