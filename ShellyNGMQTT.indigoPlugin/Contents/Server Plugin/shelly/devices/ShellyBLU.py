@@ -48,7 +48,7 @@ class BLEData:
     # I don't recall why this is a contextmanager.
     # I think it was only to make readability better when parsing each sensor value.
     @contextmanager
-    def sensor(self, name: str, required: bool = False, default: Any = _UNSET):
+    def sensor(self, name: str, required: bool = False, default: Any = None):
         if name not in self.sensors:
             if required:
                 raise KeyError(f"Sensor '{name}' not found in BLE Data")
