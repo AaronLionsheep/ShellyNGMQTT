@@ -28,7 +28,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        run: pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" git+https://github.com/AaronLionsheep/pytest-indigo.git@skeleton
+        run: pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" pytest-cov git+https://github.com/AaronLionsheep/pytest-indigo.git@skeleton
       
       - name: Test
         run: pytest
