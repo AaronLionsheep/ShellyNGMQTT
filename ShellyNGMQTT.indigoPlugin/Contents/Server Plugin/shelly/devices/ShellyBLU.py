@@ -1,16 +1,18 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
+from contextlib import contextmanager
+from dataclasses import dataclass
+from typing import Any
 
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 from bthome_ble.parser import BTHomeBluetoothDeviceData, UuidType
 from habluetooth import BluetoothServiceInfoBleak
-from typing import Any, Final
-from dataclasses import dataclass
-from contextlib import contextmanager
 
 from .Shelly import Shelly
+
 
 @dataclass
 class BLERelayPacket:
     """A BLE packet relayed from another device."""
+
     address: str
     rssi: int
     service_data: dict[str, bytes]
@@ -30,20 +32,20 @@ class BLERelayPacket:
             address=address,
             rssi=rssi,
             service_data={
-                service: bytes.fromhex(data)
-                for service, data in service_data.items()
+                service: bytes.fromhex(data) for service, data in service_data.items()
             },
-            timestamp=timestamp
+            timestamp=timestamp,
         )
 
 
 @dataclass
 class BLEData:
     """Data processed from a BLE packet."""
+
     address: str
     rssi: int
     sensors: dict[str, Any]
-    events: dict[str, Any]
+    events: dict[str, dict[str, Any]]
 
     # I don't recall why this is a contextmanager.
     # I think it was only to make readability better when parsing each sensor value.
@@ -52,7 +54,7 @@ class BLEData:
         if name not in self.sensors:
             if required:
                 raise KeyError(f"Sensor '{name}' not found in BLE Data")
-            
+
             yield default
         else:
             yield self.sensors[name]
@@ -60,7 +62,7 @@ class BLEData:
 
 class BLEPacketAlreadyProcessed(Exception):
     """A BLE Packet was already processed."""
-    ...
+
 
 
 class ShellyBLU(Shelly):
@@ -75,7 +77,7 @@ class ShellyBLU(Shelly):
 
         :param device_id: The indigo device id.
         """
-        super(ShellyBLU, self).__init__(device_id)
+        super().__init__(device_id)
         self.ble = BTHomeBluetoothDeviceData()
 
     @classmethod
@@ -83,19 +85,6 @@ class ShellyBLU(Shelly):
         """Default pluginProps that all devices of this class will have."""
         return {}
 
-    @property
-    def device(self):
-        """
-        Getter for the Indigo device.
-
-        :return: Indigo device
-        """
-        device = indigo.devices.get(self.device_id, None)
-        # Keep track of the last known device object
-        if device is not None:
-            self._device = device
-        return self._device
-    
     def get_device_state_list(self):
         """
         Build the device state list for the device.
@@ -111,32 +100,42 @@ class ShellyBLU(Shelly):
 
         :return: The device state list.
         """
-        states = super(ShellyBLU, self).get_device_state_list()
-        states.extend ([
-            indigo.activePlugin.getDeviceStateDictForNumberType("pid", "Last Packet ID", "Last Packet ID"),
-            indigo.activePlugin.getDeviceStateDictForNumberType("rssi", "Signal Strength", "Signal Strength"),
-            indigo.activePlugin.getDeviceStateDictForStringType("address", "MAC Address", "MAC Address")
-        ])
+        states = super().get_device_state_list()
+        states.extend(
+            [
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "pid", "Last Packet ID", "Last Packet ID"
+                ),
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "rssi", "Signal Strength", "Signal Strength"
+                ),
+                indigo.activePlugin.getDeviceStateDictForStringType(
+                    "address", "MAC Address", "MAC Address"
+                ),
+            ]
+        )
         return states
-    
+
     def parse_packet(self, packet: BLERelayPacket) -> BLEData:
         """
         Parse the raw BLE data from a BLE Relay packet.
         """
-        update = self.ble.update(BluetoothServiceInfoBleak(
-            name=self.device.name,
-            address=packet.address,
-            rssi=packet.rssi,
-            manufacturer_data={},
-            service_data=packet.service_data,
-            service_uuids=list(packet.service_data.keys()),
-            source="",
-            device=None, 
-            advertisement=None,
-            connectable=False,
-            time=packet.timestamp,
-            tx_power=None
-        ))
+        update = self.ble.update(
+            BluetoothServiceInfoBleak(
+                name=self.device.name,
+                address=packet.address,
+                rssi=packet.rssi,
+                manufacturer_data={},
+                service_data=packet.service_data,
+                service_uuids=list(packet.service_data.keys()),
+                source="",
+                device=None,
+                advertisement=None,
+                connectable=False,
+                time=packet.timestamp,
+                tx_power=None,
+            )
+        )
 
         return BLEData(
             address=packet.address,
@@ -149,16 +148,16 @@ class ShellyBLU(Shelly):
                 **{
                     sensor.device_key.key: sensor.native_value
                     for sensor in update.binary_entity_values.values()
-                }
+                },
             ),
             events=dict(
                 **{
-                    event.device_key.key: event.event_type
+                    event.device_key.key: {event.event_type: event.event_properties}
                     for event in update.events.values()
                 }
-            )
+            ),
         )
-    
+
     def process_ble_data(self, data: BLEData):
         """
         Process BLE data.
@@ -166,13 +165,12 @@ class ShellyBLU(Shelly):
         self.logger.info(data)
 
         state_updates = []
-        state_updates.append({'key': "pid", 'value': data.sensors.get("packet_id", -1)})
-        state_updates.append({'key': "rssi", 'value': data.rssi})
-        state_updates.append({'key': "address", 'value': data.address})
+        state_updates.append({"key": "pid", "value": data.sensors.get("packet_id", -1)})
+        state_updates.append({"key": "rssi", "value": data.rssi})
+        state_updates.append({"key": "address", "value": data.address})
         self.device.updateStatesOnServer(state_updates)
 
     def handle_ble_relay_packet(self, packet: BLERelayPacket):
         ble_data = self.parse_packet(packet)
         self.process_ble_data(ble_data)
         self.update_state_image()
-    
