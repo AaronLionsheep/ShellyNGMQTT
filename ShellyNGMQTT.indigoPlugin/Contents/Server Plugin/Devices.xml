@@ -9,6 +9,7 @@
 				<List>
 					<Option value="shelly-plus-1">Shelly Plus 1 (mini)</Option>
 					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM (mini)</Option>
+					<Option value="shelly-pm-mini">Shelly PM Mini</Option>
 					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
 					<Option value="shelly-plus-walldimmer">Shelly Plus WallDimmer (Coming Soon!)</Option>
 					<Option value="-1">%%separator%%</Option>
