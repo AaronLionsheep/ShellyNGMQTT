@@ -130,6 +130,15 @@ class Input(Component):
         :return:
         """
 
+        if error:
+            self.logger.debug("Error getting input status: {}".format(error))
+            return
+
+        if status is None:
+            # A device without this input answers the request with an error and
+            # no status, which is not a reason to take down the message loop.
+            return
+
         state = status.get('state', False)
         if state is not None:
             self.device.updateStateOnServer(key='onOffState', value=state)
