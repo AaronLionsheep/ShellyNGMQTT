@@ -160,6 +160,15 @@ class Switch(Component):
         :return:
         """
 
+        if error:
+            self.logger.debug("Error getting switch status: {}".format(error))
+            return
+
+        if status is None:
+            # A device without this component answers the request with an error
+            # and no status, which is not a reason to take down the message loop.
+            return
+
         updated_states = []
 
         # Process output
