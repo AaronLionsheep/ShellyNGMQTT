@@ -43,6 +43,18 @@ class PM1(Component):
 
         return states
 
+    def get_device_display_state_id(self):
+        """
+        Show the current power draw in the device list.
+
+        A meter has no output, so this component never writes onOffState.
+        Left to the default the device would show a permanent "off" next to a
+        live power reading, so display the measurement instead.
+
+        :return: The state name.
+        """
+        return "curEnergyLevel"
+
     def get_config(self):
         """
         Get the configuration of the power meter.

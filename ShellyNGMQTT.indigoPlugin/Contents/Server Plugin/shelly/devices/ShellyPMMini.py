@@ -30,6 +30,7 @@ class ShellyPMMini(Shelly):
         }
 
         self.pm1 = self.register_component(PM1, "PM1", props={
+            "SupportsOnState": "false",
             "SupportsPowerMeter": "true",
             "SupportsEnergyMeter": "true",
             "SupportsEnergyMeterCurPower": "true"
