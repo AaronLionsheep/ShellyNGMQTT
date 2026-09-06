@@ -4,7 +4,7 @@ function BLEScanCallback(event, result) {
   if (event !== BLE.Scanner.SCAN_RESULT) return;
   if (typeof result !== "object") return;
   if (!result.service_data || !result.service_data[BTHOME_SVC_ID]) return;
-  let data = { address: result.addr, rssi: result.rssi, service_data: {} };
+  let data = { version: 1, address: result.addr, rssi: result.rssi, service_data: {} };
   data.service_data[BTHOME_SVC_ID] = btoh(result.service_data[BTHOME_SVC_ID]);
   Shelly.emitEvent("shelly-blu", data);
 }

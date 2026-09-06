@@ -13,6 +13,7 @@ from .Shelly import Shelly
 class BLERelayPacket:
     """A BLE packet relayed from another device."""
 
+    version: int
     address: str
     rssi: int
     service_data: dict[str, bytes]
@@ -20,6 +21,7 @@ class BLERelayPacket:
 
     @classmethod
     def from_mqtt_event(cls, timestamp: float, event_data: dict):
+        version = int(event_data.get("version", 1))
         address = event_data["address"]
         rssi = event_data["rssi"]
         service_data = event_data["service_data"]
@@ -29,6 +31,7 @@ class BLERelayPacket:
             service_data[UuidType.V2.value] = service_data.pop("fcd2")
 
         return cls(
+            version=version,
             address=address,
             rssi=rssi,
             service_data={
@@ -64,13 +67,13 @@ class BLEPacketAlreadyProcessed(Exception):
     """A BLE Packet was already processed."""
 
 
-
 class ShellyBLU(Shelly):
     """
     Base class used by all Shelly BLU model classes.
     """
 
     display_name = "ShellyBLUBase"
+    button_count = 0
 
     def __init__(self, device_id):
         """Create a new Shelly BLU device.

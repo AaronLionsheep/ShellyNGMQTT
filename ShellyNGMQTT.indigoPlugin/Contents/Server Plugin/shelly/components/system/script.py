@@ -227,27 +227,47 @@ class Script(Component):
         self.stop(id, callback=upload_chunks)
 
     def handle_notify_event(self, event):
-        super(Script, self).handle_notify_event(event)
+        super().handle_notify_event(event)
+
+        # We expect the event to be a dict with well-known keys
+        if not isinstance(event, dict):
+            self.logger.error(
+                f"{self.shelly.device.name} received a malformed event."
+                f" Expected a dict, but got {type(event)}: {event}"
+            )
+            return
+
+        event_timestamp = event["ts"]
+        event_data = event.get("data", {})
 
         if event.get("name") == "shelly-blu":
-            event_data = event.get("data", {})
-            address = event_data.get("address")
-            timestamp = event["ts"]
+            if indigo.activePlugin.pluginPrefs.get("debug-ble-activity", False):
+                self.logger.info(
+                    f"BLE activity relayed via {self.shelly.device.name}: {event_data}"
+                )
+            self.logger.debug(
+                f"{self.shelly.device.name}:{event['name']}: {event_data}"
+            )
 
-            indigo.activePlugin.discovered_blu_addresses.add(address)
+            # Parse the event data
+            packet = BLERelayPacket.from_mqtt_event(
+                timestamp=event_timestamp, event_data=event_data
+            )
 
-            if indigo.activePlugin.pluginPrefs.get('debug-ble-activity', False):
-                self.logger.info(f"BLE activity relayed via {self.shelly.device.name}: {event_data}")
-            self.logger.debug(f"{self.shelly.device.name}:{event['name']}: {event_data}")
-            
+            # Track the BLE device address as having been seen
+            indigo.activePlugin.discovered_blu_addresses.add(packet.address)
 
-            shelly_blu_dev_id = indigo.activePlugin.blu_address_device.get(address)
+            # Find a device id that is linked to the BLE address
+            shelly_blu_dev_id = indigo.activePlugin.blu_address_device.get(
+                packet.address
+            )
             if not shelly_blu_dev_id:
                 return
-            
+
+            # Find the associated ShellyBLU device
             shelly_blu = indigo.activePlugin.shellies.get(shelly_blu_dev_id)
             if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
                 return
 
-            packet = BLERelayPacket.from_mqtt_event(timestamp=timestamp, event_data=event_data)
+            # Let the ShellyBLU device handle the BLU packet
             shelly_blu.handle_ble_relay_packet(packet)
