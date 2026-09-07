@@ -253,17 +253,15 @@ class Script(Component):
         event_data = event.get("data", {})
 
         if event.get("name") == "shelly-blu":
-            if indigo.activePlugin.pluginPrefs.get("debug-ble-activity", False):
-                self.logger.info(
-                    f"BLE activity relayed via {self.shelly.device.name}: {event_data}"
-                )
             self.logger.debug(
-                f"{self.shelly.device.name}:{event['name']}: {event_data}"
+                f"BLE activity relayed via {self.shelly.device.name}: {event_data}"
             )
 
             # Parse the event data
             packet = BLERelayPacket.from_mqtt_event(
-                timestamp=event_timestamp, event_data=event_data
+                relay_device_id=self.shelly.device_id,
+                timestamp=event_timestamp,
+                event_data=event_data,
             )
 
             # Track the BLE device address as having been seen

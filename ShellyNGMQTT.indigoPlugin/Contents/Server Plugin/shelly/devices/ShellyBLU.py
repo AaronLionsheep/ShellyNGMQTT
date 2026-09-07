@@ -9,18 +9,28 @@ from habluetooth import BluetoothServiceInfoBleak
 from .Shelly import Shelly
 
 
+class ServiceData(dict[str, bytes]):
+    def __repr__(self):
+        items = []
+        for key, value in self.items():
+            items.append(f"'{key}': '{value.hex()}'")
+
+        return f"{{{', '.join(items)}}}"
+
+
 @dataclass
 class BLERelayPacket:
     """A BLE packet relayed from another device."""
 
     version: int
+    relay_device_id: int
     address: str
     rssi: int
-    service_data: dict[str, bytes]
+    service_data: ServiceData
     timestamp: float
 
     @classmethod
-    def from_mqtt_event(cls, timestamp: float, event_data: dict):
+    def from_mqtt_event(cls, relay_device_id: int, timestamp: float, event_data: dict):
         version = int(event_data.get("version", 1))
         address = event_data["address"]
         rssi = event_data["rssi"]
@@ -32,11 +42,12 @@ class BLERelayPacket:
 
         return cls(
             version=version,
+            relay_device_id=relay_device_id,
             address=address,
             rssi=rssi,
-            service_data={
-                service: bytes.fromhex(data) for service, data in service_data.items()
-            },
+            service_data=ServiceData(
+                {service: bytes.fromhex(data) for service, data in service_data.items()}
+            ),
             timestamp=timestamp,
         )
 
@@ -45,10 +56,17 @@ class BLERelayPacket:
 class BLEData:
     """Data processed from a BLE packet."""
 
-    address: str
-    rssi: int
+    packet: BLERelayPacket
     sensors: dict[str, Any]
     events: dict[str, dict[str, Any]]
+
+    @property
+    def address(self) -> str:
+        return self.packet.address
+
+    @property
+    def rssi(self) -> int:
+        return self.packet.rssi
 
     # I don't recall why this is a contextmanager.
     # I think it was only to make readability better when parsing each sensor value.
@@ -61,10 +79,6 @@ class BLEData:
             yield default
         else:
             yield self.sensors[name]
-
-
-class BLEPacketAlreadyProcessed(Exception):
-    """A BLE Packet was already processed."""
 
 
 class ShellyBLU(Shelly):
@@ -129,7 +143,7 @@ class ShellyBLU(Shelly):
                 address=packet.address,
                 rssi=packet.rssi,
                 manufacturer_data={},
-                service_data=packet.service_data,
+                service_data=dict(packet.service_data),
                 service_uuids=list(packet.service_data.keys()),
                 source="",
                 device=None,
@@ -141,8 +155,7 @@ class ShellyBLU(Shelly):
         )
 
         return BLEData(
-            address=packet.address,
-            rssi=packet.rssi,
+            packet=packet,
             sensors=dict(
                 **{
                     sensor.device_key.key: sensor.native_value
@@ -165,7 +178,13 @@ class ShellyBLU(Shelly):
         """
         Process BLE data.
         """
-        self.logger.info(data)
+        if indigo.activePlugin.pluginPrefs.get("debug-ble-activity", False):
+            relay_device_name = "<Unknown>"
+            if relay_device := indigo.devices.get(data.packet.relay_device_id):
+                relay_device_name = relay_device.name
+            self.logger.info(
+                f"{self.device.name} processing BLE data from {relay_device_name} ({data.packet.rssi} dBm): sensors={data.sensors} events={data.events}"
+            )
 
         state_updates = []
         state_updates.append({"key": "pid", "value": data.sensors.get("packet_id", -1)})
