@@ -15,6 +15,7 @@ class TestBLERelayPacket:
             },
         )
         assert packet == BLERelayPacket(
+            version=1,
             address="b0:c7:de:04:1c:ff",
             rssi=-77,
             service_data={
@@ -33,6 +34,7 @@ class TestBLERelayPacket:
             },
         )
         assert packet == BLERelayPacket(
+            version=1,
             address="b0:c7:de:04:1c:ff",
             rssi=-77,
             service_data={
