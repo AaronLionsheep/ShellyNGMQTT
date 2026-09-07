@@ -1,6 +1,6 @@
-import indigo
+import indigo # pyright: ignore[reportMissingModuleSource]
 
-from .ShellyBLU import ShellyBLU
+from .ShellyBLU import ShellyBLU, BLEData
 
 
 class ShellyBLUDoorWindow(ShellyBLU):
@@ -26,22 +26,28 @@ class ShellyBLUDoorWindow(ShellyBLU):
 
         return states
     
-    def process_packet(self, packet: dict):
+    def update_state_image(self):
+        opened = self.device.states.get('onOffState', False)
+        self.device.updateStateImageOnServer(indigo.kStateImageSel.SensorTripped if opened else indigo.kStateImageSel.SensorOff)
+    
+    def process_ble_data(self, data: BLEData):
         """
         Process a BTHome data packet.
         """
-        super().process_packet(packet)
-    
+        super().process_ble_data(data)
         state_updates = []
 
-        state_updates.append({'key': "illuminance", 'value': packet.get("illuminance", -1)})
-        state_updates.append({'key': "rotation", 'value': packet.get("rotation", -1)})
-        state_updates.append({'key': "batteryLevel", 'value': packet.get("battery", 0)})
+        with data.sensor("illuminance") as illuminance:
+            state_updates.append({'key': "illuminance", 'value': illuminance})
 
-        is_open = packet.get("window", 0) == 1
-        state_updates.append({'key': "onOffState", 'value': is_open, "uiValue": "open" if is_open else "closed"})
+        with data.sensor("rotation") as rotation:
+            state_updates.append({'key': "rotation", 'value': rotation})
+
+        with data.sensor("window") as open:
+            is_open = open == 1
+            state_updates.append({'key': "onOffState", 'value': is_open, "uiValue": "open" if is_open else "closed"})
+
+        with data.sensor("battery") as battery:
+            state_updates.append({'key': "batteryLevel", 'value': battery})
 
         self.device.updateStatesOnServer(state_updates)
-
-        self.device.updateStateImageOnServer(indigo.kStateImageSel.SensorTripped if is_open else indigo.kStateImageSel.SensorOff)
-    

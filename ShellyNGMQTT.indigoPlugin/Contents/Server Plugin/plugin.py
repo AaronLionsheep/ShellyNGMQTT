@@ -1,14 +1,17 @@
-import indigo
+import indigo # pyright: ignore[reportMissingModuleSource]
 import logging
 import re
 
 from queue import Queue
 
 from shelly.devices.Shelly import Shelly
+from shelly.devices.ShellyMQTT import ShellyMQTT
 from shelly.devices.ShellyBLU import ShellyBLU
 from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
 from shelly.devices.ShellyBLUButton1 import ShellyBLUButton1
 from shelly.devices.ShellyBLUDistance import ShellyBLUDistance
+from shelly.devices.ShellyBLUHT import ShellyBLUHT
+from shelly.devices.ShellyBLUMotion import ShellyBLUMotion
 from shelly.devices.ShellyPlus1 import ShellyPlus1
 from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
 from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
@@ -28,6 +31,8 @@ shelly_model_classes = {
     'shelly-blu-doorwindow': ShellyBLUDoorWindow,
     'shelly-blu-button1': ShellyBLUButton1,
     'shelly-blu-distance': ShellyBLUDistance,
+    'shelly-blu-ht': ShellyBLUHT,
+    'shelly-blu-motion': ShellyBLUMotion,
     'shelly-plus-1': ShellyPlus1,
     'shelly-plus-1-pm': ShellyPlus1PM,
     'shelly-plus-2-pm': ShellyPlus2PM,
@@ -155,7 +160,6 @@ class Plugin(indigo.PluginBase):
                 dev_ids = device_topics.get(topic, list())  # get devices listening on this broker for this topic
                 for dev_id in dev_ids:
                     shelly = self.shellies.get(dev_id, None)
-                    self.logger.debug(shelly)
                     if shelly is not None and message_type == shelly.get_message_type():
                         # Send this message data to the shelly object
                         shelly.handle_message(topic, payload)
@@ -180,7 +184,7 @@ class Plugin(indigo.PluginBase):
             shelly = model_class(device.id)
             self.shellies[device.id] = shelly
 
-            if device.deviceTypeId.startswith("shelly-blu"):
+            if issubclass(model_class, ShellyBLU):
                 # Ensure the BLU device has a MAC address defined
                 if shelly.get_address() is None:
                     self.logger.error(f"'{device.name}' is not properly setup! Address is unknown.")
@@ -188,6 +192,11 @@ class Plugin(indigo.PluginBase):
                 
                 # Track the device associated with the BLU address
                 self.blu_address_device[shelly.get_address()] = device.id
+
+                # Update any plugin props on the device
+                props = device.pluginProps
+                props.update(model_class.plugin_props())
+                device.replacePluginPropsOnServer(props)
             else:
                 # Check that the device has a broker and an address
                 if shelly.get_broker_id() is None or shelly.get_address() is None:
@@ -259,7 +268,7 @@ class Plugin(indigo.PluginBase):
         if device.id in self.shellies:
             shelly = self.shellies[device.id]
 
-            if isinstance(shelly, Shelly):
+            if isinstance(shelly, ShellyMQTT):
                 # make sure that the device's broker has subscriptions
                 if shelly.get_broker_id() in self.broker_device_topics:
                     broker_topics = self.broker_device_topics[shelly.get_broker_id()]
@@ -458,7 +467,7 @@ class Plugin(indigo.PluginBase):
         if model_class is None:
             self.logger.error("Unable to find class for device with type: '{}'".format(shelly_model))
 
-        if shelly_model.startswith("shelly-blu"):
+        if issubclass(model_class, ShellyBLU):
             main_device = None
             device_props = {
                 'address': values_dict["mac-address"],
@@ -487,7 +496,9 @@ class Plugin(indigo.PluginBase):
                 return
 
             # Update the device properties from the factory UI
-            main_device.replacePluginPropsOnServer(device_props)
+            props = main_device.pluginProps
+            props.update(device_props)
+            main_device.replacePluginPropsOnServer(props)
 
             # Initialize the device and its components to populate the already opened UI
             model_class(main_device.id)
@@ -528,7 +539,7 @@ class Plugin(indigo.PluginBase):
             model_class(main_device.id)
     
     def deviceFactoryModelChanged(self, valuesDict, typeId, devId):
-        model:str = valuesDict.get("shelly-model", "")
+        model: str = valuesDict.get("shelly-model", "")
         if model.startswith("shelly-blu"):
             valuesDict["is-mqtt-model"] = False
             valuesDict["is-blu-model"] = True
@@ -706,13 +717,33 @@ class Plugin(indigo.PluginBase):
         return brokers
     
     def get_discovered_blu_addresses(self, filter="", valuesDict=None, typeId="", targetId=0):
-        addresses = []
         if len(self.discovered_blu_addresses) == 0:
-            addresses.append(("none", "%%disabled:No discovered BLU devices%%"))
-        else:
-            for address in self.discovered_blu_addresses:
-                addresses.append((address, address))
-        return addresses
+            return [("none", "%%disabled:No discovered BLU devices%%")]
+        
+        identified_addresses = []
+        unidentified_addresses = []
+
+        for address in self.discovered_blu_addresses:
+            blu_device_id = self.blu_address_device.get(address)
+            if not blu_device_id:
+                unidentified_addresses.append((address, address))
+                continue
+
+            shelly = self.shellies[blu_device_id]
+            identified_addresses.append((address, f"{address} - {shelly.device.name}"))
+
+        if len(identified_addresses) == 0:
+            identified_addresses = [("none", "%%disabled:None%%")]
+        if len(unidentified_addresses) == 0:
+            unidentified_addresses = [("none", "%%disabled:None%%")]
+
+        return [
+            ("none", "%%disabled:Unidentified BLE Addresses%%"),
+            *unidentified_addresses,
+            ("none", "%%separator%%"),
+            ("none", "%%disabled:Identified BLE Addresses%%"),
+            *identified_addresses
+        ]
     
     def refresh(self, valuesDict, typeId, devId):
         return valuesDict

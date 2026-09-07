@@ -32,6 +32,8 @@
 					<Option value="shelly-blu-doorwindow">Shelly BLU Door/Window</Option>
 					<Option value="shelly-blu-button1">Shelly BLU Button1</Option>
 					<Option value="shelly-blu-distance">Shelly BLU Distance</Option>
+					<Option value="shelly-blu-ht">Shelly BLU H&amp;T</Option>
+					<Option value="shelly-blu-motion">Shelly BLU Motion</Option>
 				</List>
 				<CallbackMethod>deviceFactoryModelChanged</CallbackMethod>
 			</Field>
@@ -1139,6 +1141,39 @@
 			</Field>
 			<Field id="measure-contents-level-sensor-height-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="measure-contents-level" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
 				<Label>The height of the sensor above the bottom of the container. This will be the same value as "Container Height" unless the sensor is mounted above the top of the container.</Label>
+			</Field>
+    	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Temperature" id="shelly-blu-ht">
+		<Name>Shelly BLU H&amp;T</Name>
+		<ConfigUI>
+			<Field id="temp-unit" type="menu" default="F">
+				<Label>Temperature Unit:</Label>
+				<List>
+					<Option value="F">Fahrenheit</Option>
+					<Option value="C">Celsius</Option>
+				</List>
+			</Field>
+
+			<Field id="temp-offset" type="textfield">
+				<Label>Temperature Offset:</Label>
+			</Field>
+			<Field id="temp-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>A positive or negative value to adjust the temperature reading by. This is applied using the desired temperature unit.</Label>
+			</Field>
+    	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Motion" id="shelly-blu-motion">
+		<Name>Shelly BLU Motion</Name>
+		<ConfigUI>
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
 			</Field>
     	</ConfigUI>
 		<States>

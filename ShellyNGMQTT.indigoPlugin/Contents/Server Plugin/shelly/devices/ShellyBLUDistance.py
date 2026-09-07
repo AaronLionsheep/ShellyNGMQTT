@@ -1,6 +1,6 @@
-import indigo
+import indigo # pyright: ignore[reportMissingModuleSource]
 
-from .ShellyBLU import ShellyBLU
+from .ShellyBLU import ShellyBLU, BLEData
 
 
 class ShellyBLUDistance(ShellyBLU):
@@ -26,30 +26,32 @@ class ShellyBLUDistance(ShellyBLU):
 
         return states
     
-    def process_packet(self, packet: dict):
+    def process_ble_data(self, data: BLEData):
         """
         Process a BTHome data packet.
         """
-        super().process_packet(packet)
-    
+        super().process_ble_data(data)
         state_updates = []
 
-        distance = packet.get("distance_mm", 0)
-        distance += int(self.device.pluginProps.get("offset") or 0)
+        with data.sensor("distance") as distance:
+            distance += int(self.device.pluginProps.get("offset") or 0)
+            state_updates.append({'key': "distance", 'value': distance, 'uiValue': f"{distance} mm"})
+            
+            if self.device.pluginProps.get("measure-contents-level"):
+                container_height = int(self.device.pluginProps.get("measure-contents-level-container-height", 0))
+                sensor_height = int(self.device.pluginProps.get("measure-contents-level-sensor-height", 0))
 
-        state_updates.append({'key': "vibration", 'value': packet.get("vibration", 0) == 1})
-        state_updates.append({'key': "distance", 'value': distance, 'uiValue': f"{distance} mm"})
-        state_updates.append({'key': "batteryLevel", 'value': packet.get("battery", 0)})
+                contents_height = sensor_height - distance
+                contents_level = round(contents_height / container_height * 100)
 
-        if self.device.pluginProps.get("measure-contents-level"):
-            container_height = int(self.device.pluginProps.get("measure-contents-level-container-height", 0))
-            sensor_height = int(self.device.pluginProps.get("measure-contents-level-sensor-height", 0))
+                state_updates.append({'key': "sensorValue", 'value': contents_level, 'uiValue': f"{contents_level}%"})
+            else:
+                state_updates.append({'key': "sensorValue", 'value': distance, 'uiValue': f"{distance} mm"})
 
-            contents_height = sensor_height - distance
-            contents_level = round(contents_height / container_height * 100)
+        with data.sensor("vibration") as vibration:
+            state_updates.append({'key': "vibration", 'value': vibration == 1})
 
-            state_updates.append({'key': "sensorValue", 'value': contents_level, 'uiValue': f"{contents_level}%"})
-        else:
-            state_updates.append({'key': "sensorValue", 'value': distance, 'uiValue': f"{distance} mm"})
-
+        with data.sensor("battery") as battery:
+            state_updates.append({'key': "batteryLevel", 'value': battery})
+        
         self.device.updateStatesOnServer(state_updates)    

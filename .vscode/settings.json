@@ -1,9 +1,27 @@
 {
     "cSpell.words": [
+        "BLUHT",
+        "BLURC",
+        "bthome",
+        "darkgray",
+        "devicepower",
+        "doorwindow",
         "flyingdiver",
+        "habluetooth",
         "htui",
         "indigoplugin",
         "nameserver",
-        "rssi"
-    ]
+        "NGMQTT",
+        "overcurrent",
+        "overvoltage",
+        "rssi",
+        "walldimmer"
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports.ruff": "explicit"
+    }
 }
