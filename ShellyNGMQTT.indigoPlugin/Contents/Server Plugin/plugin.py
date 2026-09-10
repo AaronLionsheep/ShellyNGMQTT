@@ -23,6 +23,7 @@ from shelly.devices.ShellyPro1PM import ShellyPro1PM
 from shelly.devices.ShellyPro2 import ShellyPro2
 from shelly.devices.ShellyPro2PM import ShellyPro2PM
 from shelly.devices.ShellyPro4PM import ShellyPro4PM
+from shelly.devices.ShellyPlus2PMGen3 import ShellyPlus2PMGen3
 
 shelly_model_classes = {
     'shelly-blu-doorwindow': ShellyBLUDoorWindow,
@@ -42,6 +43,7 @@ shelly_model_classes = {
     'shelly-pro-2': ShellyPro2,
     'shelly-pro-2-pm': ShellyPro2PM,
     'shelly-pro-4-pm': ShellyPro4PM,
+    'shelly-plus-2-pm-gen3': ShellyPlus2PMGen3,
 }
 
 
@@ -497,7 +499,8 @@ class Plugin(indigo.PluginBase):
                 'broker-id': values_dict["broker-id"],
                 'address': values_dict["address"],
                 'message-type': values_dict["message-type"],
-                'is-initial-setup': False
+                'is-initial-setup': False,
+                'profile': values_dict.get("profile", "switch")
             }
             if model_class.display_name not in group_models:
                 # The main device is not in the group, so create one
