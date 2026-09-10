@@ -1,6 +1,7 @@
 import indigo
 
 from .Shelly import Shelly
+from ..components.functional.cover import Cover
 from ..components.functional.switch import Switch
 from ..components.functional.input import Input
 from ..components.system.system import System
@@ -12,7 +13,8 @@ from ..components.system.script import Script
 
 class ShellyPlus2PM(Shelly):
     """
-    Creates a Shelly Plus 1 PM device class.
+    Creates a Shelly Plus 2 PM device class.
+    Supports profile=switch (default: two relay channels) and profile=cover (roller/shutter).
     """
 
     display_name = "Shelly Plus 2 PM"
@@ -28,18 +30,25 @@ class ShellyPlus2PM(Shelly):
             'script': Script(self)
         }
 
-        self.switch_0 = self.register_component(Switch, "Switch 1", comp_id=0, props={
-            "SupportsPowerMeter": "true",
-            "SupportsEnergyMeter": "true",
-            "SupportsEnergyMeterCurPower": "true"
-        })
-        self.switch_1 = self.register_component(Switch, "Switch 2", comp_id=1, props={
-            "SupportsPowerMeter": "true",
-            "SupportsEnergyMeter": "true",
-            "SupportsEnergyMeterCurPower": "true"
-        })
-        self.input_0 = self.register_component(Input, "Input 1")
-        self.input_1 = self.register_component(Input, "Input 2")
+        profile = self.device.pluginProps.get('profile', 'switch')
+
+        if profile == 'cover':
+            self.cover_0 = self.register_component(Cover, "Cover", comp_id=0)
+            self.input_0 = self.register_component(Input, "Input 1", comp_id=0)
+            self.input_1 = self.register_component(Input, "Input 2", comp_id=1)
+        else:
+            self.switch_0 = self.register_component(Switch, "Switch 1", comp_id=0, props={
+                "SupportsPowerMeter": "true",
+                "SupportsEnergyMeter": "true",
+                "SupportsEnergyMeterCurPower": "true"
+            })
+            self.switch_1 = self.register_component(Switch, "Switch 2", comp_id=1, props={
+                "SupportsPowerMeter": "true",
+                "SupportsEnergyMeter": "true",
+                "SupportsEnergyMeterCurPower": "true"
+            })
+            self.input_0 = self.register_component(Input, "Input 1")
+            self.input_1 = self.register_component(Input, "Input 2")
 
     def handle_notify_status(self, component_type, instance_id, status):
         """
