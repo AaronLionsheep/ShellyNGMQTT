@@ -31,6 +31,7 @@
 					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-blu-doorwindow">Shelly BLU Door/Window</Option>
 					<Option value="shelly-blu-button1">Shelly BLU Button1</Option>
+					<Option value="shelly-blu-rc-button-4">Shelly BLU RC Button 4</Option>
 					<Option value="shelly-blu-distance">Shelly BLU Distance</Option>
 					<Option value="shelly-blu-ht">Shelly BLU H&amp;T</Option>
 					<Option value="shelly-blu-motion">Shelly BLU Motion</Option>
@@ -1096,6 +1097,18 @@
 
 	<Device type="sensor" id="shelly-blu-button1">
 		<Name>Shelly BLU Button1</Name>
+		<ConfigUI>
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
+    	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Binary" id="shelly-blu-rc-button-4">
+		<Name>Shelly BLU RC Button 4</Name>
 		<ConfigUI>
             <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
             <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
