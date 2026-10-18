@@ -199,6 +199,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -355,6 +360,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -506,6 +516,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -553,6 +568,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -603,6 +623,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -658,6 +683,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -709,6 +739,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -764,6 +799,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -815,6 +855,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -1090,6 +1135,10 @@
             <Field type="checkbox" id="SupportsOnState" defaultValue="true" hidden="true" />
             <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
 			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
+
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
 		</ConfigUI>
 		<States>
 		</States>
@@ -1102,6 +1151,10 @@
             <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
             <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
 			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
+
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
     	</ConfigUI>
 		<States>
 		</States>
@@ -1114,6 +1167,10 @@
             <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
             <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
 			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
+			
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
     	</ConfigUI>
 		<States>
 		</States>
