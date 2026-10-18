@@ -39,7 +39,6 @@
                         self.shelly-blu-distance,
                         self.shelly-blu-doorwindow,
                         self.shelly-blu-motion,
-                        self.shelly-blu-remote-control
                     "
                 />
                 <CallbackMethod>refresh</CallbackMethod>
