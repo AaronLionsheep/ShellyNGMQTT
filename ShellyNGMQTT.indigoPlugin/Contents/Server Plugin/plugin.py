@@ -725,12 +725,16 @@ class Plugin(indigo.PluginBase):
 
         for address in self.discovered_blu_addresses:
             blu_device_id = self.blu_address_device.get(address)
+
+            # Mark the address as unidentified if it isn't to an Indigo device yet
             if not blu_device_id:
                 unidentified_addresses.append((address, address))
                 continue
 
-            shelly = self.shellies[blu_device_id]
-            identified_addresses.append((address, f"{address} - {shelly.device.name}"))
+            # Mark the address as identified if it is linked to a valid Indigo device
+            if blu_device_id in self.shellies:
+                shelly = self.shellies[blu_device_id]
+                identified_addresses.append((address, f"{address} - {shelly.device.name}"))
 
         if len(identified_addresses) == 0:
             identified_addresses = [("none", "%%disabled:None%%")]
