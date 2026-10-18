@@ -8,6 +8,14 @@ from habluetooth import BluetoothServiceInfoBleak
 
 from .Shelly import Shelly
 
+BUTTON_TRIGGER_TYPES = {
+    "press": "single-push",
+    "double_press": "double-push",
+    "triple_press": "triple-push",
+    "long_press": "long-push",
+    "hold_press": "hold-push",
+}
+
 
 class ServiceData(dict[str, bytes]):
     def __repr__(self):
@@ -178,6 +186,7 @@ class ShellyBLU(Shelly):
         """
         Process BLE data.
         """
+        # Log BLE activity
         if indigo.activePlugin.pluginPrefs.get("debug-ble-activity", False):
             relay_device_name = "<Unknown>"
             if relay_device := indigo.devices.get(data.packet.relay_device_id):
@@ -186,13 +195,60 @@ class ShellyBLU(Shelly):
                 f"{self.device.name} processing BLE data from {relay_device_name} ({data.packet.rssi} dBm): sensors={data.sensors} events={data.events}"
             )
 
+        # Update base states from sensor data shared across all BLU devices
         state_updates = []
         state_updates.append({"key": "pid", "value": data.sensors.get("packet_id", -1)})
         state_updates.append({"key": "rssi", "value": data.rssi})
         state_updates.append({"key": "address", "value": data.address})
         self.device.updateStatesOnServer(state_updates)
 
+        # Fire triggers matching common event data
+        self.trigger_button_events(data.events)
+
     def handle_ble_relay_packet(self, packet: BLERelayPacket):
         ble_data = self.parse_packet(packet)
         self.process_ble_data(ble_data)
         self.update_state_image()
+
+    def trigger_button_events(self, events: dict[str, dict[str, Any]]):
+        for event_key, event in events.items():
+            # Split on the last _ and pad with None to safely extract 2 items
+            event_name, index = (event_key.rsplit("_", 1) + [None])[:2]
+
+            # Skip non-button events
+            if event_name != "button":
+                continue
+
+            # Build the button id from the event index
+            try:
+                button_id = int(index or 1)
+            except ValueError as e:
+                self.logger.error(
+                    f"Unable to parse button_id from event key: {event_key}"
+                )
+
+            # Process each event
+            for event_type in event:
+                trigger_type = BUTTON_TRIGGER_TYPES.get(event_type)
+
+                if trigger_type is None:
+                    self.logger.error(
+                        f"No trigger type found for button event: {event_type}"
+                    )
+                    continue
+
+                # Execute all matching triggers
+                for trigger in indigo.activePlugin.triggers.values():
+                    # Filter out triggers not matching the trigger type for the event
+                    if trigger.pluginTypeId != trigger_type:
+                        continue
+
+                    # Filter out triggers not configured for this device
+                    if int(trigger.pluginProps.get("device-id", -1)) != self.device.id:
+                        continue
+
+                    # Filter out triggers not matching the event's button id
+                    if int(trigger.pluginProps.get("button-id", 1)) != button_id:
+                        continue
+
+                    indigo.trigger.execute(trigger)

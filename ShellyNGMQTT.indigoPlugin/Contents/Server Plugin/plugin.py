@@ -745,6 +745,22 @@ class Plugin(indigo.PluginBase):
             *identified_addresses
         ]
     
+    def get_device_buttons(self, filter="", valuesDict=None, typeId="", targetId=0):
+        """
+        Returns the list of buttons available for a device.
+        """
+        button_count = 1
+        
+        if device_id := valuesDict.get("device-id"):
+            shelly = self.shellies.get(int(device_id))
+            if isinstance(shelly, ShellyBLU):
+                button_count = shelly.button_count
+        
+        return [
+            (str(button), f"Button {button}")
+            for button in range(1, button_count + 1)
+        ]
+    
     def refresh(self, valuesDict, typeId, devId):
         return valuesDict
     
