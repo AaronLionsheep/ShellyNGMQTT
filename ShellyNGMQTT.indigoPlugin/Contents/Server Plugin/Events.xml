@@ -38,7 +38,7 @@
                         self.shelly-blu-rc-button-4,
                         self.shelly-blu-distance,
                         self.shelly-blu-doorwindow,
-                        self.shelly-blu-motion,
+                        self.shelly-blu-motion
                     "
                 />
                 <CallbackMethod>refresh</CallbackMethod>
@@ -134,7 +134,9 @@
                     filter="
                         self.shelly-blu-button1,
                         self.shelly-blu-ht,
-                        self.shelly-blu-rc-button-4
+                        self.shelly-blu-rc-button-4,
+                        self.shelly-blu-doorwindow,
+                        self.shelly-blu-motion
                     "
                 />
                 <CallbackMethod>refresh</CallbackMethod>
