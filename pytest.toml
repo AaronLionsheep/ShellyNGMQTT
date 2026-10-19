@@ -1,0 +1,7 @@
+[pytest]
+addopts = [
+    "-v",
+    "-p pytest_cov",
+    "--cov=ShellyNGMQTT.indigoPlugin/Contents/Server Plugin",
+    "--cov-report=term-missing"
+]

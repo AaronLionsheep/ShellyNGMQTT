@@ -1,23 +1,26 @@
-import indigo
 import logging
 import re
-
 from queue import Queue
 
+import indigo  # pyright: ignore[reportMissingModuleSource]
 from shelly.devices.Shelly import Shelly
 from shelly.devices.ShellyBLU import ShellyBLU
-from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
 from shelly.devices.ShellyBLUButton1 import ShellyBLUButton1
 from shelly.devices.ShellyBLUDistance import ShellyBLUDistance
+from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
+from shelly.devices.ShellyBLUHT import ShellyBLUHT
+from shelly.devices.ShellyBLUMotion import ShellyBLUMotion
+from shelly.devices.ShellyBLURCButton4 import ShellyBLURCButton4
+from shelly.devices.ShellyMQTT import ShellyMQTT
 from shelly.devices.ShellyPlus1 import ShellyPlus1
 from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
 from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
-from shelly.devices.ShellyPlusWallDimmer import ShellyPlusWallDimmer
-from shelly.devices.ShellyPlusI4 import ShellyPlusI4
 from shelly.devices.ShellyPlusHT import ShellyPlusHT
+from shelly.devices.ShellyPlusI4 import ShellyPlusI4
 from shelly.devices.ShellyPlusPlug import ShellyPlusPlug
 from shelly.devices.ShellyPlusPlugS import ShellyPlusPlugS
 from shelly.devices.ShellyPlusPlugUK import ShellyPlusPlugUK
+from shelly.devices.ShellyPlusWallDimmer import ShellyPlusWallDimmer
 from shelly.devices.ShellyPro1 import ShellyPro1
 from shelly.devices.ShellyPro1PM import ShellyPro1PM
 from shelly.devices.ShellyPro2 import ShellyPro2
@@ -25,30 +28,35 @@ from shelly.devices.ShellyPro2PM import ShellyPro2PM
 from shelly.devices.ShellyPro4PM import ShellyPro4PM
 
 shelly_model_classes = {
-    'shelly-blu-doorwindow': ShellyBLUDoorWindow,
-    'shelly-blu-button1': ShellyBLUButton1,
-    'shelly-blu-distance': ShellyBLUDistance,
-    'shelly-plus-1': ShellyPlus1,
-    'shelly-plus-1-pm': ShellyPlus1PM,
-    'shelly-plus-2-pm': ShellyPlus2PM,
-    'shelly-plus-walldimmer': ShellyPlusWallDimmer,
-    'shelly-plus-i-4': ShellyPlusI4,
-    'shelly-plus-ht': ShellyPlusHT,
-    'shelly-plus-plug': ShellyPlusPlug,
-    'shelly-plus-plug-s': ShellyPlusPlugS,
-    'shelly-plus-plug-uk': ShellyPlusPlugUK,
-    'shelly-pro-1': ShellyPro1,
-    'shelly-pro-1-pm': ShellyPro1PM,
-    'shelly-pro-2': ShellyPro2,
-    'shelly-pro-2-pm': ShellyPro2PM,
-    'shelly-pro-4-pm': ShellyPro4PM,
+    "shelly-blu-doorwindow": ShellyBLUDoorWindow,
+    "shelly-blu-button1": ShellyBLUButton1,
+    "shelly-blu-rc-button-4": ShellyBLURCButton4,
+    "shelly-blu-distance": ShellyBLUDistance,
+    "shelly-blu-ht": ShellyBLUHT,
+    "shelly-blu-motion": ShellyBLUMotion,
+    "shelly-plus-1": ShellyPlus1,
+    "shelly-plus-1-pm": ShellyPlus1PM,
+    "shelly-plus-2-pm": ShellyPlus2PM,
+    "shelly-plus-walldimmer": ShellyPlusWallDimmer,
+    "shelly-plus-i-4": ShellyPlusI4,
+    "shelly-plus-ht": ShellyPlusHT,
+    "shelly-plus-plug": ShellyPlusPlug,
+    "shelly-plus-plug-s": ShellyPlusPlugS,
+    "shelly-plus-plug-uk": ShellyPlusPlugUK,
+    "shelly-pro-1": ShellyPro1,
+    "shelly-pro-1-pm": ShellyPro1PM,
+    "shelly-pro-2": ShellyPro2,
+    "shelly-pro-2-pm": ShellyPro2PM,
+    "shelly-pro-4-pm": ShellyPro4PM,
 }
 
 
 class Plugin(indigo.PluginBase):
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
-        super(Plugin, self).__init__(pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
-        self.setLogLevel(pluginPrefs.get('log-level', "info"))
+        super(Plugin, self).__init__(
+            pluginId, pluginDisplayName, pluginVersion, pluginPrefs
+        )
+        self.setLogLevel(pluginPrefs.get("log-level", "info"))
 
         self.shellies = {}
         self.triggers = {}
@@ -83,8 +91,11 @@ class Plugin(indigo.PluginBase):
         if not self.mqtt_plugin:
             self.logger.error("MQTT Connector plugin is required!!")
             exit(-1)
-        indigo.server.subscribeToBroadcast("com.flyingdiver.indigoplugin.mqtt",
-                                           "com.flyingdiver.indigoplugin.mqtt-message_queued", "message_handler")
+        indigo.server.subscribeToBroadcast(
+            "com.flyingdiver.indigoplugin.mqtt",
+            "com.flyingdiver.indigoplugin.mqtt-message_queued",
+            "message_handler",
+        )
         self.logger.info(self.pluginFolderPath)
 
     def shutdown(self):
@@ -121,7 +132,7 @@ class Plugin(indigo.PluginBase):
         :return: None
         """
 
-        if notification['message_type'] in self.message_types:
+        if notification["message_type"] in self.message_types:
             self.message_queue.put(notification)
 
     def process_messages(self):
@@ -140,22 +151,32 @@ class Plugin(indigo.PluginBase):
 
             # We have a valid message
             # Find the devices that need to get this message and give it to them
-            broker_id = int(notification['brokerID'])
-            props = {'message_type': notification['message_type']}
+            broker_id = int(notification["brokerID"])
+            props = {"message_type": notification["message_type"]}
             while True:
-                data = self.mqtt_plugin.executeAction("fetchQueuedMessage", deviceId=broker_id, props=props, waitUntilDone=True)
+                data = self.mqtt_plugin.executeAction(
+                    "fetchQueuedMessage",
+                    deviceId=broker_id,
+                    props=props,
+                    waitUntilDone=True,
+                )
                 if data is None:  # Ensure we got data back
                     break
 
-                topic = '/'.join(data['topic_parts'])  # transform the topic into a single string
-                payload = data['payload']
-                message_type = data['message_type']
-                self.logger.debug("    Processing: \"%s\" on topic \"%s\"", payload, topic)
-                device_topics = self.broker_device_topics.get(broker_id, {})  # get device topics for this broker
-                dev_ids = device_topics.get(topic, list())  # get devices listening on this broker for this topic
+                topic = "/".join(
+                    data["topic_parts"]
+                )  # transform the topic into a single string
+                payload = data["payload"]
+                message_type = data["message_type"]
+                self.logger.debug('    Processing: "%s" on topic "%s"', payload, topic)
+                device_topics = self.broker_device_topics.get(
+                    broker_id, {}
+                )  # get device topics for this broker
+                dev_ids = device_topics.get(
+                    topic, list()
+                )  # get devices listening on this broker for this topic
                 for dev_id in dev_ids:
                     shelly = self.shellies.get(dev_id, None)
-                    self.logger.debug(shelly)
                     if shelly is not None and message_type == shelly.get_message_type():
                         # Send this message data to the shelly object
                         shelly.handle_message(topic, payload)
@@ -180,20 +201,35 @@ class Plugin(indigo.PluginBase):
             shelly = model_class(device.id)
             self.shellies[device.id] = shelly
 
-            if device.deviceTypeId.startswith("shelly-blu"):
+            if issubclass(model_class, ShellyBLU):
                 # Ensure the BLU device has a MAC address defined
                 if shelly.get_address() is None:
-                    self.logger.error(f"'{device.name}' is not properly setup! Address is unknown.")
+                    self.logger.error(
+                        f"'{device.name}' is not properly setup! Address is unknown."
+                    )
                     return
-                
+
                 # Track the device associated with the BLU address
                 self.blu_address_device[shelly.get_address()] = device.id
+
+                # Update any plugin props on the device
+                props = device.pluginProps
+                props.update(model_class.plugin_props())
+                device.replacePluginPropsOnServer(props)
             else:
                 # Check that the device has a broker and an address
                 if shelly.get_broker_id() is None or shelly.get_address() is None:
                     # Ensure the device has a broker and address
-                    self.logger.error("broker-id: \"{}\" address: \"{}\"".format(shelly.get_broker_id(), shelly.get_address()))
-                    self.logger.error("\"{}\" is not properly setup! Check the broker and topic root.".format(device.name))
+                    self.logger.error(
+                        'broker-id: "{}" address: "{}"'.format(
+                            shelly.get_broker_id(), shelly.get_address()
+                        )
+                    )
+                    self.logger.error(
+                        '"{}" is not properly setup! Check the broker and topic root.'.format(
+                            device.name
+                        )
+                    )
                     return False
 
                 # ensure that deviceSubscriptions has a dictionary of subscriptions for the broker
@@ -228,7 +264,11 @@ class Plugin(indigo.PluginBase):
                 for grouped_with_device_id in grouped_with:
                     grouped_with_device = indigo.devices[grouped_with_device_id]
                     if grouped_with_device.deviceTypeId in shelly_model_classes:
-                        self.logger.debug("{} needs it's main device started, starting '{}' manually...".format(device.name, grouped_with_device.name))
+                        self.logger.debug(
+                            "{} needs it's main device started, starting '{}' manually...".format(
+                                device.name, grouped_with_device.name
+                            )
+                        )
                         self.deviceStartComm(grouped_with_device)
 
         # Refresh the device's state list and properties that may have changed between plugin versions
@@ -259,12 +299,15 @@ class Plugin(indigo.PluginBase):
         if device.id in self.shellies:
             shelly = self.shellies[device.id]
 
-            if isinstance(shelly, Shelly):
+            if isinstance(shelly, ShellyMQTT):
                 # make sure that the device's broker has subscriptions
                 if shelly.get_broker_id() in self.broker_device_topics:
                     broker_topics = self.broker_device_topics[shelly.get_broker_id()]
                     for topic in shelly.get_topics():
-                        if topic in broker_topics and shelly.device.id in broker_topics[topic]:
+                        if (
+                            topic in broker_topics
+                            and shelly.device.id in broker_topics[topic]
+                        ):
                             broker_topics[topic].remove(shelly.device.id)
 
                     # remove the broker key if there are no more devices using it
@@ -276,7 +319,11 @@ class Plugin(indigo.PluginBase):
             try:
                 del self.shellies[device.id]
             except KeyError:
-                self.logger.warning("Something went wrong! '{}' could not be removed from internal shellies dictionary".format(device.name))
+                self.logger.warning(
+                    "Something went wrong! '{}' could not be removed from internal shellies dictionary".format(
+                        device.name
+                    )
+                )
 
     def didDeviceCommPropertyChange(self, orig_dev, new_dev):
         """
@@ -298,7 +345,9 @@ class Plugin(indigo.PluginBase):
             # if any of the MQTT information changes
             restart_fields = ["broker-id", "address", "message-type", "blu-relay"]
             for field in restart_fields:
-                if new_dev.pluginProps.get(field, None) != orig_dev.pluginProps.get(field, None):
+                if new_dev.pluginProps.get(field, None) != orig_dev.pluginProps.get(
+                    field, None
+                ):
                     return True
         return False
 
@@ -347,20 +396,22 @@ class Plugin(indigo.PluginBase):
 
         if main_device is None:
             return values_dict, errors_dict
-        
-        values_dict['shelly-model'] = main_device.deviceTypeId
-        values_dict['is-initial-setup'] = main_device.pluginProps.get('is-initial-setup', False)
+
+        values_dict["shelly-model"] = main_device.deviceTypeId
+        values_dict["is-initial-setup"] = main_device.pluginProps.get(
+            "is-initial-setup", False
+        )
 
         if main_device.deviceTypeId.startswith("shelly-blu"):
-            values_dict['is-mqtt-model'] = False
-            values_dict['is-blu-model'] = True
-            values_dict['mac-address'] = main_device.pluginProps.get('address')
+            values_dict["is-mqtt-model"] = False
+            values_dict["is-blu-model"] = True
+            values_dict["mac-address"] = main_device.pluginProps.get("address")
         else:
-            values_dict['is-mqtt-model'] = True
-            values_dict['is-blu-model'] = False
-            values_dict['broker-id'] = main_device.pluginProps.get('broker-id')
-            values_dict['address'] = main_device.pluginProps.get('address')
-            values_dict['message-type'] = main_device.pluginProps.get('message-type')
+            values_dict["is-mqtt-model"] = True
+            values_dict["is-blu-model"] = False
+            values_dict["broker-id"] = main_device.pluginProps.get("broker-id")
+            values_dict["address"] = main_device.pluginProps.get("address")
+            values_dict["message-type"] = main_device.pluginProps.get("message-type")
 
         return values_dict, errors_dict
 
@@ -376,44 +427,57 @@ class Plugin(indigo.PluginBase):
 
         errors_dict = indigo.Dict()
         valid = True
-        group_device_types = [indigo.devices[dev_id].deviceTypeId for dev_id in dev_id_list]
+        group_device_types = [
+            indigo.devices[dev_id].deviceTypeId for dev_id in dev_id_list
+        ]
 
         # Ensure a model is selected
-        if values_dict['shelly-model'] == "":
+        if values_dict["shelly-model"] == "":
             valid = False
-            errors_dict['shelly-model'] = "You must select the device model!"
+            errors_dict["shelly-model"] = "You must select the device model!"
         else:
             # Ensure the main model is not changing
-            main_models = set(group_device_types).intersection(set(shelly_model_classes.keys()))
+            main_models = set(group_device_types).intersection(
+                set(shelly_model_classes.keys())
+            )
             if len(main_models) == 1:
                 # The selected model must be the same
                 main_model = main_models.pop()
-                if values_dict['shelly-model'] != main_model:
+                if values_dict["shelly-model"] != main_model:
                     valid = False
-                    errors_dict['shelly-model'] = "You can not change the main model!"
+                    errors_dict["shelly-model"] = "You can not change the main model!"
 
         if values_dict.get("is-mqtt-model", True):
             # Ensure a broker is selected
-            if values_dict['broker-id'] == "":
+            if values_dict["broker-id"] == "":
                 valid = False
-                errors_dict['broker-id'] = "You must select the broker the device will connect to!"
+                errors_dict["broker-id"] = (
+                    "You must select the broker the device will connect to!"
+                )
 
             # Ensure the device address is supplied
-            if values_dict['address'] == "":
+            if values_dict["address"] == "":
                 valid = False
-                errors_dict['address'] = "You must specify the base device address!"
+                errors_dict["address"] = "You must specify the base device address!"
 
             # Ensure the message type is supplied
-            if values_dict['message-type'] == "":
+            if values_dict["message-type"] == "":
                 valid = False
-                errors_dict['message-type'] = "You must specify the message type for the device!"
+                errors_dict["message-type"] = (
+                    "You must specify the message type for the device!"
+                )
         elif values_dict.get("is-blu-model", False):
             address = values_dict.get("mac-address", None)
             if not address:
                 errors_dict["mac-address"] = "You must specify a MAC address!"
                 valid = False
-            elif not re.match(r"^[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}$", address.lower()):
-                errors_dict["mac-address"] = "MAC address does not match format! ex: 38:39:8f:a0:1d:a6"
+            elif not re.match(
+                r"^[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}$",
+                address.lower(),
+            ):
+                errors_dict["mac-address"] = (
+                    "MAC address does not match format! ex: 38:39:8f:a0:1d:a6"
+                )
                 valid = False
 
         return valid, values_dict, errors_dict
@@ -452,17 +516,19 @@ class Plugin(indigo.PluginBase):
         if user_cancelled:
             return
 
-        shelly_model = values_dict['shelly-model']
+        shelly_model = values_dict["shelly-model"]
         group_models = [indigo.devices[dev_id].model for dev_id in dev_id_list]
         model_class = shelly_model_classes.get(shelly_model, None)
         if model_class is None:
-            self.logger.error("Unable to find class for device with type: '{}'".format(shelly_model))
+            self.logger.error(
+                "Unable to find class for device with type: '{}'".format(shelly_model)
+            )
 
-        if shelly_model.startswith("shelly-blu"):
+        if issubclass(model_class, ShellyBLU):
             main_device = None
             device_props = {
-                'address': values_dict["mac-address"],
-                'is-initial-setup': False
+                "address": values_dict["mac-address"],
+                "is-initial-setup": False,
             }
             if model_class.display_name not in group_models:
                 # The main device is not in the group, so create one
@@ -470,7 +536,7 @@ class Plugin(indigo.PluginBase):
                     indigo.kProtocol.Plugin,
                     name=values_dict["initial-name"] or None,
                     deviceTypeId=shelly_model,
-                    props=device_props
+                    props=device_props,
                 )
                 main_device.model = model_class.display_name
                 main_device.replaceOnServer()
@@ -480,24 +546,26 @@ class Plugin(indigo.PluginBase):
                     main_device = indigo.devices[dev_id]
                     if main_device.deviceTypeId == shelly_model:
                         break
-            
+
             # Make sure we actually have a main device
             if main_device is None:
                 self.logger.error("Unable to create or find the main device!")
                 return
 
             # Update the device properties from the factory UI
-            main_device.replacePluginPropsOnServer(device_props)
+            props = main_device.pluginProps
+            props.update(device_props)
+            main_device.replacePluginPropsOnServer(props)
 
             # Initialize the device and its components to populate the already opened UI
             model_class(main_device.id)
         else:
             main_device = None
             device_props = {
-                'broker-id': values_dict["broker-id"],
-                'address': values_dict["address"],
-                'message-type': values_dict["message-type"],
-                'is-initial-setup': False
+                "broker-id": values_dict["broker-id"],
+                "address": values_dict["address"],
+                "message-type": values_dict["message-type"],
+                "is-initial-setup": False,
             }
             if model_class.display_name not in group_models:
                 # The main device is not in the group, so create one
@@ -505,7 +573,7 @@ class Plugin(indigo.PluginBase):
                     indigo.kProtocol.Plugin,
                     name=values_dict["initial-name"] or None,
                     deviceTypeId=shelly_model,
-                    props=device_props
+                    props=device_props,
                 )
                 main_device.model = model_class.display_name
                 main_device.replaceOnServer()
@@ -526,16 +594,16 @@ class Plugin(indigo.PluginBase):
 
             # Initialize the device and its components to populate the already opened UI
             model_class(main_device.id)
-    
+
     def deviceFactoryModelChanged(self, valuesDict, typeId, devId):
-        model:str = valuesDict.get("shelly-model", "")
+        model: str = valuesDict.get("shelly-model", "")
         if model.startswith("shelly-blu"):
             valuesDict["is-mqtt-model"] = False
             valuesDict["is-blu-model"] = True
         else:
             valuesDict["is-mqtt-model"] = True
             valuesDict["is-blu-model"] = False
-        
+
         return valuesDict
 
     def validateDeviceConfigUi(self, values_dict, type_id, dev_id):
@@ -666,7 +734,7 @@ class Plugin(indigo.PluginBase):
         """
 
         if userCancelled is False:
-            self.setLogLevel(valuesDict.get('log-level', "info"))
+            self.setLogLevel(valuesDict.get("log-level", "info"))
 
     def get_shelly_devices(self, filter="", valuesDict=None, typeId="", targetId=0):
         """
@@ -697,26 +765,71 @@ class Plugin(indigo.PluginBase):
 
         brokers = []
         for dev in indigo.devices.iter():
-            if dev.protocol == indigo.kProtocol.Plugin and \
-                    dev.pluginId == "com.flyingdiver.indigoplugin.mqtt" and \
-                    dev.deviceTypeId != 'aggregator':
+            if (
+                dev.protocol == indigo.kProtocol.Plugin
+                and dev.pluginId == "com.flyingdiver.indigoplugin.mqtt"
+                and dev.deviceTypeId != "aggregator"
+            ):
                 brokers.append((dev.id, dev.name))
 
         brokers.sort(key=lambda tup: tup[1])
         return brokers
-    
-    def get_discovered_blu_addresses(self, filter="", valuesDict=None, typeId="", targetId=0):
-        addresses = []
+
+    def get_discovered_blu_addresses(
+        self, filter="", valuesDict=None, typeId="", targetId=0
+    ):
         if len(self.discovered_blu_addresses) == 0:
-            addresses.append(("none", "%%disabled:No discovered BLU devices%%"))
-        else:
-            for address in self.discovered_blu_addresses:
-                addresses.append((address, address))
-        return addresses
-    
+            return [("none", "%%disabled:No discovered BLU devices%%")]
+
+        identified_addresses = []
+        unidentified_addresses = []
+
+        for address in self.discovered_blu_addresses:
+            blu_device_id = self.blu_address_device.get(address)
+
+            # Mark the address as unidentified if it isn't to an Indigo device yet
+            if not blu_device_id:
+                unidentified_addresses.append((address, address))
+                continue
+
+            # Mark the address as identified if it is linked to a valid Indigo device
+            if blu_device_id in self.shellies:
+                shelly = self.shellies[blu_device_id]
+                identified_addresses.append(
+                    (address, f"{address} - {shelly.device.name}")
+                )
+
+        if len(identified_addresses) == 0:
+            identified_addresses = [("none", "%%disabled:None%%")]
+        if len(unidentified_addresses) == 0:
+            unidentified_addresses = [("none", "%%disabled:None%%")]
+
+        return [
+            ("none", "%%disabled:Unidentified BLE Addresses%%"),
+            *unidentified_addresses,
+            ("none", "%%separator%%"),
+            ("none", "%%disabled:Identified BLE Addresses%%"),
+            *identified_addresses,
+        ]
+
+    def get_device_buttons(self, filter="", valuesDict=None, typeId="", targetId=0):
+        """
+        Returns the list of buttons available for a device.
+        """
+        button_count = 1
+
+        if device_id := valuesDict.get("device-id"):
+            shelly = self.shellies.get(int(device_id))
+            if isinstance(shelly, ShellyBLU):
+                button_count = shelly.button_count
+
+        return [
+            (str(button), f"Button {button}") for button in range(1, button_count + 1)
+        ]
+
     def refresh(self, valuesDict, typeId, devId):
         return valuesDict
-    
+
     def select_discovered_blu_address(self, valuesDict, typeId, devId):
         valuesDict["mac-address"] = valuesDict.get("discovered-mac-address", "")
         return valuesDict
@@ -747,17 +860,19 @@ class Plugin(indigo.PluginBase):
 
         valid_log_levels = ["debug", "info", "warning"]
         if level not in valid_log_levels:
-            self.logger.error(u"Attempted to set the log level to an unhandled value: {}".format(level))
+            self.logger.error(
+                "Attempted to set the log level to an unhandled value: {}".format(level)
+            )
 
         if level == "debug":
             self.indigo_log_handler.setLevel(logging.DEBUG)
-            self.logger.debug(u"Log level set to debug")
+            self.logger.debug("Log level set to debug")
         elif level == "info":
             self.indigo_log_handler.setLevel(logging.INFO)
-            self.logger.info(u"Log level set to info")
+            self.logger.info("Log level set to info")
         elif level == "warning":
             self.indigo_log_handler.setLevel(logging.WARNING)
-            self.logger.warning(u"Log level set to warning")
+            self.logger.warning("Log level set to warning")
 
     #
     # Device Configuration Callbacks
@@ -778,40 +893,34 @@ class Plugin(indigo.PluginBase):
             return
 
         config = {
-            'device': {
-                'name': values_dict.get("system-device-name"),
-                'eco_mode': values_dict.get("system-device-eco-mode")
+            "device": {
+                "name": values_dict.get("system-device-name"),
+                "eco_mode": values_dict.get("system-device-eco-mode"),
             },
-            'location': {
-                'tz': values_dict.get("system-location-timezone"),
-                'lat': values_dict.get("system-location-lat"),
-                'lon': values_dict.get("system-location-lon")
+            "location": {
+                "tz": values_dict.get("system-location-timezone"),
+                "lat": values_dict.get("system-location-lat"),
+                "lon": values_dict.get("system-location-lon"),
             },
-            'debug': {
-                'mqtt': {
-                    'enable': values_dict.get("system-debug-mqtt")
-                },
-                'websocket': {
-                    'enable': values_dict.get("system-debug-mqtt")
-                },
-                'udp': {
-                    'addr': values_dict.get("system-debug-udp-address")
-                }
-            }
+            "debug": {
+                "mqtt": {"enable": values_dict.get("system-debug-mqtt")},
+                "websocket": {"enable": values_dict.get("system-debug-mqtt")},
+                "udp": {"addr": values_dict.get("system-debug-udp-address")},
+            },
         }
 
-        if len(config['device']['name']) == 0:
-            config['device']['name'] = None
-        if len(config['location']['tz']) == 0:
-            config['location']['tz'] = None
-        if config['location']['lat'] == "":
-            config['location']['lat'] = None
-        if config['location']['lon'] == "":
-            config['location']['lon'] = None
-        if len(config['debug']['udp']['addr']) == 0:
-            config['debug']['udp']['addr'] = None
+        if len(config["device"]["name"]) == 0:
+            config["device"]["name"] = None
+        if len(config["location"]["tz"]) == 0:
+            config["location"]["tz"] = None
+        if config["location"]["lat"] == "":
+            config["location"]["lat"] = None
+        if config["location"]["lon"] == "":
+            config["location"]["lon"] = None
+        if len(config["debug"]["udp"]["addr"]) == 0:
+            config["debug"]["udp"]["addr"] = None
 
-        shelly.system_components['system'].set_config(config)
+        shelly.system_components["system"].set_config(config)
 
     def _write_wifi_configuration(self, values_dict, type_id, dev_id):
         """
@@ -828,73 +937,73 @@ class Plugin(indigo.PluginBase):
             return
 
         config = {
-            'ap': {
-                'ssid': values_dict.get("wifi-ap-ssid"),
-                'pass': values_dict.get("wifi-ap-password"),
-                'is_open': values_dict.get("wifi-ap-open-network"),
-                'enable': values_dict.get("wifi-ap-enable")
+            "ap": {
+                "ssid": values_dict.get("wifi-ap-ssid"),
+                "pass": values_dict.get("wifi-ap-password"),
+                "is_open": values_dict.get("wifi-ap-open-network"),
+                "enable": values_dict.get("wifi-ap-enable"),
             },
-            'sta': {
-                'ssid': values_dict.get("wifi-1-ssid"),
-                'pass': values_dict.get("wifi-1-password"),
-                'is_open': values_dict.get("wifi-1-open-network"),
-                'enable': values_dict.get("wifi-1-enable"),
-                'ipv4mode': values_dict.get("wifi-1-ipv4-mode"),
-                'ip': values_dict.get("wifi-1-ip-address"),
-                'netmask': values_dict.get("wifi-1-network-mask"),
-                'gw': values_dict.get("wifi-1-gateway"),
-                'nameserver': values_dict.get("wifi-1-nameserver")
+            "sta": {
+                "ssid": values_dict.get("wifi-1-ssid"),
+                "pass": values_dict.get("wifi-1-password"),
+                "is_open": values_dict.get("wifi-1-open-network"),
+                "enable": values_dict.get("wifi-1-enable"),
+                "ipv4mode": values_dict.get("wifi-1-ipv4-mode"),
+                "ip": values_dict.get("wifi-1-ip-address"),
+                "netmask": values_dict.get("wifi-1-network-mask"),
+                "gw": values_dict.get("wifi-1-gateway"),
+                "nameserver": values_dict.get("wifi-1-nameserver"),
             },
-            'sta1': {
-                'ssid': values_dict.get("wifi-2-ssid"),
-                'pass': values_dict.get("wifi-2-password"),
-                'is_open': values_dict.get("wifi-2-open-network"),
-                'enable': values_dict.get("wifi-2-enable"),
-                'ipv4mode': values_dict.get("wifi-2-ipv4-mode"),
-                'ip': values_dict.get("wifi-2-ip-address"),
-                'netmask': values_dict.get("wifi-2-network-mask"),
-                'gw': values_dict.get("wifi-2-gateway"),
-                'nameserver': values_dict.get("wifi-2-nameserver")
+            "sta1": {
+                "ssid": values_dict.get("wifi-2-ssid"),
+                "pass": values_dict.get("wifi-2-password"),
+                "is_open": values_dict.get("wifi-2-open-network"),
+                "enable": values_dict.get("wifi-2-enable"),
+                "ipv4mode": values_dict.get("wifi-2-ipv4-mode"),
+                "ip": values_dict.get("wifi-2-ip-address"),
+                "netmask": values_dict.get("wifi-2-network-mask"),
+                "gw": values_dict.get("wifi-2-gateway"),
+                "nameserver": values_dict.get("wifi-2-nameserver"),
             },
-            'roam': {
-                'rssi_thr': values_dict.get("wifi-roaming-rssi-threshold"),
-                'interval': values_dict.get("wifi-roaming-interval")
-            }
+            "roam": {
+                "rssi_thr": values_dict.get("wifi-roaming-rssi-threshold"),
+                "interval": values_dict.get("wifi-roaming-interval"),
+            },
         }
 
         # Don't write passwords if they are blank since a get_config will not populate them
-        if len(config['ap']['pass']) == 0:
-            del config['ap']['pass']
-        if len(config['sta']['pass']) == 0:
-            del config['sta']['pass']
-        if len(config['sta1']['pass']) == 0:
-            del config['sta1']['pass']
+        if len(config["ap"]["pass"]) == 0:
+            del config["ap"]["pass"]
+        if len(config["sta"]["pass"]) == 0:
+            del config["sta"]["pass"]
+        if len(config["sta1"]["pass"]) == 0:
+            del config["sta1"]["pass"]
 
         # ip, netmask, gw, and nameserver should be None when empty
         # wifi 1
-        if len(config['sta']['ssid']) == 0:
-            config['sta']['ssid'] = None
-        if len(config['sta']['ip']) == 0:
-            config['sta']['ip'] = None
-        if len(config['sta']['netmask']) == 0:
-            config['sta']['netmask'] = None
-        if len(config['sta']['gw']) == 0:
-            config['sta']['gw'] = None
-        if len(config['sta']['nameserver']) == 0:
-            config['sta']['nameserver'] = None
+        if len(config["sta"]["ssid"]) == 0:
+            config["sta"]["ssid"] = None
+        if len(config["sta"]["ip"]) == 0:
+            config["sta"]["ip"] = None
+        if len(config["sta"]["netmask"]) == 0:
+            config["sta"]["netmask"] = None
+        if len(config["sta"]["gw"]) == 0:
+            config["sta"]["gw"] = None
+        if len(config["sta"]["nameserver"]) == 0:
+            config["sta"]["nameserver"] = None
         # wifi 2
-        if len(config['sta1']['ssid']) == 0:
-            config['sta1']['ssid'] = None
-        if len(config['sta1']['ip']) == 0:
-            config['sta1']['ip'] = None
-        if len(config['sta1']['netmask']) == 0:
-            config['sta1']['netmask'] = None
-        if len(config['sta1']['gw']) == 0:
-            config['sta1']['gw'] = None
-        if len(config['sta1']['nameserver']) == 0:
-            config['sta1']['nameserver'] = None
+        if len(config["sta1"]["ssid"]) == 0:
+            config["sta1"]["ssid"] = None
+        if len(config["sta1"]["ip"]) == 0:
+            config["sta1"]["ip"] = None
+        if len(config["sta1"]["netmask"]) == 0:
+            config["sta1"]["netmask"] = None
+        if len(config["sta1"]["gw"]) == 0:
+            config["sta1"]["gw"] = None
+        if len(config["sta1"]["nameserver"]) == 0:
+            config["sta1"]["nameserver"] = None
 
-        shelly.system_components['wifi'].set_config(config)
+        shelly.system_components["wifi"].set_config(config)
 
     def _write_ble_configuration(self, values_dict, type_id, dev_id):
         """
@@ -910,11 +1019,9 @@ class Plugin(indigo.PluginBase):
         if not shelly:
             return
 
-        config = {
-            'enable': values_dict.get("ble-enable")
-        }
+        config = {"enable": values_dict.get("ble-enable")}
 
-        shelly.system_components['ble'].set_config(config)
+        shelly.system_components["ble"].set_config(config)
 
     def _write_htui_configuration(self, values_dict, type_id, dev_id):
         """
@@ -930,11 +1037,9 @@ class Plugin(indigo.PluginBase):
         if not shelly:
             return
 
-        config = {
-            'temperature_unit': values_dict.get("ht-ui-temperature-unit")
-        }
+        config = {"temperature_unit": values_dict.get("ht-ui-temperature-unit")}
 
-        shelly.system_components['ht-ui'].set_config(config)
+        shelly.system_components["ht-ui"].set_config(config)
 
     def _write_switch_configuration(self, values_dict, type_id, dev_id):
         """
@@ -949,21 +1054,21 @@ class Plugin(indigo.PluginBase):
         switch = self.get_component(indigo.devices[dev_id])
 
         config = {
-            'name': values_dict.get("name", ""),
-            'in_mode': values_dict.get("in-mode", ""),
-            'initial_state': values_dict.get("initial-state", ""),
-            'auto_on': values_dict.get("auto-on", False),
-            'auto_on_delay': values_dict.get("auto-on-delay", ""),
-            'auto_off': values_dict.get("auto-off", False),
-            'auto_off_delay': values_dict.get("auto-off-delay", ""),
-            'input_id': values_dict.get("input-id", ""),
-            'power_limit': values_dict.get("power-limit", ""),
-            'voltage_limit': values_dict.get("voltage-limit", ""),
-            'current_limit': values_dict.get("current-limit", ""),
+            "name": values_dict.get("name", ""),
+            "in_mode": values_dict.get("in-mode", ""),
+            "initial_state": values_dict.get("initial-state", ""),
+            "auto_on": values_dict.get("auto-on", False),
+            "auto_on_delay": values_dict.get("auto-on-delay", ""),
+            "auto_off": values_dict.get("auto-off", False),
+            "auto_off_delay": values_dict.get("auto-off-delay", ""),
+            "input_id": values_dict.get("input-id", ""),
+            "power_limit": values_dict.get("power-limit", ""),
+            "voltage_limit": values_dict.get("voltage-limit", ""),
+            "current_limit": values_dict.get("current-limit", ""),
         }
 
-        if len(config['name']) == 0:
-            config['name'] = None
+        if len(config["name"]) == 0:
+            config["name"] = None
 
         switch.set_config(config)
 
@@ -980,17 +1085,19 @@ class Plugin(indigo.PluginBase):
         input_component = self.get_component(indigo.devices[dev_id])
 
         config = {
-            'name': values_dict.get("name", ""),
-            'type': values_dict.get("type", ""),
-            'invert': values_dict.get("invert", False)
+            "name": values_dict.get("name", ""),
+            "type": values_dict.get("type", ""),
+            "invert": values_dict.get("invert", False),
         }
 
-        if len(config['name']) == 0:
-            config['name'] = None
+        if len(config["name"]) == 0:
+            config["name"] = None
 
         input_component.set_config(config)
 
-    def action_handler(self, pluginAction=None, device=None, callerWaitingForResult=False):
+    def action_handler(
+        self, pluginAction=None, device=None, callerWaitingForResult=False
+    ):
         """
 
         :param pluginAction:

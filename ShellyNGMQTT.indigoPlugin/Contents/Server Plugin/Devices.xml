@@ -7,31 +7,52 @@
 			<Field type="menu" id="shelly-model" defaultValue="shelly-plus-1">
 				<Label>Shelly Model:</Label>
 				<List>
+					<!-- Gen 2 -->
+					<Option value="-1">%%disabled:Gen 2%%</Option>
+					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-1">Shelly Plus 1 (mini)</Option>
 					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM (mini)</Option>
 					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
-					<Option value="shelly-plus-walldimmer">Shelly Plus WallDimmer (Coming Soon!)</Option>
-					<Option value="-1">%%separator%%</Option>
-					<Option value="shelly-plus-i-4">Shelly Plus I4/I4DC</Option>
-					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-ht">Shelly Plus H&amp;T</Option>
-					<Option value="shelly-plus-smoke">%%disabled:Shelly Plus Smoke (Coming Soon!)%%</Option>
-					<Option value="-1">%%separator%%</Option>
+					<Option value="shelly-plus-i-4">Shelly Plus I4/I4DC</Option>
 					<Option value="shelly-plus-plug">Shelly Plus Plug US/IT</Option>
 					<Option value="shelly-plus-plug-s">Shelly Plus Plug S</Option>
 					<Option value="shelly-plus-plug-uk">Shelly Plus Plug UK</Option>
-					<Option value="-1">%%separator%%</Option>
+					<Option value="shelly-plus-smoke">%%disabled:Shelly Plus Smoke (Not available)%%</Option>
+					<Option value="shelly-plus-walldimmer">Shelly Plus WallDimmer</Option>
 					<Option value="shelly-pro-1">Shelly Pro 1</Option>
 					<Option value="shelly-pro-1-pm">Shelly Pro 1 PM</Option>
 					<Option value="shelly-pro-2">Shelly Pro 2</Option>
 					<Option value="shelly-pro-2-pm">Shelly Pro 2 PM</Option>
-					<Option value="shelly-pro-3">%%disabled:Shelly Pro 3 (Coming Soon!)%%</Option>
-					<Option value="shelly-pro-3-em">%%disabled:Shelly Pro 3 EM (Coming Soon!)%%</Option>
+					<Option value="shelly-pro-3">%%disabled:Shelly Pro 3 (Not Available)%%</Option>
+					<Option value="shelly-pro-3-em">%%disabled:Shelly Pro 3 EM (Not available)%%</Option>
 					<Option value="shelly-pro-4-pm">Shelly Pro 4 PM</Option>
+					
+					<!-- BLU -->
+					<Option value="-1">%%disabled: %%</Option>
+					<Option value="-1">%%disabled:BLU%%</Option>
 					<Option value="-1">%%separator%%</Option>
-					<Option value="shelly-blu-doorwindow">Shelly BLU Door/Window</Option>
 					<Option value="shelly-blu-button1">Shelly BLU Button1</Option>
+					<Option value="shelly-blu-doorwindow">Shelly BLU Door/Window</Option>
+					<Option value="shelly-blu-ht">Shelly BLU H&amp;T</Option>
+					<Option value="shelly-blu-motion">Shelly BLU Motion</Option>
+					<Option value="shelly-blu-rc-button-4">Shelly BLU RC Button 4</Option>
+					<Option value="-1">%%disabled:Shelly BLU Wall Switch 4 (Not available)%%</Option>
+					
+					<!-- BLU + ZB -->
+					<Option value="-1">%%disabled: %%</Option>
+					<Option value="-1">%%disabled:BLU + ZB%%</Option>
+					<Option value="-1">%%separator%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU Wall Switch 4 (Not available)%%</Option>
 					<Option value="shelly-blu-distance">Shelly BLU Distance</Option>
+					<Option value="-1">%%disabled:Shelly BLU Door/Window ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU H&amp;T Display ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU H&amp;T ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU Motion ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU RC Button 4 ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU Remote Control ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU TRV (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU Wall Switch 4 ZB (Not available)%%</Option>
 				</List>
 				<CallbackMethod>deviceFactoryModelChanged</CallbackMethod>
 			</Field>
@@ -196,6 +217,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -352,6 +378,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -503,6 +534,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -550,6 +586,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -600,6 +641,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -655,6 +701,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -706,6 +757,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -761,6 +817,11 @@
 				<Label>Message Type:</Label>
 			</Field>
 
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
+			</Field>
+
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
 
@@ -812,6 +873,11 @@
 
 			<Field id="message-type" type="textfield" visibleBindingId="settings-section" visibleBindingValue="indigo">
 				<Label>Message Type:</Label>
+			</Field>
+
+			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+				<Label>BLU Relay:</Label>
+				<Description>Relay BLU (BLE) messages back to the plugin</Description>
 			</Field>
 
 			<!-- System -->
@@ -1087,6 +1153,10 @@
             <Field type="checkbox" id="SupportsOnState" defaultValue="true" hidden="true" />
             <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
 			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
+
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
 		</ConfigUI>
 		<States>
 		</States>
@@ -1099,6 +1169,26 @@
             <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
             <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
 			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
+
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
+    	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Binary" id="shelly-blu-rc-button-4">
+		<Name>Shelly BLU RC Button 4</Name>
+		<ConfigUI>
+            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
+            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
+			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
+			
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
     	</ConfigUI>
 		<States>
 		</States>
@@ -1139,6 +1229,39 @@
 			</Field>
 			<Field id="measure-contents-level-sensor-height-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="measure-contents-level" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
 				<Label>The height of the sensor above the bottom of the container. This will be the same value as "Container Height" unless the sensor is mounted above the top of the container.</Label>
+			</Field>
+    	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Temperature" id="shelly-blu-ht">
+		<Name>Shelly BLU H&amp;T</Name>
+		<ConfigUI>
+			<Field id="temp-unit" type="menu" default="F">
+				<Label>Temperature Unit:</Label>
+				<List>
+					<Option value="F">Fahrenheit</Option>
+					<Option value="C">Celsius</Option>
+				</List>
+			</Field>
+
+			<Field id="temp-offset" type="textfield">
+				<Label>Temperature Offset:</Label>
+			</Field>
+			<Field id="temp-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>A positive or negative value to adjust the temperature reading by. This is applied using the desired temperature unit.</Label>
+			</Field>
+    	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Motion" id="shelly-blu-motion">
+		<Name>Shelly BLU Motion</Name>
+		<ConfigUI>
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
 			</Field>
     	</ConfigUI>
 		<States>

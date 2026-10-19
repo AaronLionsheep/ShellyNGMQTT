@@ -1,3 +1,8 @@
 .DS_Store
 .idea
+*.pyc
+.coverage
+__pycache__
+.pytest_cache
+.ruff_cache
 ShellyNGMQTT.indigoPlugin.zip
