@@ -1,5 +1,5 @@
 import pytest
-from shelly.devices.ShellyBLU import BLEData, BLERelayPacket
+from shelly.devices.ShellyBLU import BLEData, BLERelayPacket, SensorDeviceInfo
 
 
 class TestBLERelayPacket:
@@ -92,6 +92,13 @@ class TestBleData:
                 "signal_strength": -77,
             },
             events={},
+            device_info=SensorDeviceInfo(
+                name="Device 1CFF",
+                model=None,
+                manufacturer=None,
+                sw_version="BTHome BLE v2",
+                hw_version=None,
+            ),
         )
 
     def test_address(self, data):

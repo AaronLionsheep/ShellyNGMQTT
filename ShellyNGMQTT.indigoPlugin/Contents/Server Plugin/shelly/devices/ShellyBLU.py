@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
+from bthome_ble import SensorDeviceInfo
 from bthome_ble.parser import BTHomeBluetoothDeviceData, UuidType
 from habluetooth import BluetoothServiceInfoBleak
 
@@ -67,6 +68,7 @@ class BLEData:
     packet: BLERelayPacket
     sensors: dict[str, Any]
     events: dict[str, dict[str, Any]]
+    device_info: SensorDeviceInfo | None
 
     @property
     def address(self) -> str:
@@ -180,6 +182,7 @@ class ShellyBLU(Shelly):
                     for event in update.events.values()
                 }
             ),
+            device_info=update.devices[None],
         )
 
     def process_ble_data(self, data: BLEData):
@@ -192,7 +195,9 @@ class ShellyBLU(Shelly):
             if relay_device := indigo.devices.get(data.packet.relay_device_id):
                 relay_device_name = relay_device.name
             self.logger.info(
-                f"{self.device.name} processing BLE data from {relay_device_name} ({data.packet.rssi} dBm): sensors={data.sensors} events={data.events}"
+                f"{self.device.name} processing BLE data from {relay_device_name} ({data.packet.rssi} dBm): "
+                f"sensors={data.sensors} "
+                f"events={data.events} "
             )
 
         # Update base states from sensor data shared across all BLU devices
@@ -201,6 +206,12 @@ class ShellyBLU(Shelly):
         state_updates.append({"key": "rssi", "value": data.rssi})
         state_updates.append({"key": "address", "value": data.address})
         self.device.updateStatesOnServer(state_updates)
+
+        # Update device properties
+        props = self.device.pluginProps
+        if data.device_info:
+            props["version"] = data.device_info.hw_version or props.get("version")
+        self.device.replacePluginPropsOnServer(props)
 
         # Fire triggers matching common event data
         self.trigger_button_events(data.events)
