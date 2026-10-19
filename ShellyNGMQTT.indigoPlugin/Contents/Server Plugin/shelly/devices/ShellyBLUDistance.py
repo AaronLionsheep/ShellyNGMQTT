@@ -33,7 +33,7 @@ class ShellyBLUDistance(ShellyBLU):
         super().process_ble_data(data)
         state_updates = []
 
-        with data.sensor("distance") as distance:
+        if (distance := data.sensors.get("distance")) is not None:
             distance += int(self.device.pluginProps.get("offset") or 0)
             state_updates.append({'key': "distance", 'value': distance, 'uiValue': f"{distance} mm"})
             
@@ -48,10 +48,10 @@ class ShellyBLUDistance(ShellyBLU):
             else:
                 state_updates.append({'key': "sensorValue", 'value': distance, 'uiValue': f"{distance} mm"})
 
-        with data.sensor("vibration") as vibration:
+        if (vibration := data.sensors.get("vibration")) is not None:
             state_updates.append({'key': "vibration", 'value': vibration == 1})
 
-        with data.sensor("battery") as battery:
+        if (battery := data.sensors.get("battery")) is not None:
             state_updates.append({'key': "batteryLevel", 'value': battery})
         
         self.device.updateStatesOnServer(state_updates)    

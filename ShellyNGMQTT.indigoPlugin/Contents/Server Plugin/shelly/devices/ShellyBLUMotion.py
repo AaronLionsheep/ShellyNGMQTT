@@ -45,13 +45,13 @@ class ShellyBLUMotion(ShellyBLU):
         super().process_ble_data(data) 
         state_updates = []
 
-        with data.sensor("battery") as battery:
+        if (battery := data.sensors.get("battery")) is not None:
             state_updates.append({'key': "batteryLevel", 'value': battery})
 
-        with data.sensor("illuminance") as illuminance:
+        if (illuminance := data.sensors.get("illuminance")) is not None:
             state_updates.append({'key': "illuminance", 'value': illuminance})
 
-        with data.sensor("motion") as motion:
+        if (motion := data.sensors.get("motion")) is not None:
             state_updates.append({'key': "onOffState", 'value': motion})
 
         self.device.updateStatesOnServer(state_updates)

@@ -37,17 +37,17 @@ class ShellyBLUDoorWindow(ShellyBLU):
         super().process_ble_data(data)
         state_updates = []
 
-        with data.sensor("illuminance") as illuminance:
+        if (illuminance := data.sensors.get("illuminance")) is not None:
             state_updates.append({'key': "illuminance", 'value': illuminance})
 
-        with data.sensor("rotation") as rotation:
+        if (rotation := data.sensors.get("rotation")) is not None:
             state_updates.append({'key': "rotation", 'value': rotation})
 
-        with data.sensor("window") as open:
-            is_open = open == 1
+        if (window := data.sensors.get("window")) is not None:
+            is_open = window == 1
             state_updates.append({'key': "onOffState", 'value': is_open, "uiValue": "open" if is_open else "closed"})
 
-        with data.sensor("battery") as battery:
+        if (battery := data.sensors.get("battery")) is not None:
             state_updates.append({'key': "batteryLevel", 'value': battery})
 
         self.device.updateStatesOnServer(state_updates)

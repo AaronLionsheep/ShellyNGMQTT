@@ -28,7 +28,7 @@ class ShellyBLURCButton4(ShellyBLU):
         super().process_ble_data(data) 
         state_updates = []
 
-        with data.sensor("battery") as battery:
+        if (battery := data.sensors.get("battery")) is not None:
             state_updates.append({'key': "batteryLevel", 'value': battery})
 
         self.device.updateStatesOnServer(state_updates)

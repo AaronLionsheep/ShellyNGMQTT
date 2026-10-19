@@ -48,10 +48,10 @@ class ShellyBLUHT(ShellyBLU):
         super().process_ble_data(data) 
         state_updates = []
 
-        with data.sensor("battery") as battery:
+        if (battery := data.sensors.get("battery")) is not None:
             state_updates.append({'key': "batteryLevel", 'value': battery})
 
-        with data.sensor("temperature") as temperature:
+        if (temperature := data.sensors.get("temperature")) is not None:
             unit = self.device.pluginProps.get("temp-unit", "F")
             try:
                 offset = float(self.device.pluginProps.get("temp-offset") or 0)
@@ -69,7 +69,7 @@ class ShellyBLUHT(ShellyBLU):
             state_updates.append({'key': "temperature", 'value': temperature, 'uiValue': f"{temperature:.1f} °{unit}", 'decimalPlaces': 1})
             state_updates.append({'key': "sensorValue", 'value': temperature, 'uiValue': f"{temperature:.1f} °{unit}", 'decimalPlaces': 1})  
 
-        with data.sensor("humidity") as humidity:
+        if (humidity := data.sensors.get("humidity")) is not None:
             state_updates.append({'key': "humidity", 'value': humidity, 'uiValue': f"{humidity}%"})
 
         self.device.updateStatesOnServer(state_updates)

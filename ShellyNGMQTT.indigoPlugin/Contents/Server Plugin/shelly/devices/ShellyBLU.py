@@ -1,4 +1,3 @@
-from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Any
 
@@ -150,7 +149,18 @@ class BLEData:
 
     packet: BLERelayPacket
     sensors: dict[str, Any]
+    """
+    Sensor values by name.
+
+    Sensors are only present after the device has sent them at least once.
+    """
     events: dict[str, dict[str, Any]]
+    """
+    Events (ex: button presses) from this packet only.
+
+    Duplicate packets (same packet id within 4 seconds, ex: relayed by multiple
+    devices) are skipped by bthome-ble, so each event is only seen once.
+    """
     device_info: BTHomeDeviceInfo
 
     @property
@@ -160,18 +170,6 @@ class BLEData:
     @property
     def rssi(self) -> int:
         return self.packet.rssi
-
-    # I don't recall why this is a contextmanager.
-    # I think it was only to make readability better when parsing each sensor value.
-    @contextmanager
-    def sensor(self, name: str, required: bool = False, default: Any = None):
-        if name not in self.sensors:
-            if required:
-                raise KeyError(f"Sensor '{name}' not found in BLE Data")
-
-            yield default
-        else:
-            yield self.sensors[name]
 
 
 class ShellyBLU(Shelly):
