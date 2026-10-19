@@ -1,3 +1,6 @@
+# bthome-ble 3.24.0+ requires cryptography>=49, which doesn't provide wheels for intel macs.
+# Don't upgrade past 3.23.x until intel mac support can be dropped. Features from newer
+# versions (ex: device info objects 0xF0-0xF2) are backported in shelly/devices/ShellyBLU.py.
 bthome-ble==3.20.0
 # cryptography 49.0.0 stopped providing wheels for intel macs
 cryptography<49; sys_platform == 'darwin' and platform_machine == 'x86_64'
