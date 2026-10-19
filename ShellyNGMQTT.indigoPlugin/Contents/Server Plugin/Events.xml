@@ -62,7 +62,6 @@
                     filter="
                         self.component-input,
                         self.shelly-blu-button1,
-                        self.shelly-blu-ht,
                         self.shelly-blu-rc-button-4
                     "
                 />
@@ -87,7 +86,6 @@
                     filter="
                         self.component-input,
                         self.shelly-blu-button1,
-                        self.shelly-blu-ht,
                         self.shelly-blu-rc-button-4
                     "
                 />
@@ -112,7 +110,6 @@
                     filter="
                         self.component-input,
                         self.shelly-blu-button1,
-                        self.shelly-blu-ht,
                         self.shelly-blu-rc-button-4
                     "
                 />
@@ -136,6 +133,7 @@
                     method="get_shelly_devices"
                     filter="
                         self.shelly-blu-button1,
+                        self.shelly-blu-ht,
                         self.shelly-blu-rc-button-4
                     "
                 />
