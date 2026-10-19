@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
-from bthome_ble import SensorDeviceInfo
+from bthome_ble.const import MEAS_TYPES, MeasTypes
 from bthome_ble.parser import BTHomeBluetoothDeviceData, UuidType
 from habluetooth import BluetoothServiceInfoBleak
 
@@ -16,6 +16,89 @@ BUTTON_TRIGGER_TYPES = {
     "long_press": "long-push",
     "hold_press": "hold-push",
 }
+
+# BTHome device information objects, matching their definitions in bthome-ble>=3.24.
+# These are not parsed by bthome-ble<3.24, which is required to support intel macs.
+DEVICE_INFO_MEAS_TYPES = {
+    0xF0: MeasTypes(
+        meas_format=None,  # pyright: ignore[reportArgumentType]
+        data_length=2,
+        data_format="device_type_id",
+    ),
+    0xF1: MeasTypes(
+        meas_format=None,  # pyright: ignore[reportArgumentType]
+        data_length=4,
+        data_format="firmware_version_4",
+    ),
+    0xF2: MeasTypes(
+        meas_format=None,  # pyright: ignore[reportArgumentType]
+        data_length=3,
+        data_format="firmware_version_3",
+    ),
+}
+BTHOME_MEAS_TYPES = {**MEAS_TYPES, **DEVICE_INFO_MEAS_TYPES}
+
+
+@dataclass(frozen=True)
+class BTHomeDeviceInfo:
+    """Device information objects sent in a BTHome payload."""
+
+    device_type_id: int | None = None
+    firmware_version: str | None = None
+
+    @classmethod
+    def from_payload(cls, payload: bytes) -> "BTHomeDeviceInfo":
+        """
+        Extract the device type id and firmware version from an unencrypted BTHome V2 payload.
+
+        The payload is walked object by object, since a device information object id
+        may also appear as a byte within another object's data. Parsing stops at the
+        first malformed or unknown object, keeping anything found before it.
+
+        :param payload: The BTHome service data, starting with the device information byte.
+        :return: The device information found in the payload.
+        """
+        device_type_id = None
+        firmware_version = None
+
+        # Skip encrypted payloads and anything other than BTHome V2
+        if len(payload) < 1 or payload[0] & 0x01 or payload[0] >> 5 != 2:
+            return cls()
+
+        index = 1
+        while index < len(payload):
+            meas_type = BTHOME_MEAS_TYPES.get(payload[index])
+            index += 1
+
+            # The length of an unknown object can't be determined
+            if meas_type is None:
+                break
+
+            length = meas_type.data_length
+            if meas_type.data_format in ("raw", "string"):
+                # Variable length objects are prefixed with their length
+                if index >= len(payload):
+                    break
+                length = payload[index]
+                index += 1
+
+            data = payload[index : index + length]
+            index += length
+            if len(data) < length:
+                break
+
+            if meas_type.data_format == "device_type_id" and device_type_id is None:
+                device_type_id = int.from_bytes(data, "little")
+            elif (
+                meas_type.data_format in ("firmware_version_4", "firmware_version_3")
+                and firmware_version is None
+            ):
+                # Version components are sent least significant first
+                firmware_version = ".".join(
+                    str(component) for component in reversed(data)
+                )
+
+        return cls(device_type_id=device_type_id, firmware_version=firmware_version)
 
 
 class ServiceData(dict[str, bytes]):
@@ -68,7 +151,7 @@ class BLEData:
     packet: BLERelayPacket
     sensors: dict[str, Any]
     events: dict[str, dict[str, Any]]
-    device_info: SensorDeviceInfo | None
+    device_info: BTHomeDeviceInfo
 
     @property
     def address(self) -> str:
@@ -182,7 +265,9 @@ class ShellyBLU(Shelly):
                     for event in update.events.values()
                 }
             ),
-            device_info=update.devices[None],
+            device_info=BTHomeDeviceInfo.from_payload(
+                packet.service_data.get(UuidType.V2.value, b"")
+            ),
         )
 
     def process_ble_data(self, data: BLEData):
@@ -198,6 +283,7 @@ class ShellyBLU(Shelly):
                 f"{self.device.name} processing BLE data from {relay_device_name} ({data.packet.rssi} dBm): "
                 f"sensors={data.sensors} "
                 f"events={data.events} "
+                f"device_info={ ({'device_type_id': data.device_info.device_type_id, 'firmware_version': data.device_info.firmware_version}) } "
             )
 
         # Update base states from sensor data shared across all BLU devices
@@ -207,11 +293,22 @@ class ShellyBLU(Shelly):
         state_updates.append({"key": "address", "value": data.address})
         self.device.updateStatesOnServer(state_updates)
 
-        # Update device properties
+        # Update device properties, only when device information is sent and has changed
         props = self.device.pluginProps
-        if data.device_info:
-            props["version"] = data.device_info.hw_version or props.get("version")
-        self.device.replacePluginPropsOnServer(props)
+        prop_updates = {}
+        if firmware_version := data.device_info.firmware_version:
+            prop_updates["version"] = firmware_version
+
+        # TODO: Use data.device_info.device_type_id to identify BLU devices.
+        #  Shelly's device ids are listed at https://shelly-api-docs.shelly.cloud/docs-ble/common
+        #  (ex: 0x0003 is the BLU H&T). Options:
+        #  - A class attribute on each ShellyBLU model class holding its device id
+        #  - A mapping table from device ids to the internal model identifiers (ex: "shelly-blu-ht")
+        #  - A generated device name to show when identifying an unknown/discovered device
+
+        if prop_updates:
+            props.update(prop_updates)
+            self.device.replacePluginPropsOnServer(props)
 
         # Fire triggers matching common event data
         self.trigger_button_events(data.events)
