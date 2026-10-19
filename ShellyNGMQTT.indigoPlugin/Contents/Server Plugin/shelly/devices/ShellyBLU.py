@@ -233,10 +233,11 @@ class ShellyBLU(Shelly):
             # Build the button id from the event index
             try:
                 button_id = int(index or 1)
-            except ValueError as e:
+            except ValueError:
                 self.logger.error(
                     f"Unable to parse button_id from event key: {event_key}"
                 )
+                continue
 
             # Process each event
             for event_type in event:
