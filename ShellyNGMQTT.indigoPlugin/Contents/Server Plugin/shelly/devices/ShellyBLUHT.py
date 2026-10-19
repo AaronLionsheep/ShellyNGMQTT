@@ -48,9 +48,6 @@ class ShellyBLUHT(ShellyBLU):
         super().process_ble_data(data) 
         state_updates = []
 
-        if (battery := data.sensors.get("battery")) is not None:
-            state_updates.append({'key': "batteryLevel", 'value': battery})
-
         if (temperature := data.sensors.get("temperature")) is not None:
             unit = self.device.pluginProps.get("temp-unit", "F")
             try:

@@ -288,6 +288,8 @@ class ShellyBLU(Shelly):
         state_updates.append({"key": "pid", "value": data.sensors.get("packet_id", -1)})
         state_updates.append({"key": "rssi", "value": data.rssi})
         state_updates.append({"key": "address", "value": data.address})
+        if (battery := data.sensors.get("battery")) is not None:
+            state_updates.append({"key": "batteryLevel", "value": battery})
         self.device.updateStatesOnServer(state_updates)
 
         # Update device properties, only when device information is sent

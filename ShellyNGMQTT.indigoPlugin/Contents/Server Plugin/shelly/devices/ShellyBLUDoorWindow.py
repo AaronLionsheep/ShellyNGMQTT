@@ -47,7 +47,4 @@ class ShellyBLUDoorWindow(ShellyBLU):
             is_open = window == 1
             state_updates.append({'key': "onOffState", 'value': is_open, "uiValue": "open" if is_open else "closed"})
 
-        if (battery := data.sensors.get("battery")) is not None:
-            state_updates.append({'key': "batteryLevel", 'value': battery})
-
         self.device.updateStatesOnServer(state_updates)

@@ -51,7 +51,4 @@ class ShellyBLUDistance(ShellyBLU):
         if (vibration := data.sensors.get("vibration")) is not None:
             state_updates.append({'key': "vibration", 'value': vibration == 1})
 
-        if (battery := data.sensors.get("battery")) is not None:
-            state_updates.append({'key': "batteryLevel", 'value': battery})
-        
         self.device.updateStatesOnServer(state_updates)    
