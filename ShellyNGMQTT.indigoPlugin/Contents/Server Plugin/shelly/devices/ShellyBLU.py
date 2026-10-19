@@ -283,7 +283,6 @@ class ShellyBLU(Shelly):
                 f"{self.device.name} processing BLE data from {relay_device_name} ({data.packet.rssi} dBm): "
                 f"sensors={data.sensors} "
                 f"events={data.events} "
-                f"device_info={ ({'device_type_id': data.device_info.device_type_id, 'firmware_version': data.device_info.firmware_version}) } "
             )
 
         # Update base states from sensor data shared across all BLU devices
@@ -293,7 +292,7 @@ class ShellyBLU(Shelly):
         state_updates.append({"key": "address", "value": data.address})
         self.device.updateStatesOnServer(state_updates)
 
-        # Update device properties, only when device information is sent and has changed
+        # Update device properties, only when device information is sent
         props = self.device.pluginProps
         prop_updates = {}
         if firmware_version := data.device_info.firmware_version:
