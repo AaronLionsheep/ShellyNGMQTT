@@ -7,34 +7,52 @@
 			<Field type="menu" id="shelly-model" defaultValue="shelly-plus-1">
 				<Label>Shelly Model:</Label>
 				<List>
+					<!-- Gen 2 -->
+					<Option value="-1">%%disabled:Gen 2%%</Option>
+					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-1">Shelly Plus 1 (mini)</Option>
 					<Option value="shelly-plus-1-pm">Shelly Plus 1 PM (mini)</Option>
 					<Option value="shelly-plus-2-pm">Shelly Plus 2 PM</Option>
-					<Option value="shelly-plus-walldimmer">Shelly Plus WallDimmer (Coming Soon!)</Option>
-					<Option value="-1">%%separator%%</Option>
-					<Option value="shelly-plus-i-4">Shelly Plus I4/I4DC</Option>
-					<Option value="-1">%%separator%%</Option>
 					<Option value="shelly-plus-ht">Shelly Plus H&amp;T</Option>
-					<Option value="shelly-plus-smoke">%%disabled:Shelly Plus Smoke (Coming Soon!)%%</Option>
-					<Option value="-1">%%separator%%</Option>
+					<Option value="shelly-plus-i-4">Shelly Plus I4/I4DC</Option>
 					<Option value="shelly-plus-plug">Shelly Plus Plug US/IT</Option>
 					<Option value="shelly-plus-plug-s">Shelly Plus Plug S</Option>
 					<Option value="shelly-plus-plug-uk">Shelly Plus Plug UK</Option>
-					<Option value="-1">%%separator%%</Option>
+					<Option value="shelly-plus-smoke">%%disabled:Shelly Plus Smoke (Not available)%%</Option>
+					<Option value="shelly-plus-walldimmer">Shelly Plus WallDimmer</Option>
 					<Option value="shelly-pro-1">Shelly Pro 1</Option>
 					<Option value="shelly-pro-1-pm">Shelly Pro 1 PM</Option>
 					<Option value="shelly-pro-2">Shelly Pro 2</Option>
 					<Option value="shelly-pro-2-pm">Shelly Pro 2 PM</Option>
-					<Option value="shelly-pro-3">%%disabled:Shelly Pro 3 (Coming Soon!)%%</Option>
-					<Option value="shelly-pro-3-em">%%disabled:Shelly Pro 3 EM (Coming Soon!)%%</Option>
+					<Option value="shelly-pro-3">%%disabled:Shelly Pro 3 (Not Available)%%</Option>
+					<Option value="shelly-pro-3-em">%%disabled:Shelly Pro 3 EM (Not available)%%</Option>
 					<Option value="shelly-pro-4-pm">Shelly Pro 4 PM</Option>
+					
+					<!-- BLU -->
+					<Option value="-1">%%disabled: %%</Option>
+					<Option value="-1">%%disabled:BLU%%</Option>
 					<Option value="-1">%%separator%%</Option>
-					<Option value="shelly-blu-doorwindow">Shelly BLU Door/Window</Option>
 					<Option value="shelly-blu-button1">Shelly BLU Button1</Option>
-					<Option value="shelly-blu-rc-button-4">Shelly BLU RC Button 4</Option>
-					<Option value="shelly-blu-distance">Shelly BLU Distance</Option>
+					<Option value="shelly-blu-doorwindow">Shelly BLU Door/Window</Option>
 					<Option value="shelly-blu-ht">Shelly BLU H&amp;T</Option>
 					<Option value="shelly-blu-motion">Shelly BLU Motion</Option>
+					<Option value="shelly-blu-rc-button-4">Shelly BLU RC Button 4</Option>
+					<Option value="-1">%%disabled:Shelly BLU Wall Switch 4 (Not available)%%</Option>
+					
+					<!-- BLU + ZB -->
+					<Option value="-1">%%disabled: %%</Option>
+					<Option value="-1">%%disabled:BLU + ZB%%</Option>
+					<Option value="-1">%%separator%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU Wall Switch 4 (Not available)%%</Option>
+					<Option value="shelly-blu-distance">Shelly BLU Distance</Option>
+					<Option value="-1">%%disabled:Shelly BLU Door/Window ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU H&amp;T Display ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU H&amp;T ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU Motion ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU RC Button 4 ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU Remote Control ZB (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU TRV (Not available)%%</Option>
+					<Option value="-1">%%disabled:Shelly BLU Wall Switch 4 ZB (Not available)%%</Option>
 				</List>
 				<CallbackMethod>deviceFactoryModelChanged</CallbackMethod>
 			</Field>
