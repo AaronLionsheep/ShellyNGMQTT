@@ -351,12 +351,18 @@ class ShellyBLU(Shelly):
                     if trigger.pluginTypeId != trigger_type:
                         continue
 
+                    try:
+                        trigger_device_id = int(trigger.pluginProps.get("device-id"))
+                        trigger_button_id = int(trigger.pluginProps.get("button-id", 1))
+                    except (ValueError, TypeError):
+                        continue
+
                     # Filter out triggers not configured for this device
-                    if int(trigger.pluginProps.get("device-id", -1)) != self.device.id:
+                    if trigger_device_id != self.device.id:
                         continue
 
                     # Filter out triggers not matching the event's button id
-                    if int(trigger.pluginProps.get("button-id", 1)) != button_id:
+                    if trigger_button_id != button_id:
                         continue
 
                     indigo.trigger.execute(trigger)
