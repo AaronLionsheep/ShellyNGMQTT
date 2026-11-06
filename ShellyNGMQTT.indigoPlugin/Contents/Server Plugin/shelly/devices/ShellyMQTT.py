@@ -281,7 +281,11 @@ class ShellyMQTT(Shelly):
         if component:
             component.handle_notify_event(event)
         else:
-            self.logger.warning("'{}': Unable to find component (component_type={}, comp_id={}) to pass event '{}' to!".format(self.device.name, component_type, instance_id, event["name"]))
+            self.logger.debug(
+                f"'{self.device.name}': Unable to find component "
+                f"(component_type={component_type}, comp_id={instance_id}) "
+                f"to pass event '{event['name']}' to!"
+            )
 
     def handle_action(self, action):
         """
