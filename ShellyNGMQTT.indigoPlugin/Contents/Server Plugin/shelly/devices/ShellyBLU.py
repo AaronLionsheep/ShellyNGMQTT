@@ -178,7 +178,7 @@ class ShellyBLU(Shelly):
     """
 
     display_name = "ShellyBLUBase"
-    button_count = 0
+    button_count = 1
 
     def __init__(self, device_id):
         """Create a new Shelly BLU device.
