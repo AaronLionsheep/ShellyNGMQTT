@@ -642,6 +642,52 @@ class Plugin(indigo.PluginBase):
         """
         pass
 
+    def validate_event_config_ui(self, values_dict: dict, type_id: str, event_id: int):
+        """
+        Validate the event UI values.
+
+        Parameters
+        ----------
+        values_dict: indigo.Dict
+            The current event values.
+
+        type_id: str
+            The event type.
+
+        event_id: int
+            The event identifier, or 0 if this is a new event.
+        """
+        errors = indigo.Dict()
+
+        match type_id:
+            case (
+                "btn-down"
+                | "btn-up"
+                | "ota-begin"
+                | "ota-success"
+                | "ota-error"
+                | "sta-connect-fail"
+                | "sta-disconnected"
+                | "sleep"
+                | "scheduled-restart"
+            ):
+                if not values_dict.get("device-id"):
+                    errors["device-id"] = "You must select a device."
+            case (
+                "single-push"
+                | "double-push"
+                | "triple-push"
+                | "long-push"
+                | "hold-push"
+            ):
+                if not values_dict.get("device-id"):
+                    errors["device-id"] = "You must select a device."
+
+                if not values_dict.get("button-id"):
+                    errors["button-id"] = "You must select a button."
+
+        return len(errors) == 0, values_dict, errors
+
     def actionControlDevice(self, action, device):
         """
         Handles an action being performed on the device.
