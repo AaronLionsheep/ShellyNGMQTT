@@ -1,13 +1,13 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
-from .ShellyMQTT import ShellyMQTT
-from ..components.functional.switch import Switch
 from ..components.functional.input import Input
-from ..components.system.system import System
-from ..components.system.wifi import WiFi
+from ..components.functional.switch import Switch
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
+from ..components.system.system import System
+from ..components.system.wifi import WiFi
+from .ShellyMQTT import ShellyMQTT
 
 
 class ShellyPlus1(ShellyMQTT):
@@ -21,11 +21,11 @@ class ShellyPlus1(ShellyMQTT):
         super(ShellyPlus1, self).__init__(device_id)
 
         self.system_components = {
-            'system': System(self),
-            'wifi': WiFi(self),
-            'ble': BLE(self),
-            'mqtt': MQTT(self),
-            'script': Script(self)
+            "system": System(self),
+            "wifi": WiFi(self),
+            "ble": BLE(self),
+            "mqtt": MQTT(self),
+            "script": Script(self),
         }
 
         self.switch = self.register_component(Switch, "Switch")
@@ -41,7 +41,9 @@ class ShellyPlus1(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus1, self).handle_notify_status(component_type, instance_id, status)
+        super(ShellyPlus1, self).handle_notify_status(
+            component_type, instance_id, status
+        )
 
     def handle_notify_event(self, component_type, instance_id, event):
         """

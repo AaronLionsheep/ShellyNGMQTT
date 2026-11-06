@@ -1,13 +1,14 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
-from .ShellyMQTT import ShellyMQTT
-from ..components.functional.switch import Switch
 from ..components.functional.input import Input
+from ..components.functional.switch import Switch
+from ..components.system.ble import BLE
+from ..components.system.ethernet import Ethernet
+from ..components.system.mqtt import MQTT
+from ..components.system.script import Script
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
-from ..components.system.ethernet import Ethernet
-from ..components.system.ble import BLE
-from ..components.system.mqtt import MQTT
+from .ShellyMQTT import ShellyMQTT
 
 
 class ShellyPro1PM(ShellyMQTT):
@@ -21,18 +22,23 @@ class ShellyPro1PM(ShellyMQTT):
         super(ShellyPro1PM, self).__init__(device_id)
 
         self.system_components = {
-            'system': System(self),
-            'wifi': WiFi(self),
-            'ethernet': Ethernet(self),
-            'ble': BLE(self),
-            'mqtt': MQTT(self)
+            "system": System(self),
+            "wifi": WiFi(self),
+            "ethernet": Ethernet(self),
+            "ble": BLE(self),
+            "mqtt": MQTT(self),
+            "script": Script(self),
         }
 
-        self.switch = self.register_component(Switch, "Switch", props={
-            "SupportsPowerMeter": "true",
-            "SupportsEnergyMeter": "true",
-            "SupportsEnergyMeterCurPower": "true"
-        })
+        self.switch = self.register_component(
+            Switch,
+            "Switch",
+            props={
+                "SupportsPowerMeter": "true",
+                "SupportsEnergyMeter": "true",
+                "SupportsEnergyMeterCurPower": "true",
+            },
+        )
         self.input_0 = self.register_component(Input, "Input 1", comp_id=0)
         self.input_1 = self.register_component(Input, "Input 2", comp_id=1)
 
@@ -46,7 +52,9 @@ class ShellyPro1PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPro1PM, self).handle_notify_status(component_type, instance_id, status)
+        super(ShellyPro1PM, self).handle_notify_status(
+            component_type, instance_id, status
+        )
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -58,7 +66,9 @@ class ShellyPro1PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPro1PM, self).handle_notify_event(component_type, instance_id, event)
+        super(ShellyPro1PM, self).handle_notify_event(
+            component_type, instance_id, event
+        )
 
     def handle_action(self, action):
         """

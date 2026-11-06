@@ -1,13 +1,13 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
-from .ShellyMQTT import ShellyMQTT
-from ..components.functional.switch import Switch
 from ..components.functional.input import Input
-from ..components.system.system import System
-from ..components.system.wifi import WiFi
+from ..components.functional.switch import Switch
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
+from ..components.system.system import System
+from ..components.system.wifi import WiFi
+from .ShellyMQTT import ShellyMQTT
 
 
 class ShellyPlus2PM(ShellyMQTT):
@@ -21,23 +21,33 @@ class ShellyPlus2PM(ShellyMQTT):
         super(ShellyPlus2PM, self).__init__(device_id)
 
         self.system_components = {
-            'system': System(self),
-            'wifi': WiFi(self),
-            'ble': BLE(self),
-            'mqtt': MQTT(self),
-            'script': Script(self)
+            "system": System(self),
+            "wifi": WiFi(self),
+            "ble": BLE(self),
+            "mqtt": MQTT(self),
+            "script": Script(self),
         }
 
-        self.switch_0 = self.register_component(Switch, "Switch 1", comp_id=0, props={
-            "SupportsPowerMeter": "true",
-            "SupportsEnergyMeter": "true",
-            "SupportsEnergyMeterCurPower": "true"
-        })
-        self.switch_1 = self.register_component(Switch, "Switch 2", comp_id=1, props={
-            "SupportsPowerMeter": "true",
-            "SupportsEnergyMeter": "true",
-            "SupportsEnergyMeterCurPower": "true"
-        })
+        self.switch_0 = self.register_component(
+            Switch,
+            "Switch 1",
+            comp_id=0,
+            props={
+                "SupportsPowerMeter": "true",
+                "SupportsEnergyMeter": "true",
+                "SupportsEnergyMeterCurPower": "true",
+            },
+        )
+        self.switch_1 = self.register_component(
+            Switch,
+            "Switch 2",
+            comp_id=1,
+            props={
+                "SupportsPowerMeter": "true",
+                "SupportsEnergyMeter": "true",
+                "SupportsEnergyMeterCurPower": "true",
+            },
+        )
         self.input_0 = self.register_component(Input, "Input 1")
         self.input_1 = self.register_component(Input, "Input 2")
 
@@ -51,7 +61,9 @@ class ShellyPlus2PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus2PM, self).handle_notify_status(component_type, instance_id, status)
+        super(ShellyPlus2PM, self).handle_notify_status(
+            component_type, instance_id, status
+        )
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -63,7 +75,9 @@ class ShellyPlus2PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus2PM, self).handle_notify_event(component_type, instance_id, event)
+        super(ShellyPlus2PM, self).handle_notify_event(
+            component_type, instance_id, event
+        )
 
     def handle_action(self, action):
         """
