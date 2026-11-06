@@ -9,6 +9,7 @@ class ShellyBLUButton1(ShellyBLU):
     """
 
     display_name = "Shelly BLU Button1"
+    button_count = 1
 
     def __init__(self, device_id):
         super(ShellyBLUButton1, self).__init__(device_id)

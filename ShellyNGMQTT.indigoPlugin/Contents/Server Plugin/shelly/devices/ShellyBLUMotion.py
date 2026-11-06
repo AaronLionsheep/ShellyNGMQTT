@@ -1,8 +1,8 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
-
 from typing import Any
 
-from .ShellyBLU import ShellyBLU, BLEData
+import indigo  # pyright: ignore[reportMissingModuleSource]
+
+from .ShellyBLU import BLEData, ShellyBLU
 
 
 class ShellyBLUMotion(ShellyBLU):
@@ -11,6 +11,7 @@ class ShellyBLUMotion(ShellyBLU):
     """
 
     display_name = "Shelly BLU Motion"
+    button_count = 1
 
     def __init__(self, device_id):
         super(ShellyBLUMotion, self).__init__(device_id)
@@ -19,10 +20,10 @@ class ShellyBLUMotion(ShellyBLU):
     def plugin_props(cls) -> dict[str, Any]:
         props = super().plugin_props()
         props.update(
-			SupportsBatteryLevel=True,
+            SupportsBatteryLevel=True,
             SupportsOnState=True,
             SupportsStatusRequest=False,
-            SupportsSensorValue=False
+            SupportsSensorValue=False,
         )
         return props
 
@@ -32,28 +33,36 @@ class ShellyBLUMotion(ShellyBLU):
         """
         states = super(ShellyBLUMotion, self).get_device_state_list()
 
-        states.extend([
-            indigo.activePlugin.getDeviceStateDictForNumberType("illuminance", "Illuminance", "Illuminance")
-        ])
+        states.extend(
+            [
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "illuminance", "Illuminance", "Illuminance"
+                )
+            ]
+        )
 
         return states
-    
+
     def process_ble_data(self, data: BLEData):
         """
         Process a BTHome data packet.
         """
-        super().process_ble_data(data) 
+        super().process_ble_data(data)
         state_updates = []
 
         if (illuminance := data.sensors.get("illuminance")) is not None:
-            state_updates.append({'key': "illuminance", 'value': illuminance})
+            state_updates.append({"key": "illuminance", "value": illuminance})
 
         if (motion := data.sensors.get("motion")) is not None:
-            state_updates.append({'key': "onOffState", 'value': motion})
+            state_updates.append({"key": "onOffState", "value": motion})
 
         self.device.updateStatesOnServer(state_updates)
 
     def update_state_image(self):
-        motion = self.device.states.get('onOffState', False)
-        image = indigo.kStateImageSel.MotionSensorTripped if motion else indigo.kStateImageSel.MotionSensor
+        motion = self.device.states.get("onOffState", False)
+        image = (
+            indigo.kStateImageSel.MotionSensorTripped
+            if motion
+            else indigo.kStateImageSel.MotionSensor
+        )
         self.device.updateStateImageOnServer(image)
