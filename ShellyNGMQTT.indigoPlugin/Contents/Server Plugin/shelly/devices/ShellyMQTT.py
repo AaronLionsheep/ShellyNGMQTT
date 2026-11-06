@@ -1,7 +1,7 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
 import json
-import logging
 import uuid
+
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from .Shelly import Shelly
 
@@ -18,7 +18,7 @@ class ShellyMQTT(Shelly):
 
         :param device_id: The indigo device id.
         """
-        super(ShellyMQTT, self).__init__(device_id)
+        super().__init__(device_id)
 
         self.functional_components = []
         self.system_components = {}
@@ -44,8 +44,8 @@ class ShellyMQTT(Shelly):
         :return: The Indigo deviceId of the broker for this device.
         """
 
-        broker_id = self.device.pluginProps.get('broker-id', None)
-        if broker_id is None or broker_id == '':
+        broker_id = self.device.pluginProps.get("broker-id", None)
+        if broker_id is None or broker_id == "":
             return None
         else:
             return int(broker_id)
@@ -57,7 +57,7 @@ class ShellyMQTT(Shelly):
         :return: The message type for this device.
         """
 
-        return self.device.pluginProps.get('message-type', "")
+        return self.device.pluginProps.get("message-type", "")
 
     def get_topics(self):
         """
@@ -71,9 +71,9 @@ class ShellyMQTT(Shelly):
             return []
         else:
             return [
-                "{}/online".format(address),
-                "{}/rpc".format(address),
-                "{}/events/rpc".format(address)
+                f"{address}/online",
+                f"{address}/rpc",
+                f"{address}/events/rpc",
             ]
 
     def get_device_state_list(self):
@@ -91,18 +91,44 @@ class ShellyMQTT(Shelly):
 
         :return: The device state list.
         """
-        states = super(ShellyMQTT, self).get_device_state_list()
-        states.extend([
-            indigo.activePlugin.getDeviceStateDictForBoolYesNoType("online", "Online", "Online"),
-            indigo.activePlugin.getDeviceStateDictForStringType("ip-address", "IP Address", "IP Address"),
-            indigo.activePlugin.getDeviceStateDictForStringType("ssid", "Connected SSID", "Connected SSID"),
-            indigo.activePlugin.getDeviceStateDictForNumberType("rssi", "WiFi Signal Strength (dBms)", "WiFi Signal Strength (dBms)"),
-            indigo.activePlugin.getDeviceStateDictForStringType("mac-address", "Mac Address", "Mac Address"),
-            indigo.activePlugin.getDeviceStateDictForNumberType("uptime", "Uptime (seconds)", "Uptime (seconds)"),
-            indigo.activePlugin.getDeviceStateDictForStringType("available-firmware", "Available Firmware Version", "Available Firmware Version"),
-            indigo.activePlugin.getDeviceStateDictForStringType("available-beta-firmware", "Available Beta Firmware Version", "Available Beta Firmware Version"),
-            indigo.activePlugin.getDeviceStateDictForStringType("current-firmware", "Current Firmware Version", "Current Firmware Version"),
-        ])
+        states = super().get_device_state_list()
+        states.extend(
+            [
+                indigo.activePlugin.getDeviceStateDictForBoolYesNoType(
+                    "online", "Online", "Online"
+                ),
+                indigo.activePlugin.getDeviceStateDictForStringType(
+                    "ip-address", "IP Address", "IP Address"
+                ),
+                indigo.activePlugin.getDeviceStateDictForStringType(
+                    "ssid", "Connected SSID", "Connected SSID"
+                ),
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "rssi", "WiFi Signal Strength (dBms)", "WiFi Signal Strength (dBms)"
+                ),
+                indigo.activePlugin.getDeviceStateDictForStringType(
+                    "mac-address", "Mac Address", "Mac Address"
+                ),
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "uptime", "Uptime (seconds)", "Uptime (seconds)"
+                ),
+                indigo.activePlugin.getDeviceStateDictForStringType(
+                    "available-firmware",
+                    "Available Firmware Version",
+                    "Available Firmware Version",
+                ),
+                indigo.activePlugin.getDeviceStateDictForStringType(
+                    "available-beta-firmware",
+                    "Available Beta Firmware Version",
+                    "Available Beta Firmware Version",
+                ),
+                indigo.activePlugin.getDeviceStateDictForStringType(
+                    "current-firmware",
+                    "Current Firmware Version",
+                    "Current Firmware Version",
+                ),
+            ]
+        )
         return states
 
     #
@@ -133,11 +159,10 @@ class ShellyMQTT(Shelly):
         mqtt = self.get_mqtt()
         if mqtt is not None:
             for topic in self.get_topics():
-                props = {
-                    'topic': topic,
-                    'qos': 0
-                }
-                mqtt.executeAction("add_subscription", deviceId=self.get_broker_id(), props=props)
+                props = {"topic": topic, "qos": 0}
+                mqtt.executeAction(
+                    "add_subscription", deviceId=self.get_broker_id(), props=props
+                )
 
     def publish(self, topic, payload):
         """
@@ -151,15 +176,24 @@ class ShellyMQTT(Shelly):
         mqtt = self.get_mqtt()
         if mqtt is not None:
             props = {
-                'topic': topic,
-                'payload': payload,
-                'qos': 0,
-                'retain': 0,
+                "topic": topic,
+                "payload": payload,
+                "qos": 0,
+                "retain": 0,
             }
-            mqtt.executeAction("publish", deviceId=self.get_broker_id(), props=props, waitUntilDone=False)
-            self.logger.debug("\"%s\" published \"%s\" to \"%s\"", self.device.name, payload, topic)
+            mqtt.executeAction(
+                "publish",
+                deviceId=self.get_broker_id(),
+                props=props,
+                waitUntilDone=False,
+            )
+            self.logger.debug(
+                '"%s" published "%s" to "%s"', self.device.name, payload, topic
+            )
 
-    def publish_rpc(self, method: str, params: dict = None, callback=None) -> None:
+    def publish_rpc(
+        self, method: str, params: dict | None = None, callback=None
+    ) -> None:
         """
 
         :return:
@@ -171,12 +205,12 @@ class ShellyMQTT(Shelly):
         if callback:
             self.rpc_callbacks[rpc_id] = callback
         rpc = {
-            'id': rpc_id,
-            'src': self.get_address(),
-            'method': method,
-            'params': params
+            "id": rpc_id,
+            "src": self.get_address(),
+            "method": method,
+            "params": params,
         }
-        self.publish("{}/rpc".format(self.get_address()), json.dumps(rpc))
+        self.publish(f"{self.get_address()}/rpc", json.dumps(rpc))
 
     #
     # Handlers
@@ -192,27 +226,27 @@ class ShellyMQTT(Shelly):
         :return:  None
         """
 
-        if topic == "{}/online".format(self.get_address()):
-            is_online = (payload == "true")
-            self.device.updateStateOnServer(key='online', value=is_online)
-        elif topic == "{}/rpc".format(self.get_address()):
+        if topic == f"{self.get_address()}/online":
+            is_online = payload == "true"
+            self.device.updateStateOnServer(key="online", value=is_online)
+        elif topic == f"{self.get_address()}/rpc":
             rpc = json.loads(payload)
             # Only process a response, which does not have a method
-            if 'method' not in rpc:
-                rpc_id = rpc.get('id', None)
-                result = rpc.get('result', None)
-                error = rpc.get('error', None)
+            if "method" not in rpc:
+                rpc_id = rpc.get("id", None)
+                result = rpc.get("result", None)
+                error = rpc.get("error", None)
                 callback = self.rpc_callbacks.get(rpc_id, None)
                 if callback:
                     callback(result, error)
                     del self.rpc_callbacks[rpc_id]
-        elif topic == "{}/events/rpc".format(self.get_address()):
+        elif topic == f"{self.get_address()}/events/rpc":
             rpc = json.loads(payload)
-            method = rpc.get('method', None)
-            params = rpc.get('params', {})
+            method = rpc.get("method", None)
+            params = rpc.get("params", {})
 
             if method in ("NotifyStatus", "NotifyFullStatus"):
-                for component in params.keys():
+                for component in params:
                     # Ignore the timestamp since it is not a component
                     if component == "ts":
                         continue
@@ -220,8 +254,8 @@ class ShellyMQTT(Shelly):
                     # Parse the component type and instance ID
                     component_type = None
                     instance_id = None
-                    if ':' in component:
-                        component_parts = component.split(':')
+                    if ":" in component:
+                        component_parts = component.split(":")
                         if len(component_parts) == 2:
                             component_type = component_parts[0]
                             instance_id = int(component_parts[1])
@@ -233,12 +267,12 @@ class ShellyMQTT(Shelly):
                     status = params[component]
                     self.handle_notify_status(component_type, instance_id, status)
             elif method == "NotifyEvent":
-                for e in params.get('events', []):
-                    component = e.get('component', "")
+                for e in params.get("events", []):
+                    component = e.get("component", "")
                     component_type = None
                     instance_id = 0
-                    if ':' in component:
-                        component_parts = component.split(':')
+                    if ":" in component:
+                        component_parts = component.split(":")
                         if len(component_parts) == 2:
                             component_type = component_parts[0]
                             instance_id = int(component_parts[1])
@@ -251,8 +285,6 @@ class ShellyMQTT(Shelly):
                     del e["event"]
                     self.handle_notify_event(component_type, instance_id, e)
 
-        return None
-
     def handle_notify_status(self, component_type, instance_id, status):
         """
         Default handler for NotifyStatus RPC messages.
@@ -263,7 +295,9 @@ class ShellyMQTT(Shelly):
         :return: None
         """
 
-        component = self.get_component(component_type=component_type, comp_id=instance_id)
+        component = self.get_component(
+            component_type=component_type, comp_id=instance_id
+        )
         if component:
             component.process_status(status)
 
@@ -277,7 +311,9 @@ class ShellyMQTT(Shelly):
         :return: None
         """
 
-        component = self.get_component(component_type=component_type, comp_id=instance_id)
+        component = self.get_component(
+            component_type=component_type, comp_id=instance_id
+        )
         if component:
             component.handle_notify_event(event)
         else:
@@ -306,6 +342,7 @@ class ShellyMQTT(Shelly):
 
         :return:
         """
+
         def _response(response, error=None):
             if error:
                 self.logger.error(error)
@@ -313,14 +350,18 @@ class ShellyMQTT(Shelly):
 
             if "stable" in response:
                 stable_version = response["stable"].get("version", "Unknown")
-                self.logger.info("Newer stable version ({}) found for {}".format(stable_version, self.device.name))
+                self.logger.info(
+                    f"Newer stable version ({stable_version}) found for {self.device.name}"
+                )
 
             if "beta" in response:
                 beta_version = response["beta"].get("version", "Unknown")
-                self.logger.info("Newer beta version ({}) found for {}".format(beta_version, self.device.name))
+                self.logger.info(
+                    f"Newer beta version ({beta_version}) found for {self.device.name}"
+                )
 
             if "stable" not in response and "beta" not in response:
-                self.logger.info("{} is on the latest firmware".format(self.device.name))
+                self.logger.info(f"{self.device.name} is on the latest firmware")
 
         self.publish_rpc("Shelly.CheckForUpdate", callback=_response)
 
@@ -329,10 +370,11 @@ class ShellyMQTT(Shelly):
 
         :return:
         """
+
         def _response(response, error=None):
             if error:
                 self.logger.error(error)
                 return
 
         self.publish_rpc("Shelly.Update", {"stage": stage}, callback=_response)
-        self.logger.info("Updating {}...".format(self.device.name))
+        self.logger.info(f"Updating {self.device.name}...")
