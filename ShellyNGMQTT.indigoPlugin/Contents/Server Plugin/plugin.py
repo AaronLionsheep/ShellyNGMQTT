@@ -179,7 +179,12 @@ class Plugin(indigo.PluginBase):
                     shelly = self.shellies.get(dev_id, None)
                     if shelly is not None and message_type == shelly.get_message_type():
                         # Send this message data to the shelly object
-                        shelly.handle_message(topic, payload)
+                        try:
+                            shelly.handle_message(topic, payload)
+                        except Exception:
+                            self.logger.exception(
+                                f"{shelly.device.name} unable to handle message {topic}: {payload}"
+                            )
 
     #
     # Device management
