@@ -10,18 +10,14 @@ function BLEScanCallback(event, result) {
 }
 
 function init() {
-  if (!Shelly.getComponentConfig("ble").enable) {
+  if (Shelly.getComponentConfig("ble").enable === false) {
     console.log("Error: Bluetooth must be enabled!");
     return;
   }
 
-  if (BLE.Scanner.isRunning()) {
-    console.log("Info: The BLE gateway is running.");
-  } else {
-    let bleScanner = BLE.Scanner.Start({ duration_ms: BLE.Scanner.INFINITE_SCAN, active: false });
-    if(!bleScanner) console.log("Error: Can not start new scanner!");
-  }
-
+  // Always request a scan: the 1.5+ scan manager requires it. Before 1.5,
+  // Start fails if another client owns the scan, but Subscribe still gets its results.
+  BLE.Scanner.Start({ duration_ms: BLE.Scanner.INFINITE_SCAN, active: false });
   BLE.Scanner.Subscribe(BLEScanCallback);
 }
 
