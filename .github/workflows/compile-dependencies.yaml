@@ -29,6 +29,9 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      - name: Install dependencies
+        run: brew install openssl@3 rust
+
       - name: Compile
         env:
           ARCHFLAGS: "-arch arm64 -arch x86_64"
