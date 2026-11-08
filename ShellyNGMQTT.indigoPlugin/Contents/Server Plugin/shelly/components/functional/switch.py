@@ -1,5 +1,5 @@
 # coding=utf-8
-import indigo
+import indigo # pyright: ignore[reportMissingModuleSource]
 
 from ..component import Component
 
