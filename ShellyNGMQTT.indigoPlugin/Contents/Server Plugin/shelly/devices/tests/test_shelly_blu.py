@@ -98,9 +98,9 @@ class TestBTHomeDeviceInfo:
             )
 
         def test_all_device_information_objects(self):
-            assert parse("44" + "f00900" + "f101020301" + "f2040506") == BTHomeDeviceInfo(
-                device_type_id=9, firmware_version="1.3.2.1"
-            )
+            assert parse(
+                "44" + "f00900" + "f101020301" + "f2040506"
+            ) == BTHomeDeviceInfo(device_type_id=9, firmware_version="1.3.2.1")
 
         def test_out_of_order_objects(self):
             """Objects are still parsed when not sent in ascending object id order"""
@@ -167,7 +167,10 @@ class TestBTHomeDeviceInfo:
             assert parse("4453" + "04" + "f1010203") == BTHomeDeviceInfo()
 
         def test_string_object_before_firmware(self):
-            assert parse("4453" + "04" + "f1010203" + "f2040506").firmware_version == "6.5.4"
+            assert (
+                parse("4453" + "04" + "f1010203" + "f2040506").firmware_version
+                == "6.5.4"
+            )
 
         def test_raw_object_before_device_info(self):
             # Raw (0x54) with a length of 3 containing an f0 object
@@ -277,7 +280,6 @@ class TestBLERelayPacket:
                 },
             },
         )
-        print(packet.service_data)
         assert (
             str(packet)
             == "BLERelayPacket(version=1, relay_device_id=1, address='b0:c7:de:04:1c:ff', rssi=-77, service_data={'0000fcd2-0000-1000-8000-00805f9b34fb': '44005001642e3545ef00'}, timestamp=0)"
