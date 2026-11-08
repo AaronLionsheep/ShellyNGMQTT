@@ -1,16 +1,17 @@
-import indigo
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
-from .Shelly import Shelly
-from ..components.functional.switch import Switch
 from ..components.functional.input import Input
+from ..components.functional.switch import Switch
+from ..components.system.ble import BLE
+from ..components.system.ethernet import Ethernet
+from ..components.system.mqtt import MQTT
+from ..components.system.script import Script
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
-from ..components.system.ethernet import Ethernet
-from ..components.system.ble import BLE
-from ..components.system.mqtt import MQTT
+from .ShellyMQTT import ShellyMQTT
 
 
-class ShellyPro2(Shelly):
+class ShellyPro2(ShellyMQTT):
     """
     Creates a Shelly Pro 2 device class.
     """
@@ -21,11 +22,12 @@ class ShellyPro2(Shelly):
         super(ShellyPro2, self).__init__(device_id)
 
         self.system_components = {
-            'system': System(self),
-            'wifi': WiFi(self),
-            'ethernet': Ethernet(self),
-            'ble': BLE(self),
-            'mqtt': MQTT(self)
+            "system": System(self),
+            "wifi": WiFi(self),
+            "ethernet": Ethernet(self),
+            "ble": BLE(self),
+            "mqtt": MQTT(self),
+            "script": Script(self),
         }
 
         self.switch_0 = self.register_component(Switch, "Switch 1", comp_id=0)
@@ -43,7 +45,9 @@ class ShellyPro2(Shelly):
         :return: None
         """
 
-        super(ShellyPro2, self).handle_notify_status(component_type, instance_id, status)
+        super(ShellyPro2, self).handle_notify_status(
+            component_type, instance_id, status
+        )
 
     def handle_notify_event(self, component_type, instance_id, event):
         """

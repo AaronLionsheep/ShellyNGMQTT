@@ -1,6 +1,6 @@
-import indigo
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
-from .ShellyBLU import ShellyBLU
+from .ShellyBLU import BLEData, ShellyBLU
 
 
 class ShellyBLUDoorWindow(ShellyBLU):
@@ -9,6 +9,7 @@ class ShellyBLUDoorWindow(ShellyBLU):
     """
 
     display_name = "Shelly BLU Door/Window"
+    button_count = 1
 
     def __init__(self, device_id):
         super(ShellyBLUDoorWindow, self).__init__(device_id)
@@ -19,29 +20,48 @@ class ShellyBLUDoorWindow(ShellyBLU):
         """
         states = super(ShellyBLUDoorWindow, self).get_device_state_list()
 
-        states.extend([
-            indigo.activePlugin.getDeviceStateDictForNumberType("illuminance", "Illuminance", "Illuminance"),
-            indigo.activePlugin.getDeviceStateDictForNumberType("rotation", "Rotation", "Rotation")
-        ])
+        states.extend(
+            [
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "illuminance", "Illuminance", "Illuminance"
+                ),
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "rotation", "Rotation", "Rotation"
+                ),
+            ]
+        )
 
         return states
-    
-    def process_packet(self, packet: dict):
+
+    def update_state_image(self):
+        opened = self.device.states.get("onOffState", False)
+        self.device.updateStateImageOnServer(
+            indigo.kStateImageSel.SensorTripped
+            if opened
+            else indigo.kStateImageSel.SensorOff
+        )
+
+    def process_ble_data(self, data: BLEData):
         """
         Process a BTHome data packet.
         """
-        super().process_packet(packet)
-    
+        super().process_ble_data(data)
         state_updates = []
 
-        state_updates.append({'key': "illuminance", 'value': packet.get("illuminance", -1)})
-        state_updates.append({'key': "rotation", 'value': packet.get("rotation", -1)})
-        state_updates.append({'key': "batteryLevel", 'value': packet.get("battery", 0)})
+        if (illuminance := data.sensors.get("illuminance")) is not None:
+            state_updates.append({"key": "illuminance", "value": illuminance})
 
-        is_open = packet.get("window", 0) == 1
-        state_updates.append({'key': "onOffState", 'value': is_open, "uiValue": "open" if is_open else "closed"})
+        if (rotation := data.sensors.get("rotation")) is not None:
+            state_updates.append({"key": "rotation", "value": rotation})
+
+        if (window := data.sensors.get("window")) is not None:
+            is_open = window == 1
+            state_updates.append(
+                {
+                    "key": "onOffState",
+                    "value": is_open,
+                    "uiValue": "open" if is_open else "closed",
+                }
+            )
 
         self.device.updateStatesOnServer(state_updates)
-
-        self.device.updateStateImageOnServer(indigo.kStateImageSel.SensorTripped if is_open else indigo.kStateImageSel.SensorOff)
-    

@@ -1,15 +1,15 @@
-import indigo
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
-from .Shelly import Shelly
 from ..components.functional.light import Light
-from ..components.system.system import System
-from ..components.system.wifi import WiFi
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
+from ..components.system.system import System
+from ..components.system.wifi import WiFi
+from .ShellyMQTT import ShellyMQTT
 
 
-class ShellyPlusWallDimmer(Shelly):
+class ShellyPlusWallDimmer(ShellyMQTT):
     """
     Creates a Shelly Plus WallDimmer device class.
     """
@@ -20,18 +20,22 @@ class ShellyPlusWallDimmer(Shelly):
         super(ShellyPlusWallDimmer, self).__init__(device_id)
 
         self.system_components = {
-            'system': System(self),
-            'wifi': WiFi(self),
-            'ble': BLE(self),
-            'mqtt': MQTT(self),
-            'script': Script(self)
+            "system": System(self),
+            "wifi": WiFi(self),
+            "ble": BLE(self),
+            "mqtt": MQTT(self),
+            "script": Script(self),
         }
 
-        self.switch = self.register_component(Light, "Light", props={
-            "SupportsPowerMeter": "true",
-            "SupportsEnergyMeter": "true",
-            "SupportsEnergyMeterCurPower": "true"
-        })
+        self.switch = self.register_component(
+            Light,
+            "Light",
+            props={
+                "SupportsPowerMeter": "true",
+                "SupportsEnergyMeter": "true",
+                "SupportsEnergyMeterCurPower": "true",
+            },
+        )
 
     def handle_notify_status(self, component_type, instance_id, status):
         """
@@ -42,7 +46,9 @@ class ShellyPlusWallDimmer(Shelly):
         :param status: Data for the notification.
         :return: None
         """
-        super(ShellyPlusWallDimmer, self).handle_notify_status(component_type, instance_id, status)
+        super(ShellyPlusWallDimmer, self).handle_notify_status(
+            component_type, instance_id, status
+        )
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -53,7 +59,9 @@ class ShellyPlusWallDimmer(Shelly):
         :param event: The event to handle.
         :return: None
         """
-        super(ShellyPlusWallDimmer, self).handle_notify_event(component_type, instance_id, event)
+        super(ShellyPlusWallDimmer, self).handle_notify_event(
+            component_type, instance_id, event
+        )
 
     def handle_action(self, action):
         """

@@ -1,11 +1,10 @@
-import indigo
 import os
-
-from ..component import Component
-
-from ...devices.ShellyBLU import ShellyBLU, BLEPacketAlreadyProcessed
-
 from typing import TypedDict
+
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
+
+from ...devices.ShellyBLU import BLERelayPacket, ShellyBLU
+from ..component import Component
 
 
 class ScriptConfig(TypedDict):
@@ -18,6 +17,7 @@ class Script(Component):
     """
     The Script component manages individual scripts on a device.
     """
+
     component_type = "script"
     device_type_id = ""
 
@@ -27,12 +27,17 @@ class Script(Component):
 
         :param shelly: The Shelly device object.
         """
-        super(Script, self).__init__(shelly, comp_id=-1)
+        super().__init__(shelly, comp_id=-1)
 
         if shelly.device.pluginProps.get("blu-relay", False):
             self.logger.info(f"Enabling BLU Relay on {shelly.device.name}...")
             script_name = "indigo-blu-relay.js"
-            script_path = os.path.join(indigo.activePlugin.pluginFolderPath, "Contents", "Resources", script_name)
+            script_path = os.path.join(
+                indigo.activePlugin.pluginFolderPath,
+                "Contents",
+                "Resources",
+                script_name,
+            )
             script_data = None
             with open(script_path, "r", encoding="utf-8") as script_file:
                 script_data = script_file.read()
@@ -45,50 +50,68 @@ class Script(Component):
 
             def inspect_scripts(list_response, error=None):
                 if error:
-                    self.logger.error(f"Unable to get current device scripts for {self.shelly.device.name}: {error['message']}")
+                    self.logger.error(
+                        f"Unable to get current device scripts for {self.shelly.device.name}: {error['message']}"
+                    )
                     return
 
                 scripts = list_response.get("scripts", [])
                 for script in scripts:
                     if script["name"] == script_name:
-                        self.logger.debug(f"Found existing BLU Relay script for {self.shelly.device.name}: {script}")
+                        self.logger.debug(
+                            f"Found existing BLU Relay script for {self.shelly.device.name}: {script}"
+                        )
                         upload(script)
                         return
-                
-                self.logger.info(f"Creating new BLU Relay script on {self.shelly.device.name}...")
+
+                self.logger.info(
+                    f"Creating new BLU Relay script on {self.shelly.device.name}..."
+                )
                 self.create(script_name, upload)
 
             def upload(script, error=None):
                 if error:
-                    self.logger.error(f"Unable to get/create script for {self.shelly.device.name}: {error['message']}")
+                    self.logger.error(
+                        f"Unable to get/create script for {self.shelly.device.name}: {error['message']}"
+                    )
                     return
-                
+
                 id = script["id"]
                 self.upload_script(id, code=script_data, callback=enable_and_start)
 
             def enable_and_start(script, error=None):
                 if error:
-                    self.logger.error(f"Unable to upload script to {self.shelly.device.name}: {error['message']}")
+                    self.logger.error(
+                        f"Unable to upload script to {self.shelly.device.name}: {error['message']}"
+                    )
                     return
-                
+
                 id = script["id"]
-                self.logger.debug(f"Configuring BLU Relay script on {self.shelly.device.name}...")
+                self.logger.debug(
+                    f"Configuring BLU Relay script on {self.shelly.device.name}..."
+                )
 
                 def start(response, error=None):
                     if error:
-                        self.logger.error(f"Unable to set BLU Relay script config on {self.shelly.device.name}: {error['message']}")
+                        self.logger.error(
+                            f"Unable to set BLU Relay script config on {self.shelly.device.name}: {error['message']}"
+                        )
                         return
-                    
+
                     self.start(id, callback=complete)
 
                 self.set_config(id, name=script_name, enable=True, callback=start)
 
             def complete(response, error=None):
                 if error:
-                    self.logger.error(f"Error occurred during BLU Relay script management on {self.shelly.device.name}: {error['message']}")
+                    self.logger.error(
+                        f"Error occurred during BLU Relay script management on {self.shelly.device.name}: {error['message']}"
+                    )
                     return
-                
-                self.logger.info(f"BLU Relay script is synced, running, and configured to run at device boot for {self.shelly.device.name}")
+
+                self.logger.info(
+                    f"BLU Relay script is synced, running, and configured to run at device boot for {self.shelly.device.name}"
+                )
 
             self.list(inspect_scripts)
 
@@ -121,7 +144,7 @@ class Script(Component):
         """
         if id < 0:
             return
-        
+
         self.shelly.publish_rpc("Script.GetStatus", {"id": id}, callback)
 
     def process_status(self, status):
@@ -139,7 +162,7 @@ class Script(Component):
         """
         if id < 0:
             return
-        
+
         self.shelly.publish_rpc("Script.GetConfig", {"id": id}, callback)
 
     def set_config(self, id: int, name: str, enable: bool, callback):
@@ -149,14 +172,7 @@ class Script(Component):
         :param config: A system config to upload to the device.
         :return: None
         """
-        payload = {
-            "id": id,
-            "config": {
-                "id": id,
-                "name": name,
-                "enable": enable
-            }
-        }
+        payload = {"id": id, "config": {"id": id, "name": name, "enable": enable}}
         self.shelly.publish_rpc("Script.SetConfig", payload, callback)
 
     def start(self, id: int, callback):
@@ -178,37 +194,29 @@ class Script(Component):
         Multiple chunks must be uploaded if the total code length is greater than 1024
         bytes. The script must also be stopped.
         """
-        self.logger.debug(f"Uploading {len(code)} bytes to script:{id} on {self.shelly.device.name}...")
+        self.logger.debug(
+            f"Uploading {len(code)} bytes to script:{id} on {self.shelly.device.name}..."
+        )
         self.shelly.publish_rpc(
-            "Script.PutCode",
-            {
-                "id": id,
-                "code": code,
-                "append": append
-            },
-            callback
+            "Script.PutCode", {"id": id, "code": code, "append": append}, callback
         )
 
     def upload_script(self, id: int, code: str, callback=None):
         """
         A helper utility to upload an entire script as multiple chunks.
-        """        
+        """
         chunk_size = 1024
         chunks: list[str] = []
         for i in range(0, len(code), chunk_size):
-            chunks.append({
-                "id": i / chunk_size,
-                "code": code[i:i+chunk_size]
-            })
+            chunks.append({"id": i / chunk_size, "code": code[i : i + chunk_size]})
 
-        progress = {
-            "total_bytes": len(code),
-            "uploaded_bytes": 0
-        }
+        progress = {"total_bytes": len(code), "uploaded_bytes": 0}
 
         def upload_chunks(status, error=None):
             if error:
-                self.logger.error(f"Unable to upload script data chunk: {error['message']}")
+                self.logger.error(
+                    f"Unable to upload script data chunk: {error['message']}"
+                )
                 return
 
             if len(chunks) > 0:
@@ -219,35 +227,57 @@ class Script(Component):
                 self.put_code(id, code=code, append=append, callback=upload_chunks)
 
                 progress["uploaded_bytes"] += len(code)
-                progress_pct = progress["uploaded_bytes"] / progress["total_bytes"] * 100
-                self.logger.info(f"Syncing script:{id} on {self.shelly.device.name}... ({progress_pct:.0f}%)")
+                progress_pct = (
+                    progress["uploaded_bytes"] / progress["total_bytes"] * 100
+                )
+                self.logger.info(
+                    f"Syncing script:{id} on {self.shelly.device.name}... ({progress_pct:.0f}%)"
+                )
             elif callback:
                 callback({"id": id})
 
         self.stop(id, callback=upload_chunks)
 
     def handle_notify_event(self, event):
-        super(Script, self).handle_notify_event(event)
+        super().handle_notify_event(event)
 
-        if event.get("name", "") == "shelly-blu":
-            packet = event.get("data", {})
+        # We expect the event to be a dict with well-known keys
+        if not isinstance(event, dict):
+            self.logger.error(
+                f"{self.shelly.device.name} received a malformed event."
+                f" Expected a dict, but got {type(event)}: {event}"
+            )
+            return
 
-            if indigo.activePlugin.pluginPrefs.get('debug-ble-activity', False):
-                self.logger.info(f"BLE activity relayed via {self.shelly.device.name}: {packet}")
-            self.logger.debug(f"{self.shelly.device.name}:{event['name']}: {packet}")
-            
-            address = packet.get("address", None)
-            indigo.activePlugin.discovered_blu_addresses.add(address)
+        event_timestamp = event["ts"]
+        event_data = event.get("data", {})
 
-            shelly_blu_dev_id = indigo.activePlugin.blu_address_device.get(address, None)
+        if event.get("name") == "shelly-blu":
+            self.logger.debug(
+                f"BLE activity relayed via {self.shelly.device.name}: {event_data}"
+            )
+
+            # Parse the event data
+            packet = BLERelayPacket.from_mqtt_event(
+                relay_device_id=self.shelly.device_id,
+                timestamp=event_timestamp,
+                event_data=event_data,
+            )
+
+            # Track the BLE device address as having been seen
+            indigo.activePlugin.discovered_blu_addresses.add(packet.address)
+
+            # Find a device id that is linked to the BLE address
+            shelly_blu_dev_id = indigo.activePlugin.blu_address_device.get(
+                packet.address
+            )
             if not shelly_blu_dev_id:
                 return
-            
-            shelly_blu = indigo.activePlugin.shellies.get(shelly_blu_dev_id, None)
+
+            # Find the associated ShellyBLU device
+            shelly_blu = indigo.activePlugin.shellies.get(shelly_blu_dev_id)
             if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
                 return
 
-            try:
-                shelly_blu.process_packet(packet)
-            except BLEPacketAlreadyProcessed:
-                return
+            # Let the ShellyBLU device handle the BLU packet
+            shelly_blu.handle_ble_relay_packet(packet)

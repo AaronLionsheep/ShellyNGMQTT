@@ -1,14 +1,15 @@
-import indigo
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
-from .Shelly import Shelly
 from ..components.functional.input import Input
-from ..components.system.system import System
-from ..components.system.wifi import WiFi
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
+from ..components.system.script import Script
+from ..components.system.system import System
+from ..components.system.wifi import WiFi
+from .ShellyMQTT import ShellyMQTT
 
 
-class ShellyPlusI4(Shelly):
+class ShellyPlusI4(ShellyMQTT):
     """
     Creates a Shelly Plus I4 device class.
     """
@@ -19,10 +20,11 @@ class ShellyPlusI4(Shelly):
         super(ShellyPlusI4, self).__init__(device_id)
 
         self.system_components = {
-            'system': System(self),
-            'wifi': WiFi(self),
-            'ble': BLE(self),
-            'mqtt': MQTT(self)
+            "system": System(self),
+            "wifi": WiFi(self),
+            "ble": BLE(self),
+            "mqtt": MQTT(self),
+            "script": Script(self),
         }
 
         self.input_0 = self.register_component(Input, "Input 1", comp_id=0)
@@ -40,7 +42,9 @@ class ShellyPlusI4(Shelly):
         :return: None
         """
 
-        super(ShellyPlusI4, self).handle_notify_status(component_type, instance_id, status)
+        super(ShellyPlusI4, self).handle_notify_status(
+            component_type, instance_id, status
+        )
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -52,7 +56,9 @@ class ShellyPlusI4(Shelly):
         :return: None
         """
 
-        super(ShellyPlusI4, self).handle_notify_event(component_type, instance_id, event)
+        super(ShellyPlusI4, self).handle_notify_event(
+            component_type, instance_id, event
+        )
 
     def handle_action(self, action):
         """

@@ -1,0 +1,33 @@
+name: Code Quality
+
+on:
+  pull_request:
+
+defaults:
+  run:
+    shell: bash -el {0}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 # v6.0.2
+      
+      - name: Check Linting
+        uses: astral-sh/ruff-action@0ce1b0bf8b818ef400413f810f8a11cdbda0034b # v4.0.0
+        with:
+          args: "check"
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 # v6.0.2
+      
+      - name: Check Formatting
+        uses: astral-sh/ruff-action@0ce1b0bf8b818ef400413f810f8a11cdbda0034b #v4.0.0
+        with:
+          args: "format --check --diff"
