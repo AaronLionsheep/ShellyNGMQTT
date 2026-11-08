@@ -1069,7 +1069,7 @@
 				<Label>Name:</Label>
 			</Field>
 
-			<Field id="unit" type="menu" default="F">
+			<Field id="unit" type="menu" defaultValue="F">
 				<Label>Display Unit:</Label>
 				<List>
 					<Option value="F">Fahrenheit</Option>
@@ -1238,7 +1238,7 @@
 	<Device type="sensor" subType="kSensorDeviceSubType.Temperature" id="shelly-blu-ht">
 		<Name>Shelly BLU H&amp;T</Name>
 		<ConfigUI>
-			<Field id="temp-unit" type="menu" default="F">
+			<Field id="temp-unit" type="menu" defaultValue="F">
 				<Label>Temperature Unit:</Label>
 				<List>
 					<Option value="F">Fahrenheit</Option>
