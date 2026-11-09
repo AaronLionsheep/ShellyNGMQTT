@@ -95,7 +95,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install
-        run: pip install wheels/cryptography-49.0.0-cp311-abi3-macosx_11_0_universal2.whl
+        run: pip install cryptography-49.0.0-cp311-abi3-macosx_11_0_universal2.whl
 
       - name: Test
         run: python -c "import cryptography; print(cryptography.__version__)"
