@@ -13,6 +13,8 @@ BUTTON_TRIGGER_TYPES = {
     "double_press": "double-push",
     "triple_press": "triple-push",
     "long_press": "long-push",
+    "long_double_press": "long-double-push",
+    "long_triple_press": "long-triple-push",
     "hold_press": "hold-push",
 }
 
