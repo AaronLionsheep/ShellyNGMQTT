@@ -53,7 +53,7 @@ class ShellyPro4PM(ShellyMQTT):
         self.switch_2 = self.register_component(
             Switch,
             "Switch 3",
-            comp_id=0,
+            comp_id=2,
             props={
                 "SupportsPowerMeter": "true",
                 "SupportsEnergyMeter": "true",
@@ -63,7 +63,7 @@ class ShellyPro4PM(ShellyMQTT):
         self.switch_3 = self.register_component(
             Switch,
             "Switch 4",
-            comp_id=1,
+            comp_id=3,
             props={
                 "SupportsPowerMeter": "true",
                 "SupportsEnergyMeter": "true",
