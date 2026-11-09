@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         python: [3.11] #, 3.13]
-    runs-on: macos-26
+    runs-on: macos-26-intel
     permissions:
       contents: read
     timeout-minutes: 5
@@ -35,10 +35,10 @@ jobs:
         run: brew install openssl@3 rust
 
       - name: Compile
-        env:
-          ARCHFLAGS: "-arch arm64 -arch x86_64" # Build universal2 wheels
-          MACOSX_DEPLOYMENT_TARGET: "11.0"
-          PKG_CONFIG_ALLOW_CROSS: "1" # pkg-config warns when the target arch differs
+        #env:
+        #  ARCHFLAGS: "-arch arm64 -arch x86_64" # Build universal2 wheels
+        #  MACOSX_DEPLOYMENT_TARGET: "11.0"
+        #  PKG_CONFIG_ALLOW_CROSS: "1" # pkg-config warns when the target arch differs
         run: |
           # Identify the version being targeted
           PACKAGE=$(grep -E "^cryptography==[0-9\.]+$" "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt")
@@ -47,13 +47,13 @@ jobs:
           rustup target add x86_64-apple-darwin
 
           # Build the wheel
-          export LDFLAGS="-L$(brew --prefix openssl@3)/lib"
-          export CPPFLAGS="-I$(brew --prefix openssl@3)/include"
+          #export LDFLAGS="-L$(brew --prefix openssl@3)/lib"
+          #export CPPFLAGS="-I$(brew --prefix openssl@3)/include"
           pip wheel --wheel-dir=wheels --no-deps --no-binary cryptography $PACKAGE
 
           # Rename to short universal name
-          pip install wheel
-          wheel tags --platform-tag macosx_11_0_universal2 --remove wheels/*universal2*.whl
+          #pip install wheel
+          #wheel tags --platform-tag macosx_11_0_universal2 --remove wheels/*universal2*.whl
 
       - name: Upload
         uses: actions/upload-artifact@v7.0.2
@@ -81,7 +81,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-26, macos-26-intel]
+        os: [macos-26-intel]
         python: [3.11, 3.13]
     runs-on: ${{ matrix.os }}
     needs: merge
@@ -99,7 +99,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install
-        run: pip install cryptography-49.0.0-cp311-abi3-macosx_11_0_universal2.whl
+        run: pip install cryptography-49.0.0-cp311-abi3-macosx_11_0_x86_64.whl bthome-ble==3.20.0
 
       - name: Test
-        run: python -c "import cryptography; print(cryptography.__version__)"
+        run: python -c "import cryptography; print(cryptography.__version__); from bthome_ble.const import MEAS_TYPES, MeasTypes"
