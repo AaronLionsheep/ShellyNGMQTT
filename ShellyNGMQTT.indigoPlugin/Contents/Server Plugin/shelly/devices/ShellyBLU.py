@@ -276,13 +276,13 @@ class ShellyBLU(Shelly):
         relay_device_name = "<Unknown>"
         if relay_device := indigo.devices.get(data.packet.relay_device_id):
             relay_device_name = relay_device.name
-        latency_ms = (time.time() - data.packet.timestamp) * 1000
+        latency = time.time() - data.packet.timestamp
 
         # Log BLE activity
         if indigo.activePlugin.pluginPrefs.get("debug-ble-activity", False):
             self.logger.info(
                 f"{self.device.name} processing BLE data from {relay_device_name} "
-                f"({data.packet.rssi} dBm, {latency_ms:.0f}ms): "
+                f"({data.packet.rssi} dBm, {latency * 1000:.0f}ms): "
                 f"sensors={data.sensors} "
                 f"events={data.events} "
             )
@@ -294,17 +294,17 @@ class ShellyBLU(Shelly):
                     "ble-latency-warning-threshold", "1.5"
                 )
             )
-            ble_latency_warning_threshold_ms = ble_latency_warning_threshold * 1000
         except (ValueError, TypeError):
             self.logger.exception(
                 "Unable to parse BLE latency warning threshold! Using default value of 1.5 seconds."
             )
-            ble_latency_warning_threshold_ms = 1500
+            ble_latency_warning_threshold = 1.5
 
-        if abs(latency_ms) > ble_latency_warning_threshold_ms:
+        if abs(latency) > ble_latency_warning_threshold:
             self.logger.warning(
-                f"{relay_device_name} BLE timestamps for {self.device.name} differ from Indigo Server by {latency_ms / 1000:+.3f} seconds. "
-                "Either the relay's clock differs from the server's (check the relay can reach its SNTP server) or messages are being delayed. "
+                f"{relay_device_name} BLE timestamps for {self.device.name} differ from Indigo Server by {latency:+.3f} seconds. "
+                "Either the relay's clock differs from the server's (check if the relay can reach its SNTP server) "
+                "or messages are being delayed via the network and/or the MQTT broker. "
                 "Relays whose clocks differ by more than 4 seconds can produce duplicate BLU events."
             )
 
