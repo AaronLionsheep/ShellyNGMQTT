@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: [3.11, 3.13]
+        python: [3.11] #, 3.13]
     runs-on: macos-26
     permissions:
       contents: read
@@ -46,6 +46,7 @@ jobs:
 
           # Build the wheel
           pip wheel --wheel-dir=wheels --no-deps --no-binary cryptography $PACKAGE
+          wheel tags --platform-tag macosx_11_0_universal2 --remove wheels/*universal2*.whl
 
       - name: Upload
         uses: actions/upload-artifact@v7.0.2
@@ -67,3 +68,31 @@ jobs:
         with:
           name: wheels
           delete-merged: true
+
+  test:
+    name: Test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-26, macos-26-intel]
+        python: [3.11, 3.13]
+    runs-on: ${{ matrix.os }}
+    needs: merge
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: wheels
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        run: pip install wheels/cryptography-49.0.0-cp311-abi3-macosx_11_0_universal2.whl
+
+      - name: Test
+        run: python -c "import cryptography; print(cryptography.__version__)"
