@@ -48,8 +48,8 @@ jobs:
           rustup target add x86_64-apple-darwin
 
           # Build the wheel
-          #export LDFLAGS="-L$(brew --prefix openssl@3)/lib"
-          #export CPPFLAGS="-I$(brew --prefix openssl@3)/include"
+          export LDFLAGS="-L$(brew --prefix openssl@3)/lib"
+          export CPPFLAGS="-I$(brew --prefix openssl@3)/include"
           pip wheel --wheel-dir=wheels --no-deps --no-binary cryptography $PACKAGE
 
           # Rename to short universal name
