@@ -299,7 +299,7 @@ class ShellyBLU(Shelly):
             self.logger.exception("Unable to parse BLE latency warning threshold!")
             return
 
-        if latency_ms > ble_latency_warning_threshold_ms:
+        if abs(latency_ms) > ble_latency_warning_threshold_ms:
             self.logger.warning(
                 f"{relay_device_name} relayed a BLE packet for {self.device.name} with high latency ({latency_ms / 1000:.3f} seconds). "
                 "Clocks must be synchronized between all relay devices and Indigo Server. "
