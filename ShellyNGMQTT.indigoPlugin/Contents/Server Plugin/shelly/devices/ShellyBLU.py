@@ -296,8 +296,10 @@ class ShellyBLU(Shelly):
             )
             ble_latency_warning_threshold_ms = ble_latency_warning_threshold * 1000
         except (ValueError, TypeError):
-            self.logger.exception("Unable to parse BLE latency warning threshold!")
-            return
+            self.logger.exception(
+                "Unable to parse BLE latency warning threshold! Using default value of 1.5 seconds."
+            )
+            ble_latency_warning_threshold_ms = 1500
 
         if abs(latency_ms) > ble_latency_warning_threshold_ms:
             self.logger.warning(
