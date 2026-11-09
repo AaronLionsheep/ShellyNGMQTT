@@ -11,7 +11,7 @@
     },
     {
       "matchPackageNames": ["bthome-ble"],
-      "allowedVersions": "<3.24.0"
+      "allowedVersions": "<3.23.5"
     }
   ]
 }
