@@ -303,9 +303,9 @@ class ShellyBLU(Shelly):
 
         if abs(latency_ms) > ble_latency_warning_threshold_ms:
             self.logger.warning(
-                f"{relay_device_name} relayed a BLE packet for {self.device.name} with high latency ({latency_ms / 1000:.3f} seconds). "
-                "Clocks must be synchronized between all relay devices and Indigo Server. "
-                "Ensure all relays have access to an NTP server and are synchronizing time."
+                f"{relay_device_name} BLE timestamps for {self.device.name} differ from Indigo Server by {latency_ms / 1000:+.3f} seconds. "
+                "Either the relay's clock differs from the server's (check the relay can reach its SNTP server) or messages are being delayed. "
+                "Relays whose clocks differ by more than 4 seconds can produce duplicate BLU events."
             )
 
         # Update base states from sensor data shared across all BLU devices
