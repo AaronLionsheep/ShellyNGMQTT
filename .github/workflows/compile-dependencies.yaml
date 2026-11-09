@@ -1,0 +1,112 @@
+name: Compile Dependencies
+
+on:
+  pull_request:
+    #branches:
+    #  - "renovate/cryptography-*"
+    #paths:
+    #  - "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  cryptography:
+    name: Cryptography
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [3.11] #, 3.13]
+    runs-on: macos-26
+    permissions:
+      contents: read
+    timeout-minutes: 5
+    steps:
+      - name: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Set up MacPorts
+        uses: melusina-org/setup-macports@v1
+
+      - name: Install dependencies
+        run: sudo port install openssl +universal
+
+      - name: Compile
+        env:
+          ARCHFLAGS: "-arch arm64 -arch x86_64"
+          MACOSX_DEPLOYMENT_TARGET: "11.0"
+          PKG_CONFIG_ALLOW_CROSS: "1"
+          #AARCH64_APPLE_DARWIN_OPENSSL_DIR: "/opt/homebrew/opt/openssl@3"
+          #X86_64_APPLE_DARWIN_OPENSSL_DIR: "/usr/local/opt/openssl@3"
+          OPENSSL_STATIC: "1"
+        run: |
+          # Identify the version being targeted
+          PACKAGE=$(grep -E "^cryptography==[0-9\.]+$" "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt")
+
+          # Add the x86_64 toolchain for rust cross-compiling
+          rustup target add x86_64-apple-darwin
+
+          # Build the wheel
+          #export LDFLAGS="-L$(brew --prefix openssl@3)/lib"
+          #export CPPFLAGS="-I$(brew --prefix openssl@3)/include"
+          #export PKG_CONFIG_PATH="$(brew --prefix openssl@3)/lib/pkgconfig"
+          pip wheel --wheel-dir=wheels --no-deps --no-binary cryptography $PACKAGE
+
+          # Rename to short universal name
+          pip install wheel
+          wheel tags --platform-tag macosx_11_0_universal2 --remove wheels/*universal2*.whl
+
+      - name: Upload
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: cryptography-${{ matrix.python }}
+          path: wheels/*.whl
+
+  merge:
+    name: Merge Outputs
+    runs-on: ubuntu-latest
+    needs:
+      - cryptography
+    steps:
+      - name: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v7.0.2
+        with:
+          name: wheels
+          delete-merged: true
+
+  test:
+    name: Test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-26-intel]
+        python: [3.11, 3.13]
+    runs-on: ${{ matrix.os }}
+    needs: merge
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: wheels
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        run: pip install cryptography-49.0.0-cp311-abi3-macosx_11_0_universal2.whl bthome-ble==3.20.0
+
+      - name: Test
+        run: python -c "import cryptography; print(cryptography.__version__); from bthome_ble.const import MEAS_TYPES, MeasTypes"
