@@ -1,3 +1,4 @@
+import time
 from dataclasses import dataclass
 from typing import Any
 
@@ -272,15 +273,37 @@ class ShellyBLU(Shelly):
         """
         Process BLE data.
         """
+        latency_ms = (time.time() - data.packet.timestamp) * 1000
+
         # Log BLE activity
         if indigo.activePlugin.pluginPrefs.get("debug-ble-activity", False):
             relay_device_name = "<Unknown>"
             if relay_device := indigo.devices.get(data.packet.relay_device_id):
                 relay_device_name = relay_device.name
             self.logger.info(
-                f"{self.device.name} processing BLE data from {relay_device_name} ({data.packet.rssi} dBm): "
+                f"{self.device.name} processing BLE data from {relay_device_name} "
+                f"({data.packet.rssi} dBm, {latency_ms:.0f}ms): "
                 f"sensors={data.sensors} "
                 f"events={data.events} "
+            )
+
+        # Warn when the processing latency exceeds the configured threshold
+        try:
+            ble_latency_warning_threshold = float(
+                indigo.activePlugin.pluginPrefs.get(
+                    "ble-latency-warning-threshold", "1.5"
+                )
+            )
+            ble_latency_warning_threshold_ms = ble_latency_warning_threshold * 1000
+        except (ValueError, TypeError):
+            self.logger.exception("Unable to parse BLE latency warning threshold!")
+            return
+
+        if latency_ms > ble_latency_warning_threshold_ms:
+            self.logger.warning(
+                f"{relay_device_name} relayed a BLE packet for {self.device.name} with high latency ({latency_ms / 1000:.3f} seconds). "
+                "Clocks must be synchronized between all relay devices and Indigo Server. "
+                "Ensure all relays have access to an NTP server and are synchronizing time."
             )
 
         # Update base states from sensor data shared across all BLU devices
