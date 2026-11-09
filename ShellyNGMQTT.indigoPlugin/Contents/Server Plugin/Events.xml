@@ -123,6 +123,54 @@
         </ConfigUI>
     </Event>
 
+    <Event id="long-double-push">
+        <Name>Long Double Push</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List
+                    class="self"
+                    method="get_shelly_devices"
+                    filter="
+                        self.shelly-blu-button-tough-1-zb,
+                        self.shelly-blu-rc-button-4-zb,
+                        self.shelly-blu-wall-switch-4-zb
+                    "
+                />
+                <CallbackMethod>refresh</CallbackMethod>
+            </Field>
+
+            <Field id="button-id" type="menu" defaultValue="">
+                <Label>Button:</Label>
+                <List class="self" method="get_device_buttons" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
+    <Event id="long-triple-push">
+        <Name>Long Triple Push</Name>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List
+                    class="self"
+                    method="get_shelly_devices"
+                    filter="
+                        self.shelly-blu-button-tough-1-zb,
+                        self.shelly-blu-rc-button-4-zb,
+                        self.shelly-blu-wall-switch-4-zb
+                    "
+                />
+                <CallbackMethod>refresh</CallbackMethod>
+            </Field>
+
+            <Field id="button-id" type="menu" defaultValue="">
+                <Label>Button:</Label>
+                <List class="self" method="get_device_buttons" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+    </Event>
+
     <Event id="hold-push">
         <Name>Hold Push</Name>
         <ConfigUI>
