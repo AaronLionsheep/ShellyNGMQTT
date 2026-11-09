@@ -273,13 +273,13 @@ class ShellyBLU(Shelly):
         """
         Process BLE data.
         """
+        relay_device_name = "<Unknown>"
+        if relay_device := indigo.devices.get(data.packet.relay_device_id):
+            relay_device_name = relay_device.name
         latency_ms = (time.time() - data.packet.timestamp) * 1000
 
         # Log BLE activity
         if indigo.activePlugin.pluginPrefs.get("debug-ble-activity", False):
-            relay_device_name = "<Unknown>"
-            if relay_device := indigo.devices.get(data.packet.relay_device_id):
-                relay_device_name = relay_device.name
             self.logger.info(
                 f"{self.device.name} processing BLE data from {relay_device_name} "
                 f"({data.packet.rssi} dBm, {latency_ms:.0f}ms): "
