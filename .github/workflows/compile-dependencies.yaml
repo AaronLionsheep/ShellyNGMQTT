@@ -46,6 +46,9 @@ jobs:
 
           # Build the wheel
           pip wheel --wheel-dir=wheels --no-deps --no-binary cryptography $PACKAGE
+
+          # Rename to short universal name
+          pip install wheel
           wheel tags --platform-tag macosx_11_0_universal2 --remove wheels/*universal2*.whl
 
       - name: Upload
