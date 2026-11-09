@@ -32,13 +32,17 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        run: brew install openssl@3 rust
+        run: |
+          brew install openssl@3 rust
+          arch -x86_64 brew install openssl@3 rust
 
       - name: Compile
         env:
           ARCHFLAGS: "-arch arm64 -arch x86_64" # Build universal2 wheels
           MACOSX_DEPLOYMENT_TARGET: "11.0"
           PKG_CONFIG_ALLOW_CROSS: "1" # pkg-config warns when the target arch differs
+          AARCH64_APPLE_DARWIN_OPENSSL_DIR: "/opt/homebrew/opt/openssl@3"
+          X86_64_APPLE_DARWIN_OPENSSL_DIR: "/usr/local/opt/openssl@3"
           OPENSSL_STATIC: "1"
         run: |
           # Identify the version being targeted
@@ -48,8 +52,9 @@ jobs:
           rustup target add x86_64-apple-darwin
 
           # Build the wheel
-          export LDFLAGS="-L$(brew --prefix openssl@3)/lib"
-          export CPPFLAGS="-I$(brew --prefix openssl@3)/include"
+          #export LDFLAGS="-L$(brew --prefix openssl@3)/lib"
+          #export CPPFLAGS="-I$(brew --prefix openssl@3)/include"
+          #export PKG_CONFIG_PATH="$(brew --prefix openssl@3)/lib/pkgconfig"
           pip wheel --wheel-dir=wheels --no-deps --no-binary cryptography $PACKAGE
 
           # Rename to short universal name
