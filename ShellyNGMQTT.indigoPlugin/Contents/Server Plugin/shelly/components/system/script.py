@@ -269,8 +269,9 @@ class Script(Component):
 
             # Only process the packet if we trust the relay device's clock
             if not self.shelly.clock_trusted():
-                self.logger.debug(
-                    f"Not processing BLE packet from {self.shelly.device.name} because the clock is not trusted. "
+                self.logger.warning(
+                    f"{self.shelly.device.name} has no recent NTP sync, ignoring its BLE packets. "
+                    "Check that it can reach its SNTP server."
                 )
                 return
 
