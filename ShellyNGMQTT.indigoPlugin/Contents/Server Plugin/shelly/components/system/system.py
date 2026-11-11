@@ -128,8 +128,8 @@ class System(Component):
             self.logger.error(error)
             return
 
-        if last_sync_ts := status.get("last_sync_ts"):
-            self._last_ntp_sync_ts = last_sync_ts
+        if "last_sync_ts" in status:
+            self._last_ntp_sync_ts = status["last_sync_ts"]
 
         self.shelly.device.updateStatesOnServer(
             [
