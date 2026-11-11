@@ -102,6 +102,10 @@
     <Event id="long-push">
         <Name>Long Push</Name>
         <ConfigUI>
+            <Field id="tip" type="label" fontColor="darkgray">
+                <Label>This event is fired AFTER releasing the contact/button if the duration threshold was met.</Label>
+            </Field>
+
             <Field id="device-id" type="menu">
                 <Label>Device:</Label>
                 <List
@@ -174,6 +178,10 @@
     <Event id="hold-push">
         <Name>Hold Push</Name>
         <ConfigUI>
+            <Field id="tip" type="label" fontColor="darkgray">
+                <Label>This event is fired BEFORE the contact/button is released once the duration threshold is met.</Label>
+            </Field>
+
             <Field id="device-id" type="menu">
                 <Label>Device:</Label>
                 <List
