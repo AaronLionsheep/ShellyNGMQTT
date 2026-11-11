@@ -287,27 +287,6 @@ class ShellyBLU(Shelly):
                 f"events={data.events} "
             )
 
-        # Warn when the processing latency exceeds the configured threshold
-        try:
-            ble_latency_warning_threshold = float(
-                indigo.activePlugin.pluginPrefs.get(
-                    "ble-latency-warning-threshold", "1.5"
-                )
-            )
-        except (ValueError, TypeError):
-            self.logger.exception(
-                "Unable to parse BLE latency warning threshold! Using default value of 1.5 seconds."
-            )
-            ble_latency_warning_threshold = 1.5
-
-        if abs(latency) > ble_latency_warning_threshold:
-            self.logger.warning(
-                f"{relay_device_name} BLE timestamps for {self.device.name} differ from Indigo Server by {latency:+.3f} seconds. "
-                "Either the relay's clock differs from the server's (check if the relay can reach its SNTP server) "
-                "or messages are being delayed via the network and/or the MQTT broker. "
-                "Relays whose clocks differ by more than 4 seconds can produce duplicate BLU events."
-            )
-
         # Update base states from sensor data shared across all BLU devices
         state_updates = []
         state_updates.append({"key": "pid", "value": data.sensors.get("packet_id", -1)})

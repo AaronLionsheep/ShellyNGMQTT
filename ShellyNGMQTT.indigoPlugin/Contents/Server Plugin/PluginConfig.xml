@@ -28,11 +28,4 @@
     <Field id="notice-debug-ble-activity" type="label" fontSize="small" fontColor="darkGrey">
         <Label>Print all BLE messages to the info log for easier BLE debugging.</Label>
     </Field>
-
-    <Field id="ble-latency-warning-threshold" type="textfield" defaultValue="1.5">
-        <Label>BLE latency warning threshold (seconds):</Label>
-    </Field>
-    <Field id="help-ble-latency-warning-threshold" type="label" fontSize="small" fontColor="darkGrey">
-        <Label>Log a warning when the time between a BLE message received by a relay and processed by Indigo exceeds this threshold.</Label>
-    </Field>
 </PluginConfig>
