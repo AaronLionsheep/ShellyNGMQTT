@@ -267,14 +267,6 @@ class Script(Component):
             # Track the BLE device address as having been seen
             indigo.activePlugin.discovered_blu_addresses.add(packet.address)
 
-            # Only process the packet if we trust the relay device's clock
-            if not self.shelly.clock_trusted():
-                self.logger.warning(
-                    f"{self.shelly.device.name} has no recent NTP sync, ignoring its BLE packets. "
-                    "Check that it can reach its SNTP server."
-                )
-                return
-
             # Find a device id that is linked to the BLE address
             shelly_blu_dev_id = indigo.activePlugin.blu_address_device.get(
                 packet.address
@@ -285,6 +277,14 @@ class Script(Component):
             # Find the associated ShellyBLU device
             shelly_blu = indigo.activePlugin.shellies.get(shelly_blu_dev_id)
             if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
+                return
+
+            # Only process the packet if we trust the relay device's clock
+            if not self.shelly.clock_trusted():
+                self.logger.warning(
+                    f"{self.shelly.device.name} has no recent NTP sync, ignoring its BLE packets. "
+                    "Check that it can reach its SNTP server."
+                )
                 return
 
             # Let the ShellyBLU device handle the BLU packet
