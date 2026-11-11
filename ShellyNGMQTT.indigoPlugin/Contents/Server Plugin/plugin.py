@@ -778,20 +778,6 @@ class Plugin(indigo.PluginBase):
     def validate_prefs_config_ui(self, values_dict: dict):
         errors = indigo.Dict()
 
-        # Validate ble-latency-warning-threshold
-        if value := values_dict.get("ble-latency-warning-threshold"):
-            try:
-                values_dict["ble-latency-warning-threshold"] = (
-                    f"{float(value):.3f}".rstrip("0").rstrip(".")
-                )
-            except (ValueError, TypeError):
-                errors["ble-latency-warning-threshold"] = (
-                    "This must be a number (may contain a decimal)."
-                )
-        else:
-            # If the value was blank, reset to the default
-            values_dict["ble-latency-warning-threshold"] = "1.5"
-
         return len(errors) == 0, values_dict, errors
 
     def closedPrefsConfigUi(self, valuesDict, userCancelled):

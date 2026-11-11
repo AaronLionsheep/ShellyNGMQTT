@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
 <PluginConfig>
-    <Field id="info-clear-fields" type="label" fontColor="orange">
-        <Label>Clear any field and save to reset to the default value.&#xA;</Label>
-    </Field>
-
     <Field type="menu" id="log-level" defaultValue="info">
         <Label>The level of detail to include in the log</Label>
         <List>
