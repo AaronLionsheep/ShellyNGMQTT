@@ -571,7 +571,7 @@ class Plugin(indigo.PluginBase):
                 "address": values_dict["address"],
                 "message-type": values_dict["message-type"],
                 "is-initial-setup": False,
-                "profile": values_dict.get("profile")
+                "profile": values_dict.get("profile"),
             }
             if model_class.display_name not in group_models:
                 # The main device is not in the group, so create one
@@ -775,6 +775,10 @@ class Plugin(indigo.PluginBase):
     #
     # Plugin utilities
     #
+    def validate_prefs_config_ui(self, values_dict: dict):
+        errors = indigo.Dict()
+
+        return len(errors) == 0, values_dict, errors
 
     def closedPrefsConfigUi(self, valuesDict, userCancelled):
         """
@@ -1137,9 +1141,9 @@ class Plugin(indigo.PluginBase):
         cover = self.get_component(indigo.devices[dev_id])
 
         config = {
-            'name': values_dict.get("name"),
-            'in_mode': values_dict.get("in-mode", ""),
-            'initial_state': values_dict.get("initial-state", ""),
+            "name": values_dict.get("name"),
+            "in_mode": values_dict.get("in-mode", ""),
+            "initial_state": values_dict.get("initial-state", ""),
         }
 
         cover.set_config(config)

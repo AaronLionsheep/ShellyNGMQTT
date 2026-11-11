@@ -1,3 +1,4 @@
+import time
 from dataclasses import dataclass
 from typing import Any
 
@@ -279,8 +280,11 @@ class ShellyBLU(Shelly):
             relay_device_name = "<Unknown>"
             if relay_device := indigo.devices.get(data.packet.relay_device_id):
                 relay_device_name = relay_device.name
+            latency = time.time() - data.packet.timestamp
+
             self.logger.info(
-                f"{self.device.name} processing BLE data from {relay_device_name} ({data.packet.rssi} dBm): "
+                f"{self.device.name} processing BLE data from {relay_device_name} "
+                f"({data.packet.rssi} dBm, {latency * 1000:.0f}ms): "
                 f"sensors={data.sensors} "
                 f"events={data.events} "
             )

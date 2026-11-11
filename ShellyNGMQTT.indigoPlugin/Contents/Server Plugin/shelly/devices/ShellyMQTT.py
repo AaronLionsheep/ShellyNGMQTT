@@ -3,6 +3,7 @@ import uuid
 
 import indigo  # pyright: ignore[reportMissingModuleSource]
 
+from ..components.system.system import System
 from .Shelly import Shelly
 
 
@@ -378,3 +379,16 @@ class ShellyMQTT(Shelly):
 
         self.publish_rpc("Shelly.Update", {"stage": stage}, callback=_response)
         self.logger.info(f"Updating {self.device.name}...")
+
+    def clock_trusted(self) -> bool:
+        """
+        Determine if the system clock has been synchronized recently.
+        """
+        system = self.system_components.get("system")
+        if system is None:
+            return False
+
+        if not isinstance(system, System):
+            return False
+
+        return system.clock_trusted()

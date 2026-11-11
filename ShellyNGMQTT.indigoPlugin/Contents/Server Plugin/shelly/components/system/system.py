@@ -1,3 +1,5 @@
+from datetime import UTC, datetime, timedelta
+
 from ..component import Component
 
 
@@ -16,7 +18,9 @@ class System(Component):
         :param shelly: The Shelly device object.
         """
 
-        super(System, self).__init__(shelly)
+        super().__init__(shelly)
+
+        self._last_ntp_sync_ts: float = None
 
     def get_config(self):
         """
@@ -41,23 +45,31 @@ class System(Component):
             return
 
         self.latest_config = {
-            'system-device-name': config.get("device", {}).get("name", ""),
-            'system-device-eco-mode': config.get("device", {}).get("eco_mode", ""),
-            'system-device-mac-address': config.get("device", {}).get("mac", ""),
-            'system-device-firmware': config.get("device", {}).get("fw_id", ""),
-            'system-location-timezone': config.get("location", {}).get("tz", ""),
-            'system-location-lat': config.get("location", {}).get("lat", ""),
-            'system-location-lon': config.get("location", {}).get("lon", ""),
-            'system-debug-mqtt':  config.get("debug", {}).get("mqtt", {}).get("enable", ""),
-            'system-debug-websocket': config.get("debug", {}).get("websocket", {}).get("enable", ""),
-            'system-debug-udp-address': config.get("debug", {}).get("udp", {}).get("addr", ""),
-            'version': config.get("device", {}).get("fw_id", "").split("/")[-1]
+            "system-device-name": config.get("device", {}).get("name", ""),
+            "system-device-eco-mode": config.get("device", {}).get("eco_mode", ""),
+            "system-device-mac-address": config.get("device", {}).get("mac", ""),
+            "system-device-firmware": config.get("device", {}).get("fw_id", ""),
+            "system-location-timezone": config.get("location", {}).get("tz", ""),
+            "system-location-lat": config.get("location", {}).get("lat", ""),
+            "system-location-lon": config.get("location", {}).get("lon", ""),
+            "system-debug-mqtt": config.get("debug", {})
+            .get("mqtt", {})
+            .get("enable", ""),
+            "system-debug-websocket": config.get("debug", {})
+            .get("websocket", {})
+            .get("enable", ""),
+            "system-debug-udp-address": config.get("debug", {})
+            .get("udp", {})
+            .get("addr", ""),
+            "version": config.get("device", {}).get("fw_id", "").split("/")[-1],
         }
 
         props = self.shelly.device.pluginProps
         props.update(self.latest_config)
         self.shelly.device.replacePluginPropsOnServer(props)
-        self.shelly.device.updateStateOnServer("current-firmware", config.get("device", {}).get("fw_id", ""))
+        self.shelly.device.updateStateOnServer(
+            "current-firmware", config.get("device", {}).get("fw_id", "")
+        )
 
     def set_config(self, config):
         """
@@ -67,7 +79,9 @@ class System(Component):
         :return: None
         """
 
-        self.shelly.publish_rpc("Sys.SetConfig", {'config': config}, callback=self.process_set_config)
+        self.shelly.publish_rpc(
+            "Sys.SetConfig", {"config": config}, callback=self.process_set_config
+        )
 
     def process_set_config(self, status, error=None):
         """
@@ -79,10 +93,14 @@ class System(Component):
         """
 
         if error:
-            self.logger.error("Error writing configuration: {}".format(error.get("message", "<Unknown>")))
+            self.logger.error(
+                "Error writing configuration: {}".format(
+                    error.get("message", "<Unknown>")
+                )
+            )
             return
 
-        if status.get('restart_required', False):
+        if status.get("restart_required", False):
             self.log_command_received("rebooting...")
 
     def get_status(self):
@@ -93,9 +111,7 @@ class System(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
         self.shelly.publish_rpc("Sys.GetStatus", params, callback=self.process_status)
 
@@ -112,9 +128,36 @@ class System(Component):
             self.logger.error(error)
             return
 
-        self.shelly.device.updateStatesOnServer([
-            {'key': "mac-address", 'value': status.get('mac', None)},
-            {'key': "uptime", 'value': status.get('uptime', None)},
-            {'key': "available-firmware", 'value': status.get('available_updates', {}).get('stable', {}).get('version', None)},
-            {'key': "available-beta-firmware", 'value': status.get('available_updates', {}).get('beta', {}).get('version', None)}
-        ])
+        if "last_sync_ts" in status:
+            self._last_ntp_sync_ts = status["last_sync_ts"]
+
+        self.shelly.device.updateStatesOnServer(
+            [
+                {"key": "mac-address", "value": status.get("mac", None)},
+                {"key": "uptime", "value": status.get("uptime", None)},
+                {
+                    "key": "available-firmware",
+                    "value": status.get("available_updates", {})
+                    .get("stable", {})
+                    .get("version", None),
+                },
+                {
+                    "key": "available-beta-firmware",
+                    "value": status.get("available_updates", {})
+                    .get("beta", {})
+                    .get("version", None),
+                },
+            ]
+        )
+
+    def clock_trusted(self) -> bool:
+        """
+        Determine if the system clock has been synchronized recently.
+        """
+        if self._last_ntp_sync_ts is None:
+            return False
+
+        now = datetime.now(UTC)
+        last_sync = datetime.fromtimestamp(self._last_ntp_sync_ts, tz=UTC)
+
+        return (now - last_sync) < timedelta(hours=4)

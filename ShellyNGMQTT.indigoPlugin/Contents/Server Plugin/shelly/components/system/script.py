@@ -279,5 +279,13 @@ class Script(Component):
             if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
                 return
 
+            # Only process the packet if we trust the relay device's clock
+            if not self.shelly.clock_trusted():
+                self.logger.warning(
+                    f"{self.shelly.device.name} has no recent NTP sync, ignoring its BLE packets. "
+                    "Check that it can reach its SNTP server."
+                )
+                return
+
             # Let the ShellyBLU device handle the BLU packet
             shelly_blu.handle_ble_relay_packet(packet)
