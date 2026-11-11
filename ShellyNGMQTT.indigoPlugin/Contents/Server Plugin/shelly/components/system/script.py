@@ -267,6 +267,13 @@ class Script(Component):
             # Track the BLE device address as having been seen
             indigo.activePlugin.discovered_blu_addresses.add(packet.address)
 
+            # Only process the packet if we trust the relay device's clock
+            if not self.shelly.clock_trusted():
+                self.logger.debug(
+                    f"Not processing BLE packet from {self.shelly.device.name} because the clock is not trusted. "
+                )
+                return
+
             # Find a device id that is linked to the BLE address
             shelly_blu_dev_id = indigo.activePlugin.blu_address_device.get(
                 packet.address
