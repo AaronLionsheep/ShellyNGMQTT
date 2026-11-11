@@ -235,9 +235,6 @@ class Switch(Component):
     def toggle(self):
         """
         This method toggles the output state.
-
-        :return: None
         """
-
-        # TODO: toggle the device state
-        return
+        self.shelly.publish_rpc("Switch.Toggle", {"id": self.comp_id})
+        self.log_command_sent("toggle")
