@@ -1,5 +1,6 @@
 import logging
 import re
+from collections import defaultdict
 from queue import Queue
 
 import indigo  # pyright: ignore[reportMissingModuleSource]
@@ -76,11 +77,8 @@ class Plugin(indigo.PluginBase):
         # }
         self.broker_device_topics = {}
 
-        self.discovered_blu_addresses = set()
-        """The set of discovered BLU addresses"""
-
-        self.blu_address_device: dict[str, int] = {}
-        """Mapping from a BLU address to the indigo device id"""
+        self.blu_address_devices: defaultdict[str, set] = defaultdict(set)
+        """A mapping of MAC address to associated device IDs"""
 
     def startup(self):
         """
@@ -208,14 +206,15 @@ class Plugin(indigo.PluginBase):
 
             if issubclass(model_class, ShellyBLU):
                 # Ensure the BLU device has a MAC address defined
-                if shelly.get_address() is None:
+                address = shelly.get_address()
+                if address is None:
                     self.logger.error(
                         f"'{device.name}' is not properly setup! Address is unknown."
                     )
                     return
 
                 # Track the device associated with the BLU address
-                self.blu_address_device[shelly.get_address()] = device.id
+                self.blu_address_devices[address].add(device.id)
 
                 # Update any plugin props on the device
                 props = device.pluginProps
@@ -300,35 +299,41 @@ class Plugin(indigo.PluginBase):
         :param device:
         :return:
         """
+        if device.id not in self.shellies:
+            return
 
-        if device.id in self.shellies:
-            shelly = self.shellies[device.id]
+        shelly = self.shellies[device.id]
 
-            if isinstance(shelly, ShellyMQTT):
-                # make sure that the device's broker has subscriptions
-                if shelly.get_broker_id() in self.broker_device_topics:
-                    broker_topics = self.broker_device_topics[shelly.get_broker_id()]
-                    for topic in shelly.get_topics():
-                        if (
-                            topic in broker_topics
-                            and shelly.device.id in broker_topics[topic]
-                        ):
-                            broker_topics[topic].remove(shelly.device.id)
+        if isinstance(shelly, ShellyMQTT):
+            # make sure that the device's broker has subscriptions
+            if shelly.get_broker_id() in self.broker_device_topics:
+                broker_topics = self.broker_device_topics[shelly.get_broker_id()]
+                for topic in shelly.get_topics():
+                    if (
+                        topic in broker_topics
+                        and shelly.device.id in broker_topics[topic]
+                    ):
+                        broker_topics[topic].remove(shelly.device.id)
 
-                    # remove the broker key if there are no more devices using it
-                    if len(broker_topics) == 0:
-                        del self.broker_device_topics[shelly.get_broker_id()]
+                # remove the broker key if there are no more devices using it
+                if len(broker_topics) == 0:
+                    del self.broker_device_topics[shelly.get_broker_id()]
 
-                self.message_types.remove(shelly.get_message_type())
+            self.message_types.remove(shelly.get_message_type())
+        elif isinstance(shelly, ShellyBLU):
+            address = shelly.get_address()
+            if address in self.blu_address_devices:
+                self.blu_address_devices[address].discard(device.id)
 
-            try:
-                del self.shellies[device.id]
-            except KeyError:
-                self.logger.warning(
-                    "Something went wrong! '{}' could not be removed from internal shellies dictionary".format(
-                        device.name
-                    )
-                )
+            self.logger.info(self.blu_address_devices)
+
+        try:
+            del self.shellies[device.id]
+        except KeyError:
+            self.logger.warning(
+                "Something went wrong! "
+                f"'{device.name}' could not be removed from internal shellies dictionary"
+            )
 
     def didDeviceCommPropertyChange(self, orig_dev, new_dev):
         """
@@ -344,17 +349,25 @@ class Plugin(indigo.PluginBase):
         :param new_dev: The device after updates.
         :return: True or false whether the device had the communication properties changed.
         """
+        model_class = shelly_model_classes.get(new_dev.deviceTypeId)
+        if model_class is None:
+            return False
 
-        if new_dev.deviceTypeId in shelly_model_classes:
-            # The final device is a main device, so it needs to be restarted
-            # if any of the MQTT information changes
-            restart_fields = ["broker-id", "address", "message-type", "blu-relay"]
-            for field in restart_fields:
-                if new_dev.pluginProps.get(field, None) != orig_dev.pluginProps.get(
-                    field, None
-                ):
-                    return True
-        return False
+        did_change = False
+        restart_fields = ["broker-id", "address", "message-type", "blu-relay"]
+
+        # Detect if any of the communication fields changed
+        for field in restart_fields:
+            orig_value = orig_dev.pluginProps.get(field)
+            new_value = new_dev.pluginProps.get(field)
+            did_change |= new_value != orig_value
+
+        # Clean up old device address
+        if did_change and issubclass(model_class, ShellyBLU):
+            orig_address = orig_dev.pluginProps.get("address")
+            self.blu_address_devices[orig_address].discard(orig_dev.id)
+
+        return did_change
 
     def triggerStartProcessing(self, trigger):
         """
@@ -834,26 +847,24 @@ class Plugin(indigo.PluginBase):
     def get_discovered_blu_addresses(
         self, filter="", valuesDict=None, typeId="", targetId=0
     ):
-        if len(self.discovered_blu_addresses) == 0:
+        if len(self.blu_address_devices) == 0:
             return [("none", "%%disabled:No discovered BLU devices%%")]
 
         identified_addresses = []
         unidentified_addresses = []
 
-        for address in self.discovered_blu_addresses:
-            blu_device_id = self.blu_address_device.get(address)
-
-            # Mark the address as unidentified if it isn't to an Indigo device yet
-            if not blu_device_id:
+        for address, device_ids in self.blu_address_devices.copy().items():
+            # Mark the address as unidentified if it isn't associated with a device
+            if len(device_ids) == 0:
                 unidentified_addresses.append((address, address))
-                continue
-
-            # Mark the address as identified if it is linked to a valid Indigo device
-            if blu_device_id in self.shellies:
-                shelly = self.shellies[blu_device_id]
+            # Mark the address as identified since it is associated with one or more devices
+            elif len(device_ids) == 1:
+                shelly = self.shellies.get(next(iter(device_ids)))
                 identified_addresses.append(
                     (address, f"{address} - {shelly.device.name}")
                 )
+            else:
+                identified_addresses.append((address, f"{address} - <multiple>"))
 
         if len(identified_addresses) == 0:
             identified_addresses = [("none", "%%disabled:None%%")]

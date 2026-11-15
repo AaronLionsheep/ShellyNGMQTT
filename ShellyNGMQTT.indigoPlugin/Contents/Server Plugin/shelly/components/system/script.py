@@ -264,28 +264,19 @@ class Script(Component):
                 event_data=event_data,
             )
 
-            # Track the BLE device address as having been seen
-            indigo.activePlugin.discovered_blu_addresses.add(packet.address)
+            for device_id in indigo.activePlugin.blu_address_devices[packet.address]:
+                # Find the associated ShellyBLU device
+                shelly_blu = indigo.activePlugin.shellies.get(device_id)
+                if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
+                    return
 
-            # Find a device id that is linked to the BLE address
-            shelly_blu_dev_id = indigo.activePlugin.blu_address_device.get(
-                packet.address
-            )
-            if not shelly_blu_dev_id:
-                return
+                # Only process the packet if we trust the relay device's clock
+                if not self.shelly.clock_trusted():
+                    self.logger.warning(
+                        f"{self.shelly.device.name} has no recent NTP sync, ignoring its BLE packets. "
+                        "Check that it can reach its SNTP server."
+                    )
+                    return
 
-            # Find the associated ShellyBLU device
-            shelly_blu = indigo.activePlugin.shellies.get(shelly_blu_dev_id)
-            if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
-                return
-
-            # Only process the packet if we trust the relay device's clock
-            if not self.shelly.clock_trusted():
-                self.logger.warning(
-                    f"{self.shelly.device.name} has no recent NTP sync, ignoring its BLE packets. "
-                    "Check that it can reach its SNTP server."
-                )
-                return
-
-            # Let the ShellyBLU device handle the BLU packet
-            shelly_blu.handle_ble_relay_packet(packet)
+                # Let the ShellyBLU device handle the BLU packet
+                shelly_blu.handle_ble_relay_packet(packet)
