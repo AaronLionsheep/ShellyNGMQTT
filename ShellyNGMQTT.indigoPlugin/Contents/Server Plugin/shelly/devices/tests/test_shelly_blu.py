@@ -329,20 +329,17 @@ class TestBleData:
 
 
 class TestShellyBLU:
-    class TestNormalizeAddress:
-        def test_converts_to_lowercase(self):
-            assert (
-                ShellyBLU.normalize_address("B0:C7:DE:04:1C:FF") == "b0:c7:de:04:1c:ff"
-            )
-
-        def test_strips_leading_whitespace(self):
-            assert (
-                ShellyBLU.normalize_address("  b0:c7:de:04:1c:ff")
-                == "b0:c7:de:04:1c:ff"
-            )
-
-        def test_strips_trailing_whitespace(self):
-            assert (
-                ShellyBLU.normalize_address("b0:c7:de:04:1c:ff  ")
-                == "b0:c7:de:04:1c:ff"
-            )
+    @pytest.mark.parametrize(
+        "address",
+        [
+            "B0:C7:DE:04:1C:FF",
+            "b0:C7:dE:04:1c:fF",
+            "b0:c7:de:04:1c:ff",
+            " b0:c7:de:04:1c:ff",
+            "  b0:c7:de:04:1c:ff",
+            "b0:c7:de:04:1c:ff ",
+            "b0:c7:de:04:1c:ff  ",
+        ],
+    )
+    def test_normalize_address(self, address):
+        assert ShellyBLU.normalize_address(address) == "b0:c7:de:04:1c:ff"
