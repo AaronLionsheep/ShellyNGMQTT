@@ -321,9 +321,8 @@ class Plugin(indigo.PluginBase):
 
             self.message_types.remove(shelly.get_message_type())
         elif isinstance(shelly, ShellyBLU):
-            address = shelly.get_address()
-            for address in self.blu_address_devices:
-                self.blu_address_devices[address].discard(device.id)
+            for device_ids in list(self.blu_address_devices.values()):
+                device_ids.discard(device.id)
 
         try:
             del self.shellies[device.id]
