@@ -205,7 +205,7 @@ class ShellyBLU(Shelly):
         """
         return address.lower().strip()
 
-    def get_address(self) -> str:
+    def get_address(self) -> str | None:
         """
         Get the normalized Mac address of the device.
         """
