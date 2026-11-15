@@ -70,11 +70,7 @@ class Shelly(object):
 
         :return: The cleaned base address.
         """
-        address: str | None = self.device.pluginProps.get("address", None)
-        if not address or address == "":
-            return None
-
-        return address.strip().rstrip("/")
+        return self.device.pluginProps.get("address", "").strip().rstrip("/") or None
 
     def get_component_for_device(self, device):
         """
