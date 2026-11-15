@@ -484,7 +484,7 @@ class Plugin(indigo.PluginBase):
                 valid = False
             elif not re.match(
                 r"^[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}$",
-                address.lower(),
+                ShellyBLU.normalize_address(address),
             ):
                 errors_dict["mac-address"] = (
                     "MAC address does not match format! ex: 38:39:8f:a0:1d:a6"
