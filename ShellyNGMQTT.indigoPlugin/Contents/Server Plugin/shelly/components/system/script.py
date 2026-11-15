@@ -277,7 +277,7 @@ class Script(Component):
                 )
                 return
 
-            # Submit the packet to each targe device for processing
+            # Submit the packet to each target device for processing
             for device_id in target_device_ids:
                 shelly_blu = indigo.activePlugin.shellies.get(device_id)
                 if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
