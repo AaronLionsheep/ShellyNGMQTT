@@ -325,8 +325,6 @@ class Plugin(indigo.PluginBase):
             if address in self.blu_address_devices:
                 self.blu_address_devices[address].discard(device.id)
 
-            self.logger.info(self.blu_address_devices)
-
         try:
             del self.shellies[device.id]
         except KeyError:
@@ -873,9 +871,11 @@ class Plugin(indigo.PluginBase):
 
         return [
             ("none", "%%disabled:Unidentified BLE Addresses%%"),
-            *unidentified_addresses,
             ("none", "%%separator%%"),
+            *unidentified_addresses,
+            ("none", "%%disabled: %%"),
             ("none", "%%disabled:Identified BLE Addresses%%"),
+            ("none", "%%separator%%"),
             *identified_addresses,
         ]
 
