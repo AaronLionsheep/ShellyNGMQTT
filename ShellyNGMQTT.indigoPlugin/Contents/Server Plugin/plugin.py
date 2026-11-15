@@ -853,9 +853,10 @@ class Plugin(indigo.PluginBase):
             # Mark the address as identified since it is associated with one or more devices
             elif len(device_ids) == 1:
                 shelly = self.shellies.get(next(iter(device_ids)))
-                identified_addresses.append(
-                    (address, f"{address} - {shelly.device.name}")
-                )
+                name = "<unknown>"
+                if shelly:
+                    name = shelly.device.name
+                identified_addresses.append((address, f"{address} - {name}"))
             else:
                 identified_addresses.append((address, f"{address} - <multiple>"))
 
