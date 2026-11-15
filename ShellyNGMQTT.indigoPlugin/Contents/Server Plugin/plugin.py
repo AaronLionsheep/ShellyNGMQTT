@@ -322,7 +322,7 @@ class Plugin(indigo.PluginBase):
             self.message_types.remove(shelly.get_message_type())
         elif isinstance(shelly, ShellyBLU):
             address = shelly.get_address()
-            if address in self.blu_address_devices:
+            for address in self.blu_address_devices:
                 self.blu_address_devices[address].discard(device.id)
 
         try:
@@ -347,25 +347,21 @@ class Plugin(indigo.PluginBase):
         :param new_dev: The device after updates.
         :return: True or false whether the device had the communication properties changed.
         """
+        restart_fields = ["broker-id", "address", "message-type", "blu-relay"]
+
+        # Only primary device models will have communication properties
         model_class = shelly_model_classes.get(new_dev.deviceTypeId)
         if model_class is None:
             return False
-
-        did_change = False
-        restart_fields = ["broker-id", "address", "message-type", "blu-relay"]
 
         # Detect if any of the communication fields changed
         for field in restart_fields:
             orig_value = orig_dev.pluginProps.get(field)
             new_value = new_dev.pluginProps.get(field)
-            did_change |= new_value != orig_value
+            if new_value != orig_value:
+                return True
 
-        # Clean up old device address
-        if did_change and issubclass(model_class, ShellyBLU):
-            orig_address = orig_dev.pluginProps.get("address")
-            self.blu_address_devices[orig_address].discard(orig_dev.id)
-
-        return did_change
+        return False
 
     def triggerStartProcessing(self, trigger):
         """

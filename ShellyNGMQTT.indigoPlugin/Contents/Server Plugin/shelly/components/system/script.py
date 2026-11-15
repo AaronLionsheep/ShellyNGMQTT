@@ -264,19 +264,23 @@ class Script(Component):
                 event_data=event_data,
             )
 
-            for device_id in indigo.activePlugin.blu_address_devices[packet.address]:
-                # Find the associated ShellyBLU device
+            # This is purposefully not using .get() so it creates the entry in the defaultdict for address discovery
+            target_device_ids = tuple(
+                indigo.activePlugin.blu_address_devices[packet.address]
+            )
+
+            # Only process the packet if we trust the relay device's clock
+            if len(target_device_ids) > 0 and not self.shelly.clock_trusted():
+                self.logger.warning(
+                    f"{self.shelly.device.name} has no recent NTP sync, ignoring its BLE packets. "
+                    "Check that it can reach its SNTP server."
+                )
+                return
+
+            # Submit the packet to each targe device for processing
+            for device_id in target_device_ids:
                 shelly_blu = indigo.activePlugin.shellies.get(device_id)
                 if not shelly_blu or not isinstance(shelly_blu, ShellyBLU):
-                    return
+                    continue
 
-                # Only process the packet if we trust the relay device's clock
-                if not self.shelly.clock_trusted():
-                    self.logger.warning(
-                        f"{self.shelly.device.name} has no recent NTP sync, ignoring its BLE packets. "
-                        "Check that it can reach its SNTP server."
-                    )
-                    return
-
-                # Let the ShellyBLU device handle the BLU packet
                 shelly_blu.handle_ble_relay_packet(packet)
