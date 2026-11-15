@@ -102,8 +102,12 @@
     <Event id="long-push">
         <Name>Long Push</Name>
         <ConfigUI>
-            <Field id="tip" type="label" fontColor="darkgray">
+            <Field id="tip-timing" type="label">
                 <Label>This event is fired AFTER releasing the contact/button if the duration threshold was met.</Label>
+            </Field>
+
+            <Field id="tip-end" type="label">
+                <Label></Label>
             </Field>
 
             <Field id="device-id" type="menu">
@@ -178,8 +182,16 @@
     <Event id="hold-push">
         <Name>Hold Push</Name>
         <ConfigUI>
-            <Field id="tip" type="label" fontColor="darkgray">
+            <Field id="tip-timing" type="label">
                 <Label>This event is fired BEFORE the contact/button is released once the duration threshold is met.</Label>
+            </Field>
+
+            <Field id="tip-required-firmware-version" type="label" fontColor="orange">
+                <Label>This event is only processed for devices running firmware version 1.0.22 or newer.</Label>
+            </Field>
+
+            <Field id="tip-end" type="label">
+                <Label></Label>
             </Field>
 
             <Field id="device-id" type="menu">
