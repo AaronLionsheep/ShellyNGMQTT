@@ -4,6 +4,7 @@ from shelly.devices.ShellyBLU import (
     BLEData,
     BLERelayPacket,
     BTHomeDeviceInfo,
+    ShellyBLU,
 )
 
 # Unencrypted BTHome V2 payload: packet id, battery, humidity, temperature
@@ -325,3 +326,23 @@ class TestBleData:
         assert data.device_info == BTHomeDeviceInfo(
             device_type_id=1, firmware_version="1.3.2.1"
         )
+
+
+class TestShellyBLU:
+    class TestNormalizeAddress:
+        def test_converts_to_lowercase(self):
+            assert (
+                ShellyBLU.normalize_address("B0:C7:DE:04:1C:FF") == "b0:c7:de:04:1c:ff"
+            )
+
+        def test_strips_leading_whitespace(self):
+            assert (
+                ShellyBLU.normalize_address("  b0:c7:de:04:1c:ff")
+                == "b0:c7:de:04:1c:ff"
+            )
+
+        def test_strips_trailing_whitespace(self):
+            assert (
+                ShellyBLU.normalize_address("b0:c7:de:04:1c:ff  ")
+                == "b0:c7:de:04:1c:ff"
+            )

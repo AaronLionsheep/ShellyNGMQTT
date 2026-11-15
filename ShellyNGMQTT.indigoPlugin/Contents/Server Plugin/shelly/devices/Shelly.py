@@ -1,7 +1,8 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
 import json
 import logging
 import uuid
+
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
 
 class Shelly(object):
@@ -69,15 +70,11 @@ class Shelly(object):
 
         :return: The cleaned base address.
         """
-
-        address = self.device.pluginProps.get('address', None)
-        if not address or address == '':
+        address: str | None = self.device.pluginProps.get("address", None)
+        if not address or address == "":
             return None
 
-        address.strip()
-        if address.endswith('/'):
-            address = address[:-1]
-        return address
+        return address.strip().rstrip("/")
 
     def get_component_for_device(self, device):
         """
@@ -115,7 +112,9 @@ class Shelly(object):
 
         :return: The state name.
         """
-        return indigo.PluginBase.getDeviceDisplayStateId(indigo.activePlugin, self.device)
+        return indigo.PluginBase.getDeviceDisplayStateId(
+            indigo.activePlugin, self.device
+        )
 
     def update_state_image(self):
         """
@@ -150,8 +149,8 @@ class Shelly(object):
         :return: None
         """
 
-        if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
-            self.logger.info("sent \"{}\" {}".format(self.device.name, message))
+        if indigo.activePlugin.pluginPrefs.get("log-device-activity", True):
+            self.logger.info('sent "{}" {}'.format(self.device.name, message))
 
     def log_command_received(self, message):
         """
@@ -161,8 +160,8 @@ class Shelly(object):
         :return: None
         """
 
-        if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
-            self.logger.info("received \"{}\" {}".format(self.device.name, message))
+        if indigo.activePlugin.pluginPrefs.get("log-device-activity", True):
+            self.logger.info('received "{}" {}'.format(self.device.name, message))
 
     def register_component(self, component_class, name, comp_id=0, props=None):
         """
@@ -190,14 +189,19 @@ class Shelly(object):
                 indigo.kProtocol.Plugin,
                 name=ui_name,
                 deviceTypeId=component_class.device_type_id,
-                groupWithDevice=self.device.id)
+                groupWithDevice=self.device.id,
+            )
             device.model = name
             device.replaceOnServer()
             self.component_devices[name] = device
 
         device = self.component_devices.get(name, None)
         if device is None:
-            raise KeyError("component '{}' not found in '{}' when it should...".format(name, self.device.name))
+            raise KeyError(
+                "component '{}' not found in '{}' when it should...".format(
+                    name, self.device.name
+                )
+            )
 
         # Force any device properties
         if len(props) > 0:
@@ -224,9 +228,14 @@ class Shelly(object):
             comp_id = 0
 
         for component in self.components:
-            if component_class is not None and not isinstance(component, component_class):
+            if component_class is not None and not isinstance(
+                component, component_class
+            ):
                 continue
-            if component_type is not None and component.component_type != component_type:
+            if (
+                component_type is not None
+                and component.component_type != component_type
+            ):
                 continue
             # Special case: let a component with id -1 handle any comp_id message
             if component.comp_id != -1 and component.comp_id != comp_id:

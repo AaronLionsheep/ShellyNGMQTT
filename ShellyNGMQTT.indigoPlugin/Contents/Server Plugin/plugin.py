@@ -59,7 +59,7 @@ class Plugin(indigo.PluginBase):
         )
         self.setLogLevel(pluginPrefs.get("log-level", "info"))
 
-        self.shellies = {}
+        self.shellies: dict[int, Shelly] = {}
         self.triggers = {}
         self.message_types = []
         self.message_queue = Queue()
@@ -75,9 +75,9 @@ class Plugin(indigo.PluginBase):
         #       'another/unique/topic': [dev7, dev8, dev9]
         #   }
         # }
-        self.broker_device_topics = {}
+        self.broker_device_topics: dict[int, dict[str, list[int]]] = {}
 
-        self.blu_address_devices: defaultdict[str, set] = defaultdict(set)
+        self.blu_address_devices: defaultdict[str, set[int]] = defaultdict(set)
         """A mapping of MAC address to associated device IDs"""
 
     def startup(self):
@@ -538,7 +538,9 @@ class Plugin(indigo.PluginBase):
         if issubclass(model_class, ShellyBLU):
             main_device = None
             device_props = {
-                "address": values_dict["mac-address"],
+                "address": ShellyBLU.normalize_address(
+                    values_dict.get("mac-address") or ""
+                ),
                 "is-initial-setup": False,
             }
             if model_class.display_name not in group_models:
