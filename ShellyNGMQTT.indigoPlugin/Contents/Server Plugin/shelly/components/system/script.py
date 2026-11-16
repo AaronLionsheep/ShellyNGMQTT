@@ -1,10 +1,15 @@
 import os
+import time
 from typing import TypedDict
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
 from ...devices.ShellyBLU import BLERelayPacket, ShellyBLU
 from ..component import Component
+
+# Relayed BLE packets older than this (in seconds) are discarded, since their sensor
+# values are stale (ex: queued while the plugin was not running).
+MAX_BLE_PACKET_AGE = 60.0
 
 
 class ScriptConfig(TypedDict):
@@ -269,11 +274,24 @@ class Script(Component):
                 indigo.activePlugin.blu_address_devices[packet.address]
             )
 
+            # Nothing to dispatch to, the address has only been recorded for discovery
+            if not target_device_ids:
+                return
+
             # Only process the packet if we trust the relay device's clock
-            if len(target_device_ids) > 0 and not self.shelly.clock_trusted():
+            if not self.shelly.clock_trusted():
                 self.logger.warning(
                     f"{self.shelly.device.name} has no recent NTP sync, ignoring its BLE packets. "
                     "Check that it can reach its SNTP server."
+                )
+                return
+
+            # Discard old packets by comparing the relay's timestamp to the system time
+            packet_age = time.time() - packet.timestamp
+            if packet_age > MAX_BLE_PACKET_AGE:
+                self.logger.debug(
+                    f"Discarding BLE packet for {packet.address} relayed via "
+                    f"{self.shelly.device.name}, {packet_age:.1f}s old: {event_data}"
                 )
                 return
 

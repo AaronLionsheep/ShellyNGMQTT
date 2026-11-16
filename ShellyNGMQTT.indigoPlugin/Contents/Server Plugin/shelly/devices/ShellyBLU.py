@@ -40,6 +40,10 @@ DEVICE_INFO_MEAS_TYPES = {
 }
 BTHOME_MEAS_TYPES = {**MEAS_TYPES, **DEVICE_INFO_MEAS_TYPES}
 
+# Events (ex: button presses) from packets older than this (in seconds) do not fire
+# triggers, so a delayed press doesn't run its actions late.
+MAX_BLE_EVENT_AGE = 3.0
+
 
 @dataclass(frozen=True)
 class BTHomeDeviceInfo:
@@ -334,8 +338,15 @@ class ShellyBLU(Shelly):
             props.update(prop_updates)
             self.device.replacePluginPropsOnServer(props)
 
-        # Fire triggers matching common event data
-        self.trigger_button_events(data.events)
+        # Fire triggers matching common event data, unless the packet is too old
+        packet_age = time.time() - data.packet.timestamp
+        if packet_age <= MAX_BLE_EVENT_AGE:
+            self.trigger_button_events(data.events)
+        elif data.events:
+            self.logger.warning(
+                f"{self.device.name} ignoring events from a BLE packet received "
+                f"{packet_age:.1f}s ago: {data.events}"
+            )
 
     def handle_ble_relay_packet(self, packet: BLERelayPacket):
         ble_data = self.parse_packet(packet)
