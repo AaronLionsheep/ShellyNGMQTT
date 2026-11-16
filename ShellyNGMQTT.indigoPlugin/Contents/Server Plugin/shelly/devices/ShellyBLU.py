@@ -126,7 +126,7 @@ class BLERelayPacket:
     @classmethod
     def from_mqtt_event(cls, relay_device_id: int, timestamp: float, event_data: dict):
         version = int(event_data.get("version", 1))
-        address = event_data["address"]
+        address = ShellyBLU.normalize_address(event_data["address"])
         rssi = event_data["rssi"]
         service_data = event_data["service_data"]
 
@@ -195,6 +195,25 @@ class ShellyBLU(Shelly):
     def plugin_props(cls) -> dict[str, Any]:
         """Default pluginProps that all devices of this class will have."""
         return {}
+
+    @staticmethod
+    def normalize_address(address: str) -> str:
+        """
+        Normalize the MAC Address for the device.
+
+        The address will always be lowercase and without leading or trailing whitespace.
+        """
+        return address.lower().strip()
+
+    def get_address(self) -> str | None:
+        """
+        Get the normalized Mac address of the device.
+        """
+        address = super().get_address()
+        if address is None:
+            return address
+
+        return self.normalize_address(address)
 
     def get_device_state_list(self):
         """

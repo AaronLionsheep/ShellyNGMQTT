@@ -4,6 +4,7 @@ from shelly.devices.ShellyBLU import (
     BLEData,
     BLERelayPacket,
     BTHomeDeviceInfo,
+    ShellyBLU,
 )
 
 # Unencrypted BTHome V2 payload: packet id, battery, humidity, temperature
@@ -224,12 +225,13 @@ class TestBTHomeDeviceInfo:
 
 
 class TestBLERelayPacket:
-    def test_from_mqtt_event(self):
+    @pytest.mark.parametrize("address", ["b0:c7:de:04:1c:ff", "B0:C7:DE:04:1C:FF"])
+    def test_from_mqtt_event(self, address):
         packet = BLERelayPacket.from_mqtt_event(
             relay_device_id=1,
             timestamp=0,
             event_data={
-                "address": "b0:c7:de:04:1c:ff",
+                "address": address,
                 "rssi": -77,
                 "service_data": {
                     "0000fcd2-0000-1000-8000-00805f9b34fb": "44005001642e3545ef00"
@@ -325,3 +327,20 @@ class TestBleData:
         assert data.device_info == BTHomeDeviceInfo(
             device_type_id=1, firmware_version="1.3.2.1"
         )
+
+
+class TestShellyBLU:
+    @pytest.mark.parametrize(
+        "address",
+        [
+            "B0:C7:DE:04:1C:FF",
+            "b0:C7:dE:04:1c:fF",
+            "b0:c7:de:04:1c:ff",
+            " b0:c7:de:04:1c:ff",
+            "  b0:c7:de:04:1c:ff",
+            "b0:c7:de:04:1c:ff ",
+            "b0:c7:de:04:1c:ff  ",
+        ],
+    )
+    def test_normalize_address(self, address):
+        assert ShellyBLU.normalize_address(address) == "b0:c7:de:04:1c:ff"
