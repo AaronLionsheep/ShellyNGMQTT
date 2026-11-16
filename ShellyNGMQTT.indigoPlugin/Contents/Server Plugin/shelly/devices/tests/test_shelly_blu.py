@@ -225,12 +225,13 @@ class TestBTHomeDeviceInfo:
 
 
 class TestBLERelayPacket:
-    def test_from_mqtt_event(self):
+    @pytest.mark.parametrize("address", ["b0:c7:de:04:1c:ff", "B0:C7:DE:04:1C:FF"])
+    def test_from_mqtt_event(self, address):
         packet = BLERelayPacket.from_mqtt_event(
             relay_device_id=1,
             timestamp=0,
             event_data={
-                "address": "b0:c7:de:04:1c:ff",
+                "address": address,
                 "rssi": -77,
                 "service_data": {
                     "0000fcd2-0000-1000-8000-00805f9b34fb": "44005001642e3545ef00"
