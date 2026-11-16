@@ -66,11 +66,15 @@ class Shelly(object):
 
     def get_address(self):
         """
-        Helper function to get the base address of this device. Trailing '/' will be removed.
+        Helper function to get the base address of this device.
+
+        Leading and trailing whitespace is removed, and trailing '/' characters will be
+        removed.
 
         :return: The cleaned base address.
         """
-        return self.device.pluginProps.get("address", "").strip().rstrip("/") or None
+        address = self.device.pluginProps.get("address") or ""
+        return address.strip().rstrip("/") or None
 
     def get_component_for_device(self, device):
         """
