@@ -16,7 +16,7 @@ class DevicePower(Component):
         :param shelly: The Shelly device object.
         """
 
-        super(DevicePower, self).__init__(shelly)
+        super().__init__(shelly)
 
     def get_config(self):
         """
@@ -109,9 +109,9 @@ class DevicePower(Component):
                 {
                     "key": "battery-voltage",
                     "value": voltage,
-                    "uiValue": "{} V".format(voltage),
+                    "uiValue": f"{voltage} V",
                 },
-                {"key": "batteryLevel", "value": level, "uiValue": "{}%".format(level)},
+                {"key": "batteryLevel", "value": level, "uiValue": f"{level}%"},
                 {"key": "external-power", "value": external},
             ]
         )

@@ -16,7 +16,7 @@ class HT_UI(Component):
         :param shelly: The Shelly device object.
         """
 
-        super(HT_UI, self).__init__(shelly)
+        super().__init__(shelly)
 
     def get_config(self):
         """
@@ -99,4 +99,3 @@ class HT_UI(Component):
         """
 
         # No status properties
-        pass

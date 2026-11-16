@@ -19,7 +19,7 @@ class Input(Component):
         :param comp_id: The integer identifier for the component
         """
 
-        super(Input, self).__init__(shelly, device_id, comp_id)
+        super().__init__(shelly, device_id, comp_id)
 
     def handle_action(self, action):
         """
@@ -42,7 +42,7 @@ class Input(Component):
         :return: None
         """
 
-        super(Input, self).handle_notify_event(event)
+        super().handle_notify_event(event)
 
         if event["name"] == "btn_down":
             self.device.updateStateOnServer(key="onOffState", value=True)

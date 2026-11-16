@@ -1,5 +1,6 @@
 import logging
 import re
+import sys
 from collections import defaultdict
 from queue import Queue
 
@@ -55,9 +56,7 @@ shelly_model_classes = {
 
 class Plugin(indigo.PluginBase):
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
-        super(Plugin, self).__init__(
-            pluginId, pluginDisplayName, pluginVersion, pluginPrefs
-        )
+        super().__init__(pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
         self.setLogLevel(pluginPrefs.get("log-level", "info"))
 
         self.shellies: dict[int, Shelly] = {}
@@ -89,7 +88,7 @@ class Plugin(indigo.PluginBase):
 
         if not self.mqtt_plugin:
             self.logger.error("MQTT Connector plugin is required!!")
-            exit(-1)
+            sys.exit(-1)
         indigo.server.subscribeToBroadcast(
             "com.flyingdiver.indigoplugin.mqtt",
             "com.flyingdiver.indigoplugin.mqtt-message_queued",
@@ -168,12 +167,13 @@ class Plugin(indigo.PluginBase):
                 payload = data["payload"]
                 message_type = data["message_type"]
                 self.logger.debug('    Processing: "%s" on topic "%s"', payload, topic)
-                device_topics = self.broker_device_topics.get(
-                    broker_id, {}
-                )  # get device topics for this broker
-                dev_ids = device_topics.get(
-                    topic, list()
-                )  # get devices listening on this broker for this topic
+
+                # get device topics for the broker
+                device_topics = self.broker_device_topics.get(broker_id, {})
+
+                # get devices listening on this broker for this topic
+                dev_ids = device_topics.get(topic, [])
+
                 for dev_id in dev_ids:
                     shelly = self.shellies.get(dev_id, None)
                     if shelly is not None and message_type == shelly.get_message_type():
@@ -197,7 +197,7 @@ class Plugin(indigo.PluginBase):
         """
         # Catch main devices that have already been started by a component
         if device.id in self.shellies:
-            self.logger.debug("{} not starting again...".format(device.name))
+            self.logger.debug(f"{device.name} not starting again...")
             return
 
         if device.deviceTypeId in shelly_model_classes:
@@ -226,14 +226,10 @@ class Plugin(indigo.PluginBase):
                 if shelly.get_broker_id() is None or shelly.get_address() is None:
                     # Ensure the device has a broker and address
                     self.logger.error(
-                        'broker-id: "{}" address: "{}"'.format(
-                            shelly.get_broker_id(), shelly.get_address()
-                        )
+                        f'broker-id: "{shelly.get_broker_id()}" address: "{shelly.get_address()}"'
                     )
                     self.logger.error(
-                        '"{}" is not properly setup! Check the broker and topic root.'.format(
-                            device.name
-                        )
+                        f'"{device.name}" is not properly setup! Check the broker and topic root.'
                     )
                     return False
 
@@ -270,9 +266,7 @@ class Plugin(indigo.PluginBase):
                     grouped_with_device = indigo.devices[grouped_with_device_id]
                     if grouped_with_device.deviceTypeId in shelly_model_classes:
                         self.logger.debug(
-                            "{} needs it's main device started, starting '{}' manually...".format(
-                                device.name, grouped_with_device.name
-                            )
+                            f"{device.name} needs it's main device started, starting '{grouped_with_device.name}' manually..."
                         )
                         self.deviceStartComm(grouped_with_device)
 
@@ -533,7 +527,7 @@ class Plugin(indigo.PluginBase):
         model_class = shelly_model_classes.get(shelly_model, None)
         if model_class is None:
             self.logger.error(
-                "Unable to find class for device with type: '{}'".format(shelly_model)
+                f"Unable to find class for device with type: '{shelly_model}'"
             )
 
         if issubclass(model_class, ShellyBLU):
@@ -655,7 +649,6 @@ class Plugin(indigo.PluginBase):
             else:
                 self.logger.error("Unable to find shelly or component for device id: {}".format(dev_id))
         """
-        pass
 
     def validate_event_config_ui(self, values_dict: dict, type_id: str, event_id: int):
         """
@@ -958,7 +951,7 @@ class Plugin(indigo.PluginBase):
         valid_log_levels = ["debug", "info", "warning"]
         if level not in valid_log_levels:
             self.logger.error(
-                "Attempted to set the log level to an unhandled value: {}".format(level)
+                f"Attempted to set the log level to an unhandled value: {level}"
             )
 
         if level == "debug":
@@ -1232,13 +1225,12 @@ class Plugin(indigo.PluginBase):
             except TypeError:
                 device_id = None
         shelly = self.shellies.get(device_id, None)
+        if not shelly:
+            raise ValueError(f"No shelly object found for device id {device_id}")
 
         # Handle individual actions
         if action == "Shelly.CheckForUpdate":
-            if shelly:
-                shelly.check_for_update()
+            shelly.check_for_update()
         elif action == "Shelly.Update":
-            if shelly:
-                stage = pluginAction.props.get("stage")
-
-                shelly.update(stage)
+            stage = pluginAction.props.get("stage")
+            shelly.update(stage)

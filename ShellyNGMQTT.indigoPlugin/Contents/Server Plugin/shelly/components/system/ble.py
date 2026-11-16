@@ -16,7 +16,7 @@ class BLE(Component):
         :param shelly: The Shelly device object.
         """
 
-        super(BLE, self).__init__(shelly)
+        super().__init__(shelly)
 
     def get_config(self):
         """
@@ -99,4 +99,3 @@ class BLE(Component):
         """
 
         # No status properties
-        pass

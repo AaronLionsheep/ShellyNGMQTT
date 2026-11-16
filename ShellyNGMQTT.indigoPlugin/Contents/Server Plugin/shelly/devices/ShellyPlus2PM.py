@@ -1,4 +1,3 @@
-import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..components.functional.cover import Cover
 from ..components.functional.input import Input
@@ -20,7 +19,7 @@ class ShellyPlus2PM(ShellyMQTT):
     display_name = "Shelly Plus 2 PM"
 
     def __init__(self, device_id):
-        super(ShellyPlus2PM, self).__init__(device_id)
+        super().__init__(device_id)
 
         self.system_components = {
             "system": System(self),
@@ -69,7 +68,7 @@ class ShellyPlus2PM(ShellyMQTT):
             self.input_0 = self.register_component(Input, "Input 1")
             self.input_1 = self.register_component(Input, "Input 2")
         else:
-            raise ValueError("Unknown profile: {}".format(profile))
+            raise ValueError(f"Unknown profile: {profile}")
 
     def handle_notify_status(self, component_type, instance_id, status):
         """
@@ -81,7 +80,7 @@ class ShellyPlus2PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus2PM, self).handle_notify_status(
+        super().handle_notify_status(
             component_type, instance_id, status
         )
 
@@ -95,7 +94,7 @@ class ShellyPlus2PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus2PM, self).handle_notify_event(
+        super().handle_notify_event(
             component_type, instance_id, event
         )
 
@@ -107,4 +106,4 @@ class ShellyPlus2PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus2PM, self).handle_action(action)
+        super().handle_action(action)

@@ -1,4 +1,3 @@
-# coding=utf-8
 import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..component import Component
@@ -19,7 +18,7 @@ class Temperature(Component):
         :param shelly: The Shelly device object.
         :param comp_id: The integer identifier for the component
         """
-        super(Temperature, self).__init__(shelly, device_id, comp_id)
+        super().__init__(shelly, device_id, comp_id)
 
     def get_device_state_list(self):
         """
@@ -27,7 +26,7 @@ class Temperature(Component):
 
         :return: The device state list.
         """
-        states = super(Temperature, self).get_device_state_list()
+        states = super().get_device_state_list()
         states.extend(
             [
                 indigo.activePlugin.getDeviceStateDictForNumberType(
@@ -69,7 +68,7 @@ class Temperature(Component):
         :param event: The event from the device.
         :return: None
         """
-        super(Temperature, self).handle_notify_event(event)
+        super().handle_notify_event(event)
 
     def handle_notify_status(self, status):
         """
@@ -177,7 +176,7 @@ class Temperature(Component):
                 {
                     "key": "temperature_c",
                     "value": temp_c,
-                    "uiValue": "{} °C".format(temp_c),
+                    "uiValue": f"{temp_c} °C",
                     "decimalPlaces": 1,
                 }
             )
@@ -188,7 +187,7 @@ class Temperature(Component):
                 {
                     "key": "temperature_f",
                     "value": temp_f,
-                    "uiValue": "{} °F".format(temp_f),
+                    "uiValue": f"{temp_f} °F",
                     "decimalPlaces": 1,
                 }
             )
@@ -198,7 +197,7 @@ class Temperature(Component):
                 {
                     "key": "sensorValue",
                     "value": temp_f,
-                    "uiValue": "{} °F".format(temp_f),
+                    "uiValue": f"{temp_f} °F",
                     "decimalPlaces": 1,
                 }
             )
@@ -207,7 +206,7 @@ class Temperature(Component):
                 {
                     "key": "sensorValue",
                     "value": temp_c,
-                    "uiValue": "{} °C".format(temp_c),
+                    "uiValue": f"{temp_c} °C",
                     "decimalPlaces": 1,
                 }
             )

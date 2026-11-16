@@ -1,4 +1,3 @@
-import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..components.functional.input import Input
 from ..components.functional.switch import Switch
@@ -18,7 +17,7 @@ class ShellyPlus1PM(ShellyMQTT):
     display_name = "Shelly Plus 1 PM"
 
     def __init__(self, device_id):
-        super(ShellyPlus1PM, self).__init__(device_id)
+        super().__init__(device_id)
 
         self.system_components = {
             "system": System(self),
@@ -49,7 +48,7 @@ class ShellyPlus1PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus1PM, self).handle_notify_status(
+        super().handle_notify_status(
             component_type, instance_id, status
         )
 
@@ -63,7 +62,7 @@ class ShellyPlus1PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus1PM, self).handle_notify_event(
+        super().handle_notify_event(
             component_type, instance_id, event
         )
 
@@ -75,4 +74,4 @@ class ShellyPlus1PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus1PM, self).handle_action(action)
+        super().handle_action(action)

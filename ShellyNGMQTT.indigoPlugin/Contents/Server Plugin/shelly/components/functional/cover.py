@@ -1,4 +1,3 @@
-# coding=utf-8
 import indigo
 
 from ..component import Component
@@ -15,10 +14,10 @@ class Cover(Component):
     device_type_id = "component-cover"
 
     def __init__(self, shelly, device_id, comp_id=0):
-        super(Cover, self).__init__(shelly, device_id, comp_id)
+        super().__init__(shelly, device_id, comp_id)
 
     def get_device_state_list(self):
-        states = super(Cover, self).get_device_state_list()
+        states = super().get_device_state_list()
         states.extend(
             [
                 indigo.activePlugin.getDeviceStateDictForStringType(
@@ -41,7 +40,7 @@ class Cover(Component):
         return "cover_state"
 
     def handle_action(self, action):
-        super(Cover, self).handle_action(action)
+        super().handle_action(action)
 
         if action.deviceAction == indigo.kDeviceAction.TurnOn:
             self.open()
@@ -89,7 +88,7 @@ class Cover(Component):
                 {
                     "key": "temperature_c",
                     "value": temp_c,
-                    "uiValue": "{} °C".format(temp_c),
+                    "uiValue": f"{temp_c} °C",
                 }
             )
         temp_f = status.get("temperature", {}).get("tF", None)
@@ -98,7 +97,7 @@ class Cover(Component):
                 {
                     "key": "temperature_f",
                     "value": temp_f,
-                    "uiValue": "{} °F".format(temp_f),
+                    "uiValue": f"{temp_f} °F",
                 }
             )
 
@@ -114,14 +113,14 @@ class Cover(Component):
                 {
                     "key": "curEnergyLevel",
                     "value": apower,
-                    "uiValue": "{} W".format(apower),
+                    "uiValue": f"{apower} W",
                 }
             )
 
         voltage = status.get("voltage", None)
         if voltage is not None and "voltage" in self.device.states:
             updated_states.append(
-                {"key": "voltage", "value": voltage, "uiValue": "{} V".format(voltage)}
+                {"key": "voltage", "value": voltage, "uiValue": f"{voltage} V"}
             )
 
         energy_total = status.get("aenergy", {}).get("total", None)
@@ -131,7 +130,7 @@ class Cover(Component):
                 {
                     "key": "accumEnergyTotal",
                     "value": energy_total,
-                    "uiValue": "{:.3f} kWh".format(energy_total_kwh),
+                    "uiValue": f"{energy_total_kwh:.3f} kWh",
                 }
             )
 
@@ -189,4 +188,4 @@ class Cover(Component):
     def go_to_position(self, pos):
         pos = max(0, min(100, int(pos)))
         self.shelly.publish_rpc("Cover.GoToPosition", {"id": self.comp_id, "pos": pos})
-        self.log_command_sent("go to {}%".format(pos))
+        self.log_command_sent(f"go to {pos}%")

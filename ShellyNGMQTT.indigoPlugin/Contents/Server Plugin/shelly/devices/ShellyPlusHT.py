@@ -19,7 +19,7 @@ class ShellyPlusHT(ShellyMQTT):
     display_name = "Shelly Plus H&T"
 
     def __init__(self, device_id):
-        super(ShellyPlusHT, self).__init__(device_id)
+        super().__init__(device_id)
 
         self.system_components = {
             "system": System(self),
@@ -55,7 +55,7 @@ class ShellyPlusHT(ShellyMQTT):
         :param status: Data for the notification.
         :return: None
         """
-        super(ShellyPlusHT, self).handle_notify_status(
+        super().handle_notify_status(
             component_type, instance_id, status
         )
 
@@ -68,7 +68,7 @@ class ShellyPlusHT(ShellyMQTT):
         :param event: The event to handle.
         :return: None
         """
-        super(ShellyPlusHT, self).handle_notify_event(
+        super().handle_notify_event(
             component_type, instance_id, event
         )
 
@@ -79,7 +79,7 @@ class ShellyPlusHT(ShellyMQTT):
         :param action: The Indigo action.
         :return: None
         """
-        super(ShellyPlusHT, self).handle_action(action)
+        super().handle_action(action)
 
     def get_device_state_list(self):
         """
@@ -96,7 +96,7 @@ class ShellyPlusHT(ShellyMQTT):
 
         :return: The device state list.
         """
-        states = super(ShellyPlusHT, self).get_device_state_list()
+        states = super().get_device_state_list()
         states.extend(
             [
                 indigo.activePlugin.getDeviceStateDictForRealType(

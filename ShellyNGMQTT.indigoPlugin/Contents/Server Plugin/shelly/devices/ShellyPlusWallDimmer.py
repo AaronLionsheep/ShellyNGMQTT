@@ -1,4 +1,3 @@
-import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..components.functional.light import Light
 from ..components.system.ble import BLE
@@ -17,7 +16,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
     display_name = "Shelly Plus WallDimmer"
 
     def __init__(self, device_id):
-        super(ShellyPlusWallDimmer, self).__init__(device_id)
+        super().__init__(device_id)
 
         self.system_components = {
             "system": System(self),
@@ -46,7 +45,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param status: Data for the notification.
         :return: None
         """
-        super(ShellyPlusWallDimmer, self).handle_notify_status(
+        super().handle_notify_status(
             component_type, instance_id, status
         )
 
@@ -59,7 +58,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param event: The event to handle.
         :return: None
         """
-        super(ShellyPlusWallDimmer, self).handle_notify_event(
+        super().handle_notify_event(
             component_type, instance_id, event
         )
 
@@ -70,4 +69,4 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param action: The Indigo action.
         :return: None
         """
-        super(ShellyPlusWallDimmer, self).handle_action(action)
+        super().handle_action(action)

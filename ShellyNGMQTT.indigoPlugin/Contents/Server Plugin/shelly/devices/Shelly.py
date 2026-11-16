@@ -1,11 +1,9 @@
-import json
 import logging
-import uuid
 
 import indigo  # pyright: ignore[reportMissingModuleSource]
 
 
-class Shelly(object):
+class Shelly:
     """
     Base class used by all Shelly model classes.
     """
@@ -150,7 +148,7 @@ class Shelly(object):
         """
 
         if indigo.activePlugin.pluginPrefs.get("log-device-activity", True):
-            self.logger.info('sent "{}" {}'.format(self.device.name, message))
+            self.logger.info(f'sent "{self.device.name}" {message}')
 
     def log_command_received(self, message):
         """
@@ -161,7 +159,7 @@ class Shelly(object):
         """
 
         if indigo.activePlugin.pluginPrefs.get("log-device-activity", True):
-            self.logger.info('received "{}" {}'.format(self.device.name, message))
+            self.logger.info(f'received "{self.device.name}" {message}')
 
     def register_component(self, component_class, name, comp_id=0, props=None):
         """
@@ -184,7 +182,7 @@ class Shelly(object):
             # The component name we are trying to register is new, so we did
             # not find a device with that name already in the group. Create it
             # and add it to the group.
-            ui_name = "{} {}".format(self.device.name, name)
+            ui_name = f"{self.device.name} {name}"
             device = indigo.device.create(
                 indigo.kProtocol.Plugin,
                 name=ui_name,
@@ -198,9 +196,7 @@ class Shelly(object):
         device = self.component_devices.get(name, None)
         if device is None:
             raise KeyError(
-                "component '{}' not found in '{}' when it should...".format(
-                    name, self.device.name
-                )
+                f"component '{name}' not found in '{self.device.name}' when it should..."
             )
 
         # Force any device properties

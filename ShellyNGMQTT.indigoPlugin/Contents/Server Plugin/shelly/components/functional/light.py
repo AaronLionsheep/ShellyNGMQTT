@@ -1,4 +1,3 @@
-# coding=utf-8
 import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..component import Component
@@ -20,7 +19,7 @@ class Light(Component):
         :param comp_id: The integer identifier for the component
         """
 
-        super(Light, self).__init__(shelly, device_id, comp_id)
+        super().__init__(shelly, device_id, comp_id)
 
     def get_device_state_list(self):
         """
@@ -37,7 +36,7 @@ class Light(Component):
 
         :return: The device state list.
         """
-        states = super(Light, self).get_device_state_list()
+        states = super().get_device_state_list()
 
         states.extend(
             [
@@ -74,7 +73,7 @@ class Light(Component):
         :param action: The Indigo action to handle.
         :return: None
         """
-        super(Light, self).handle_action(action)
+        super().handle_action(action)
 
         if action.deviceAction == indigo.kDeviceAction.TurnOn:
             self.set(on=True)
@@ -202,7 +201,7 @@ class Light(Component):
                 {
                     "key": "temperature_c",
                     "value": temp_c,
-                    "uiValue": "{} °C".format(temp_c),
+                    "uiValue": f"{temp_c} °C",
                 }
             )
         temp_f = status.get("temperature", {}).get("tF", None)
@@ -211,7 +210,7 @@ class Light(Component):
                 {
                     "key": "temperature_f",
                     "value": temp_f,
-                    "uiValue": "{} °F".format(temp_f),
+                    "uiValue": f"{temp_f} °F",
                 }
             )
 
@@ -222,7 +221,7 @@ class Light(Component):
                 {
                     "key": "curEnergyLevel",
                     "value": power,
-                    "uiValue": "{} W".format(power),
+                    "uiValue": f"{power} W",
                 }
             )
 
@@ -230,14 +229,14 @@ class Light(Component):
         voltage = status.get("voltage", None)
         if voltage is not None and "voltage" in self.device.states:
             updated_states.append(
-                {"key": "voltage", "value": voltage, "uiValue": "{} V".format(voltage)}
+                {"key": "voltage", "value": voltage, "uiValue": f"{voltage} V"}
             )
 
         # Process Current
         current = status.get("current", None)
         if current is not None and "current" in self.device.states:
             updated_states.append(
-                {"key": "current", "value": current, "uiValue": "{} A".format(current)}
+                {"key": "current", "value": current, "uiValue": f"{current} A"}
             )
 
         # Process Power Factor
@@ -253,7 +252,7 @@ class Light(Component):
                 {
                     "key": "accumEnergyTotal",
                     "value": energy_total,
-                    "uiValue": "{:.3f} kWh".format(energy_total_kwh),
+                    "uiValue": f"{energy_total_kwh:.3f} kWh",
                 }
             )
 

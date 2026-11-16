@@ -1,4 +1,3 @@
-# coding=utf-8
 import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..component import Component
@@ -19,7 +18,7 @@ class Humidity(Component):
         :param shelly: The Shelly device object.
         :param comp_id: The integer identifier for the component
         """
-        super(Humidity, self).__init__(shelly, device_id, comp_id)
+        super().__init__(shelly, device_id, comp_id)
 
     def update_state_image(self):
         """
@@ -49,7 +48,7 @@ class Humidity(Component):
         :param event: The event from the device.
         :return: None
         """
-        super(Humidity, self).handle_notify_event(event)
+        super().handle_notify_event(event)
 
     def handle_notify_status(self, status):
         """
@@ -157,7 +156,7 @@ class Humidity(Component):
             {
                 "key": "sensorValue",
                 "value": humidity,
-                "uiValue": "{}%".format(humidity),
+                "uiValue": f"{humidity}%",
                 "decimalPlaces": 1,
             }
         )

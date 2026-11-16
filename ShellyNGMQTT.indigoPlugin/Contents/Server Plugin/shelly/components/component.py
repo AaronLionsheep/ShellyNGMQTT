@@ -1,8 +1,10 @@
 import indigo  # pyright: ignore[reportMissingModuleSource]
 
 
-class Component(object):
-    """ """
+class Component:
+    """
+    A base class used for all components.
+    """
 
     component_type = None
     device_type_id = None
@@ -47,7 +49,7 @@ class Component(object):
                 device_name = self.device.name
             else:
                 device_name = self.shelly.device.name
-            self.logger.info('sent "{}" {}'.format(device_name, message))
+            self.logger.info(f'sent "{device_name}" {message}')
 
     def log_command_received(self, message):
         """
@@ -62,7 +64,7 @@ class Component(object):
                 device_name = self.device.name
             else:
                 device_name = self.shelly.device.name
-            self.logger.info('received "{}" {}'.format(device_name, message))
+            self.logger.info(f'received "{device_name}" {message}')
 
     def get_device_state_list(self):
         """
