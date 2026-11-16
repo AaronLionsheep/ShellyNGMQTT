@@ -20,9 +20,7 @@ class ShellyBLUMotion(ShellyBLU):
     def plugin_props(cls) -> dict[str, Any]:
         props = super().plugin_props()
         props.update(
-            SupportsBatteryLevel=True,
             SupportsOnState=True,
-            SupportsStatusRequest=False,
             SupportsSensorValue=False,
         )
         return props

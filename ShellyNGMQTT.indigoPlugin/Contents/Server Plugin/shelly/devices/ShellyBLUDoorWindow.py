@@ -1,3 +1,5 @@
+from typing import Any
+
 import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from .ShellyBLU import BLEData, ShellyBLU
@@ -12,14 +14,19 @@ class ShellyBLUDoorWindow(ShellyBLU):
     button_count = 1
 
     def __init__(self, device_id):
-        super(ShellyBLUDoorWindow, self).__init__(device_id)
+        super().__init__(device_id)
+
+    @classmethod
+    def plugin_props(cls) -> dict[str, Any]:
+        props = super().plugin_props()
+        props.update(SupportsOnState=True, SupportsSensorValue=False)
+        return props
 
     def get_device_state_list(self):
         """
         Build the device state list for the device.
         """
-        states = super(ShellyBLUDoorWindow, self).get_device_state_list()
-
+        states = super().get_device_state_list()
         states.extend(
             [
                 indigo.activePlugin.getDeviceStateDictForNumberType(
@@ -30,7 +37,6 @@ class ShellyBLUDoorWindow(ShellyBLU):
                 ),
             ]
         )
-
         return states
 
     def update_state_image(self):

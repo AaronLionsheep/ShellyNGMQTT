@@ -1,3 +1,5 @@
+from typing import Any
+
 import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from .ShellyBLU import BLEData, ShellyBLU
@@ -12,14 +14,19 @@ class ShellyBLUDistance(ShellyBLU):
     button_count = 1
 
     def __init__(self, device_id):
-        super(ShellyBLUDistance, self).__init__(device_id)
+        super().__init__(device_id)
+
+    @classmethod
+    def plugin_props(cls) -> dict[str, Any]:
+        props = super().plugin_props()
+        props.update(SupportsOnState=False, SupportsSensorValue=True)
+        return props
 
     def get_device_state_list(self):
         """
         Build the device state list for the device.
         """
-        states = super(ShellyBLUDistance, self).get_device_state_list()
-
+        states = super().get_device_state_list()
         states.extend(
             [
                 indigo.activePlugin.getDeviceStateDictForBoolTrueFalseType(
@@ -30,7 +37,6 @@ class ShellyBLUDistance(ShellyBLU):
                 ),
             ]
         )
-
         return states
 
     def process_ble_data(self, data: BLEData):
