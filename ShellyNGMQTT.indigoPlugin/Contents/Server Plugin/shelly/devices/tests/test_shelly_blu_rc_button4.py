@@ -26,4 +26,6 @@ class TestShellyBLURCButton4:
 
     def test_plugin_props_returns_new_dict(self):
         """Each call returns a separate dict so devices never share props"""
-        assert ShellyBLURCButton4.plugin_props() is not ShellyBLURCButton4.plugin_props()
+        assert (
+            ShellyBLURCButton4.plugin_props() is not ShellyBLURCButton4.plugin_props()
+        )

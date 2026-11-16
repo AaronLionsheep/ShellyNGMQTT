@@ -1,4 +1,4 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..component import Component
 
@@ -45,9 +45,9 @@ class Input(Component):
         super(Input, self).handle_notify_event(event)
 
         if event["name"] == "btn_down":
-            self.device.updateStateOnServer(key='onOffState', value=True)
+            self.device.updateStateOnServer(key="onOffState", value=True)
         elif event["name"] == "btn_up":
-            self.device.updateStateOnServer(key='onOffState', value=False)
+            self.device.updateStateOnServer(key="onOffState", value=False)
 
     def get_config(self):
         """
@@ -56,7 +56,9 @@ class Input(Component):
         :return: config
         """
 
-        self.shelly.publish_rpc("Input.GetConfig", {'id': self.comp_id}, callback=self.process_config)
+        self.shelly.publish_rpc(
+            "Input.GetConfig", {"id": self.comp_id}, callback=self.process_config
+        )
 
     def process_config(self, config, error=None):
         """
@@ -72,9 +74,9 @@ class Input(Component):
             return
 
         self.latest_config = {
-            'name': config.get("name", ""),
-            'type': config.get("type", ""),
-            'invert': config.get("invert", False),
+            "name": config.get("name", ""),
+            "type": config.get("type", ""),
+            "invert": config.get("invert", False),
         }
 
         props = self.device.pluginProps
@@ -89,7 +91,11 @@ class Input(Component):
         :return: None
         """
 
-        self.shelly.publish_rpc("Input.SetConfig", {'id': self.comp_id, 'config': config}, callback=self.process_set_config)
+        self.shelly.publish_rpc(
+            "Input.SetConfig",
+            {"id": self.comp_id, "config": config},
+            callback=self.process_set_config,
+        )
 
     def process_set_config(self, status, error=None):
         """
@@ -101,10 +107,14 @@ class Input(Component):
         """
 
         if error:
-            self.logger.error("Error writing input configuration: {}".format(error.get("message", "<Unknown>")))
+            self.logger.error(
+                "Error writing input configuration: {}".format(
+                    error.get("message", "<Unknown>")
+                )
+            )
             return
 
-        if status.get('restart_required', False):
+        if status.get("restart_required", False):
             self.log_command_received("rebooting...")
 
     def get_status(self):
@@ -115,9 +125,7 @@ class Input(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
         self.shelly.publish_rpc("Input.GetStatus", params, callback=self.process_status)
 
@@ -130,6 +138,6 @@ class Input(Component):
         :return:
         """
 
-        state = status.get('state', False)
+        state = status.get("state", False)
         if state is not None:
-            self.device.updateStateOnServer(key='onOffState', value=state)
+            self.device.updateStateOnServer(key="onOffState", value=state)

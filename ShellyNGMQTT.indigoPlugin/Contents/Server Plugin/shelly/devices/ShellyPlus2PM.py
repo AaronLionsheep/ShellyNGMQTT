@@ -30,9 +30,9 @@ class ShellyPlus2PM(ShellyMQTT):
             "script": Script(self),
         }
 
-        profile = self.device.pluginProps.get('profile', 'switch')
+        profile = self.device.pluginProps.get("profile", "switch")
 
-        if profile == 'cover':
+        if profile == "cover":
             self.cover_0 = self.register_component(
                 Cover,
                 "Cover",
@@ -40,12 +40,12 @@ class ShellyPlus2PM(ShellyMQTT):
                 props={
                     "SupportsPowerMeter": "true",
                     "SupportsEnergyMeter": "true",
-                    "SupportsEnergyMeterCurPower": "true"
-                }
+                    "SupportsEnergyMeterCurPower": "true",
+                },
             )
             self.input_0 = self.register_component(Input, "Input 1", comp_id=0)
             self.input_1 = self.register_component(Input, "Input 2", comp_id=1)
-        elif profile == 'switch':
+        elif profile == "switch":
             self.switch_0 = self.register_component(
                 Switch,
                 "Switch 1",

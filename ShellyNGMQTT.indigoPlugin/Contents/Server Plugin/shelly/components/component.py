@@ -1,10 +1,8 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
 
 class Component(object):
-    """
-
-    """
+    """ """
 
     component_type = None
     device_type_id = None
@@ -44,12 +42,12 @@ class Component(object):
         :return: None
         """
 
-        if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
+        if indigo.activePlugin.pluginPrefs.get("log-device-activity", True):
             if self.device:
                 device_name = self.device.name
             else:
                 device_name = self.shelly.device.name
-            self.logger.info("sent \"{}\" {}".format(device_name, message))
+            self.logger.info('sent "{}" {}'.format(device_name, message))
 
     def log_command_received(self, message):
         """
@@ -59,12 +57,12 @@ class Component(object):
         :return: None
         """
 
-        if indigo.activePlugin.pluginPrefs.get('log-device-activity', True):
+        if indigo.activePlugin.pluginPrefs.get("log-device-activity", True):
             if self.device:
                 device_name = self.device.name
             else:
                 device_name = self.shelly.device.name
-            self.logger.info("received \"{}\" {}".format(device_name, message))
+            self.logger.info('received "{}" {}'.format(device_name, message))
 
     def get_device_state_list(self):
         """
@@ -89,7 +87,9 @@ class Component(object):
 
         :return: The state name.
         """
-        return indigo.PluginBase.getDeviceDisplayStateId(indigo.activePlugin, self.device)
+        return indigo.PluginBase.getDeviceDisplayStateId(
+            indigo.activePlugin, self.device
+        )
 
     def handle_action(self, action):
         """
@@ -114,7 +114,10 @@ class Component(object):
         """
         # Fire any triggers matching this event for the device associated with the component
         for trigger in indigo.activePlugin.triggers.values():
-            if trigger.pluginTypeId == event["name"].replace('_', '-') and int(trigger.pluginProps.get('device-id', -1)) == self.device.id:
+            if (
+                trigger.pluginTypeId == event["name"].replace("_", "-")
+                and int(trigger.pluginProps.get("device-id", -1)) == self.device.id
+            ):
                 indigo.trigger.execute(trigger)
 
         # Handle base events

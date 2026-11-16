@@ -1,5 +1,5 @@
 # coding=utf-8
-import indigo # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..component import Component
 
@@ -28,10 +28,16 @@ class Temperature(Component):
         :return: The device state list.
         """
         states = super(Temperature, self).get_device_state_list()
-        states.extend([
-            indigo.activePlugin.getDeviceStateDictForNumberType("temperature_c", "Temperature", "Temperature"),
-            indigo.activePlugin.getDeviceStateDictForNumberType("temperature_f", "Temperature", "Temperature")
-        ])
+        states.extend(
+            [
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "temperature_c", "Temperature", "Temperature"
+                ),
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "temperature_f", "Temperature", "Temperature"
+                ),
+            ]
+        )
 
         return states
 
@@ -81,7 +87,9 @@ class Temperature(Component):
         :return: config
         """
 
-        self.shelly.publish_rpc("Temperature.GetConfig", {'id': self.comp_id}, callback=self.process_config)
+        self.shelly.publish_rpc(
+            "Temperature.GetConfig", {"id": self.comp_id}, callback=self.process_config
+        )
 
     def process_config(self, config, error=None):
         """
@@ -97,8 +105,8 @@ class Temperature(Component):
             return
 
         self.latest_config = {
-            'name': config.get("name", ""),
-            'report-threshold': config.get("report_thr_C", ""),
+            "name": config.get("name", ""),
+            "report-threshold": config.get("report_thr_C", ""),
         }
 
         props = self.device.pluginProps
@@ -113,7 +121,11 @@ class Temperature(Component):
         :return: None
         """
 
-        self.shelly.publish_rpc("Temperature.SetConfig", {'id': self.comp_id, 'config': config}, callback=self.process_set_config)
+        self.shelly.publish_rpc(
+            "Temperature.SetConfig",
+            {"id": self.comp_id, "config": config},
+            callback=self.process_set_config,
+        )
 
     def process_set_config(self, status, error=None):
         """
@@ -125,10 +137,14 @@ class Temperature(Component):
         """
 
         if error:
-            self.logger.error("Error writing input configuration: {}".format(error.get("message", "<Unknown>")))
+            self.logger.error(
+                "Error writing input configuration: {}".format(
+                    error.get("message", "<Unknown>")
+                )
+            )
             return
 
-        if status.get('restart_required', False):
+        if status.get("restart_required", False):
             self.log_command_received("rebooting...")
 
     def get_status(self):
@@ -139,11 +155,11 @@ class Temperature(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
-        self.shelly.publish_rpc("Temperature.GetStatus", params, callback=self.process_status)
+        self.shelly.publish_rpc(
+            "Temperature.GetStatus", params, callback=self.process_status
+        )
 
     def process_status(self, status, error=None):
         """
@@ -155,18 +171,46 @@ class Temperature(Component):
         """
         updated_states = []
 
-        temp_c = status.get('tC', None)
+        temp_c = status.get("tC", None)
         if temp_c is not None:
-            updated_states.append({'key': "temperature_c", 'value': temp_c, 'uiValue': "{} °C".format(temp_c), 'decimalPlaces': 1})
+            updated_states.append(
+                {
+                    "key": "temperature_c",
+                    "value": temp_c,
+                    "uiValue": "{} °C".format(temp_c),
+                    "decimalPlaces": 1,
+                }
+            )
 
-        temp_f = status.get('tF', None)
+        temp_f = status.get("tF", None)
         if temp_f is not None:
-            updated_states.append({'key': "temperature_f", 'value': temp_f, 'uiValue': "{} °F".format(temp_f), 'decimalPlaces': 1})
+            updated_states.append(
+                {
+                    "key": "temperature_f",
+                    "value": temp_f,
+                    "uiValue": "{} °F".format(temp_f),
+                    "decimalPlaces": 1,
+                }
+            )
 
         if self.device.pluginProps["unit"] == "F":
-            updated_states.append({'key': "sensorValue", 'value': temp_f, 'uiValue': "{} °F".format(temp_f), 'decimalPlaces': 1})
+            updated_states.append(
+                {
+                    "key": "sensorValue",
+                    "value": temp_f,
+                    "uiValue": "{} °F".format(temp_f),
+                    "decimalPlaces": 1,
+                }
+            )
         elif self.device.pluginProps["unit"] == "C":
-            updated_states.append({'key': "sensorValue", 'value': temp_c, 'uiValue': "{} °C".format(temp_c), 'decimalPlaces': 1})
+            updated_states.append(
+                {
+                    "key": "sensorValue",
+                    "value": temp_c,
+                    "uiValue": "{} °C".format(temp_c),
+                    "decimalPlaces": 1,
+                }
+            )
 
         self.device.updateStatesOnServer(updated_states)
         self.update_state_image()

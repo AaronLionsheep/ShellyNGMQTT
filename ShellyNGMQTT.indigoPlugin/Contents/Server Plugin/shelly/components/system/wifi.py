@@ -42,33 +42,33 @@ class WiFi(Component):
 
         self.latest_config = {
             # AP
-            'wifi-ap-ssid': config.get("ap", {}).get("ssid", ""),
-            'wifi-ap-password': "",  # Never save the password
-            'wifi-ap-open-network': config.get("ap", {}).get("is_open", False),
-            'wifi-ap-enable': config.get("ap", {}).get("enable", ""),
+            "wifi-ap-ssid": config.get("ap", {}).get("ssid", ""),
+            "wifi-ap-password": "",  # Never save the password
+            "wifi-ap-open-network": config.get("ap", {}).get("is_open", False),
+            "wifi-ap-enable": config.get("ap", {}).get("enable", ""),
             # WiFi 1
-            'wifi-1-ssid': config.get("sta", {}).get("ssid", ""),
-            'wifi-1-password': "",  # Never save the password
-            'wifi-1-open-network': config.get("sta", {}).get("is_open", False),
-            'wifi-1-enable': config.get("sta", {}).get("enable", ""),
-            'wifi-1-ipv4-mode': config.get("sta", {}).get("ipv4mode", ""),
-            'wifi-1-ip-address': config.get("sta", {}).get("ip", ""),
-            'wifi-1-network-mask': config.get("sta", {}).get("netmask", ""),
-            'wifi-1-gateway': config.get("sta", {}).get("gw", ""),
-            'wifi-1-nameserver': config.get("sta", {}).get("nameserver", ""),
+            "wifi-1-ssid": config.get("sta", {}).get("ssid", ""),
+            "wifi-1-password": "",  # Never save the password
+            "wifi-1-open-network": config.get("sta", {}).get("is_open", False),
+            "wifi-1-enable": config.get("sta", {}).get("enable", ""),
+            "wifi-1-ipv4-mode": config.get("sta", {}).get("ipv4mode", ""),
+            "wifi-1-ip-address": config.get("sta", {}).get("ip", ""),
+            "wifi-1-network-mask": config.get("sta", {}).get("netmask", ""),
+            "wifi-1-gateway": config.get("sta", {}).get("gw", ""),
+            "wifi-1-nameserver": config.get("sta", {}).get("nameserver", ""),
             # WiFi 2
-            'wifi-2-ssid': config.get("sta1", {}).get("ssid", ""),
-            'wifi-2-password': "",  # Never save the password
-            'wifi-2-open-network': config.get("sta1", {}).get("is_open", False),
-            'wifi-2-enable': config.get("sta1", {}).get("enable", ""),
-            'wifi-2-ipv4-mode': config.get("sta1", {}).get("ipv4mode", ""),
-            'wifi-2-ip-address': config.get("sta1", {}).get("ip", ""),
-            'wifi-2-network-mask': config.get("sta1", {}).get("netmask", ""),
-            'wifi-2-gateway': config.get("sta1", {}).get("gw", ""),
-            'wifi-2-nameserver': config.get("sta1", {}).get("nameserver", ""),
+            "wifi-2-ssid": config.get("sta1", {}).get("ssid", ""),
+            "wifi-2-password": "",  # Never save the password
+            "wifi-2-open-network": config.get("sta1", {}).get("is_open", False),
+            "wifi-2-enable": config.get("sta1", {}).get("enable", ""),
+            "wifi-2-ipv4-mode": config.get("sta1", {}).get("ipv4mode", ""),
+            "wifi-2-ip-address": config.get("sta1", {}).get("ip", ""),
+            "wifi-2-network-mask": config.get("sta1", {}).get("netmask", ""),
+            "wifi-2-gateway": config.get("sta1", {}).get("gw", ""),
+            "wifi-2-nameserver": config.get("sta1", {}).get("nameserver", ""),
             # Roaming
-            'wifi-roaming-rssi-threshold': config.get("roam", {}).get("rssi_thr", ""),
-            'wifi-roaming-interval': config.get("roam", {}).get("interval", "")
+            "wifi-roaming-rssi-threshold": config.get("roam", {}).get("rssi_thr", ""),
+            "wifi-roaming-interval": config.get("roam", {}).get("interval", ""),
         }
 
         props = self.shelly.device.pluginProps
@@ -83,7 +83,9 @@ class WiFi(Component):
         :return: None
         """
 
-        self.shelly.publish_rpc("Wifi.SetConfig", {'config': config}, callback=self.process_set_config)
+        self.shelly.publish_rpc(
+            "Wifi.SetConfig", {"config": config}, callback=self.process_set_config
+        )
 
     def process_set_config(self, status, error=None):
         """
@@ -95,10 +97,14 @@ class WiFi(Component):
         """
 
         if error:
-            self.logger.error("Error writing configuration: {}".format(error.get("message", "<Unknown>")))
+            self.logger.error(
+                "Error writing configuration: {}".format(
+                    error.get("message", "<Unknown>")
+                )
+            )
             return
 
-        if status.get('restart_required', False):
+        if status.get("restart_required", False):
             self.log_command_received("rebooting...")
 
     def get_status(self):
@@ -109,9 +115,7 @@ class WiFi(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
         self.shelly.publish_rpc("Wifi.GetStatus", params, callback=self.process_status)
 
@@ -128,9 +132,11 @@ class WiFi(Component):
             self.logger.error(error)
             return
 
-        if status and status.get('ssid', None):
-            self.shelly.device.updateStatesOnServer([
-                {'key': "ssid", 'value': status.get('ssid', None)},
-                {'key': "rssi", 'value': status.get('rssi', None)},
-                {'key': "ip-address", 'value': status.get('sta_ip', None)}
-            ])
+        if status and status.get("ssid", None):
+            self.shelly.device.updateStatesOnServer(
+                [
+                    {"key": "ssid", "value": status.get("ssid", None)},
+                    {"key": "rssi", "value": status.get("rssi", None)},
+                    {"key": "ip-address", "value": status.get("sta_ip", None)},
+                ]
+            )

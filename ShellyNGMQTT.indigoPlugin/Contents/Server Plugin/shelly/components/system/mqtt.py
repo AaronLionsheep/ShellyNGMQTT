@@ -46,9 +46,7 @@ class MQTT(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
         self.shelly.publish_rpc("MQTT.GetStatus", params, callback=self.process_status)
 

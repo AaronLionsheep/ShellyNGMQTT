@@ -40,9 +40,7 @@ class HT_UI(Component):
             self.logger.error(error)
             return
 
-        self.latest_config = {
-            'temperature-unit': config.get("temperature_unit", "C")
-        }
+        self.latest_config = {"temperature-unit": config.get("temperature_unit", "C")}
 
         props = self.shelly.device.pluginProps
         props.update(self.latest_config)
@@ -56,7 +54,9 @@ class HT_UI(Component):
         :return: None
         """
 
-        self.shelly.publish_rpc("HT_UI.SetConfig", {'config': config}, callback=self.process_set_config)
+        self.shelly.publish_rpc(
+            "HT_UI.SetConfig", {"config": config}, callback=self.process_set_config
+        )
 
     def process_set_config(self, status, error=None):
         """
@@ -68,10 +68,14 @@ class HT_UI(Component):
         """
 
         if error:
-            self.logger.error("Error writing configuration: {}".format(error.get("message", "<Unknown>")))
+            self.logger.error(
+                "Error writing configuration: {}".format(
+                    error.get("message", "<Unknown>")
+                )
+            )
             return
 
-        if status.get('restart_required', False):
+        if status.get("restart_required", False):
             self.log_command_received("rebooting...")
 
     def get_status(self):
@@ -81,9 +85,7 @@ class HT_UI(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
         self.shelly.publish_rpc("HT_UI.GetStatus", params, callback=self.process_status)
 

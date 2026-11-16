@@ -1,5 +1,5 @@
 # coding=utf-8
-import indigo # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..component import Component
 
@@ -39,17 +39,31 @@ class Light(Component):
         """
         states = super(Light, self).get_device_state_list()
 
-        states.extend([
-            indigo.activePlugin.getDeviceStateDictForNumberType("temperature_c", "Temperature", "Temperature"),
-            indigo.activePlugin.getDeviceStateDictForNumberType("temperature_f", "Temperature", "Temperature")
-        ])
+        states.extend(
+            [
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "temperature_c", "Temperature", "Temperature"
+                ),
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "temperature_f", "Temperature", "Temperature"
+                ),
+            ]
+        )
 
         if self.device.pluginProps.get("SupportsPowerMeter", "false") == "true":
-            states.extend([
-                indigo.activePlugin.getDeviceStateDictForNumberType("voltage", "Voltage (Volts)", "Voltage (Volts)"),
-                indigo.activePlugin.getDeviceStateDictForNumberType("current", "Current (Amps)", "Current (Amps)"),
-                indigo.activePlugin.getDeviceStateDictForNumberType("power", "Power (Watts)", "Power (Watts)")
-            ])
+            states.extend(
+                [
+                    indigo.activePlugin.getDeviceStateDictForNumberType(
+                        "voltage", "Voltage (Volts)", "Voltage (Volts)"
+                    ),
+                    indigo.activePlugin.getDeviceStateDictForNumberType(
+                        "current", "Current (Amps)", "Current (Amps)"
+                    ),
+                    indigo.activePlugin.getDeviceStateDictForNumberType(
+                        "power", "Power (Watts)", "Power (Watts)"
+                    ),
+                ]
+            )
 
         return states
 
@@ -77,7 +91,9 @@ class Light(Component):
 
         :return: config
         """
-        self.shelly.publish_rpc("Light.GetConfig", {'id': self.comp_id}, callback=self.process_config)
+        self.shelly.publish_rpc(
+            "Light.GetConfig", {"id": self.comp_id}, callback=self.process_config
+        )
 
     def process_config(self, config, error=None):
         """
@@ -92,17 +108,17 @@ class Light(Component):
             return
 
         self.latest_config = {
-            'name': config.get("name", ""),
-            'in-mode': config.get("in_mode", ""),
-            'initial-state': config.get("initial_state", ""),
-            'auto-on': config.get("auto_on", False),
-            'auto-on-delay': config.get("auto_on_delay", ""),
-            'auto-off': config.get("auto_off", False),
-            'auto-off-delay': config.get("auto_off_delay", ""),
-            'input-id': config.get("input_id", ""),
-            'power-limit': config.get("power_limit", ""),
-            'voltage-limit': config.get("voltage_limit", ""),
-            'current-limit': config.get("current_limit", ""),
+            "name": config.get("name", ""),
+            "in-mode": config.get("in_mode", ""),
+            "initial-state": config.get("initial_state", ""),
+            "auto-on": config.get("auto_on", False),
+            "auto-on-delay": config.get("auto_on_delay", ""),
+            "auto-off": config.get("auto_off", False),
+            "auto-off-delay": config.get("auto_off_delay", ""),
+            "input-id": config.get("input_id", ""),
+            "power-limit": config.get("power_limit", ""),
+            "voltage-limit": config.get("voltage_limit", ""),
+            "current-limit": config.get("current_limit", ""),
         }
 
         props = self.device.pluginProps
@@ -116,7 +132,11 @@ class Light(Component):
         :param config: An InputConfig object to upload to the device.
         :return: None
         """
-        self.shelly.publish_rpc("Light.SetConfig", {'id': self.comp_id, 'config': config}, callback=self.process_set_config)
+        self.shelly.publish_rpc(
+            "Light.SetConfig",
+            {"id": self.comp_id, "config": config},
+            callback=self.process_set_config,
+        )
 
     def process_set_config(self, status, error=None):
         """
@@ -127,10 +147,14 @@ class Light(Component):
         :return: None
         """
         if error:
-            self.logger.error("Error writing switch configuration: {}".format(error.get("message", "<Unknown>")))
+            self.logger.error(
+                "Error writing switch configuration: {}".format(
+                    error.get("message", "<Unknown>")
+                )
+            )
             return
 
-        if status.get('restart_required', False):
+        if status.get("restart_required", False):
             self.log_command_received("rebooting...")
 
     def get_status(self):
@@ -141,9 +165,7 @@ class Light(Component):
 
         :return: status (dict)
         """
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
         self.shelly.publish_rpc("Light.GetStatus", params, callback=self.process_status)
 
@@ -158,52 +180,82 @@ class Light(Component):
         updated_states = []
 
         # Process output
-        output = status.get('output', None)
-        if output is True and self.device.states.get('onOffState', None) is not True:
-            updated_states.append({'key': "onOffState", 'value': True})
+        output = status.get("output", None)
+        if output is True and self.device.states.get("onOffState", None) is not True:
+            updated_states.append({"key": "onOffState", "value": True})
             self.log_command_received("on")
-        elif output is False and self.device.states.get('onOffState', None) is not False:
-            updated_states.append({'key': "onOffState", 'value': False})
+        elif (
+            output is False and self.device.states.get("onOffState", None) is not False
+        ):
+            updated_states.append({"key": "onOffState", "value": False})
             self.log_command_received("off")
 
         # Process brightness
         brightness = status.get("brightness", None)
         if brightness is not None and output is True:
-            updated_states.append({'key': "brightnessLevel", 'value': brightness})
+            updated_states.append({"key": "brightnessLevel", "value": brightness})
 
         # Process temperature
-        temp_c = status.get('temperature', {}).get('tC', None)
+        temp_c = status.get("temperature", {}).get("tC", None)
         if temp_c is not None and "temperature_c" in self.device.states:
-            updated_states.append({'key': "temperature_c", 'value': temp_c, 'uiValue': "{} °C".format(temp_c)})
-        temp_f = status.get('temperature', {}).get('tF', None)
+            updated_states.append(
+                {
+                    "key": "temperature_c",
+                    "value": temp_c,
+                    "uiValue": "{} °C".format(temp_c),
+                }
+            )
+        temp_f = status.get("temperature", {}).get("tF", None)
         if temp_f is not None and "temperature_f" in self.device.states:
-            updated_states.append({'key': "temperature_f", 'value': temp_f, 'uiValue': "{} °F".format(temp_f)})
+            updated_states.append(
+                {
+                    "key": "temperature_f",
+                    "value": temp_f,
+                    "uiValue": "{} °F".format(temp_f),
+                }
+            )
 
         # Process Power
-        power = status.get('apower', None)
+        power = status.get("apower", None)
         if power is not None and "curEnergyLevel" in self.device.states:
-            updated_states.append({'key': "curEnergyLevel", 'value': power, 'uiValue': "{} W".format(power)})
+            updated_states.append(
+                {
+                    "key": "curEnergyLevel",
+                    "value": power,
+                    "uiValue": "{} W".format(power),
+                }
+            )
 
         # Process Voltage
-        voltage = status.get('voltage', None)
+        voltage = status.get("voltage", None)
         if voltage is not None and "voltage" in self.device.states:
-            updated_states.append({'key': "voltage", 'value': voltage, 'uiValue': "{} V".format(voltage)})
+            updated_states.append(
+                {"key": "voltage", "value": voltage, "uiValue": "{} V".format(voltage)}
+            )
 
         # Process Current
-        current = status.get('current', None)
+        current = status.get("current", None)
         if current is not None and "current" in self.device.states:
-            updated_states.append({'key': "current", 'value': current, 'uiValue': "{} A".format(current)})
+            updated_states.append(
+                {"key": "current", "value": current, "uiValue": "{} A".format(current)}
+            )
 
         # Process Power Factor
-        power_factor = status.get('pf', None)
+        power_factor = status.get("pf", None)
         if power_factor is not None and "power_factor" in self.device.states:
-            updated_states.append({'key': "power_factor", 'value': power_factor})
+            updated_states.append({"key": "power_factor", "value": power_factor})
 
         # Process Energy
-        energy_total = status.get('aenergy', {}).get('total', None)
+        energy_total = status.get("aenergy", {}).get("total", None)
         if energy_total is not None and "accumEnergyTotal" in self.device.states:
             energy_total_kwh = energy_total / 1000
-            updated_states.append({'key': "accumEnergyTotal", 'value': energy_total, 'uiValue': "{:.3f} kWh".format(energy_total_kwh)})
+            updated_states.append(
+                {
+                    "key": "accumEnergyTotal",
+                    "value": energy_total,
+                    "uiValue": "{:.3f} kWh".format(energy_total_kwh),
+                }
+            )
 
         self.device.updateStatesOnServer(updated_states)
 
@@ -211,7 +263,7 @@ class Light(Component):
         self,
         on: bool | None = None,
         brightness: int | None = None,
-        toggle_after: int | None = None
+        toggle_after: int | None = None,
     ):
         """
         This method sets the output of the Switch component to on or off.
@@ -220,24 +272,22 @@ class Light(Component):
         :param toggle_after: Optional time in seconds to undo the action.
         :return: None
         """
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
         if on is not None:
             params["on"] = on
         if brightness is not None:
             params["brightness"] = brightness
         if toggle_after is not None:
-            params['toggle_after'] = toggle_after
+            params["toggle_after"] = toggle_after
 
         self.shelly.publish_rpc("Light.Set", params)
 
         if on is True:
-            self.device.updateStateOnServer(key='onOffState', value=True)
+            self.device.updateStateOnServer(key="onOffState", value=True)
             self.log_command_sent("on")
         if on is False:
-            self.device.updateStateOnServer(key='onOffState', value=False)
+            self.device.updateStateOnServer(key="onOffState", value=False)
             self.log_command_sent("off")
 
     def toggle(self):
