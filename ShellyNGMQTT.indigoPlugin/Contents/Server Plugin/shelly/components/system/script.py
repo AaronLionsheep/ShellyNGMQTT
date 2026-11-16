@@ -288,7 +288,12 @@ class Script(Component):
 
             # Discard old packets by comparing the relay's timestamp to the system time
             packet_age = time.time() - packet.timestamp
-            if packet_age > MAX_BLE_PACKET_AGE:
+            max_packet_age = float(
+                indigo.activePlugin.pluginPrefs.get(
+                    "ble-max-packet-age", MAX_BLE_PACKET_AGE
+                )
+            )
+            if packet_age > max_packet_age:
                 self.logger.debug(
                     f"Discarding BLE packet for {packet.address} relayed via "
                     f"{self.shelly.device.name}, {packet_age:.1f}s old: {event_data}"

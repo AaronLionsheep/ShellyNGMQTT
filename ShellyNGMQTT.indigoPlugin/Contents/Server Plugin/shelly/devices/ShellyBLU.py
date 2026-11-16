@@ -340,7 +340,10 @@ class ShellyBLU(Shelly):
 
         # Fire triggers matching common event data, unless the packet is too old
         packet_age = time.time() - data.packet.timestamp
-        if packet_age <= MAX_BLE_EVENT_AGE:
+        max_event_age = float(
+            indigo.activePlugin.pluginPrefs.get("ble-max-event-age", MAX_BLE_EVENT_AGE)
+        )
+        if packet_age <= max_event_age:
             self.trigger_button_events(data.events)
         elif data.events:
             self.logger.warning(
