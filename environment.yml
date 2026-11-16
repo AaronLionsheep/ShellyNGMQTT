@@ -9,5 +9,5 @@ dependencies:
   - pip
   - pip:
     - -r ShellyNGMQTT.indigoPlugin/Contents/Server\ Plugin/requirements.txt
-    #- git+https://github.com/AaronLionsheep/pytest-indigo.git@v2.1.0
-    - -e ../pytest-indigo
+    - git+https://github.com/AaronLionsheep/pytest-indigo.git@0.2.0
+    #- -e ../pytest-indigo
