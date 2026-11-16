@@ -1,0 +1,5 @@
+[run]
+omit =
+    */tests/**/test_*.py
+    */tests/**/__init__.py
+    */conftest.py
