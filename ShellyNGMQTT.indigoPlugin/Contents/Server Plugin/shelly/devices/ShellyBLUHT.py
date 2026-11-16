@@ -1,8 +1,8 @@
-import indigo # pyright: ignore[reportMissingModuleSource]
-
 from typing import Any
 
-from .ShellyBLU import ShellyBLU, BLEData
+import indigo  # pyright: ignore[reportMissingModuleSource]
+
+from .ShellyBLU import BLEData, ShellyBLU
 
 
 class ShellyBLUHT(ShellyBLU):
@@ -13,20 +13,12 @@ class ShellyBLUHT(ShellyBLU):
     display_name = "Shelly BLU H&T"
     button_count = 1
 
-    def __init__(self, device_id):
-        super(ShellyBLUHT, self).__init__(device_id)
-
     @classmethod
     def plugin_props(cls) -> dict[str, Any]:
         props = super().plugin_props()
-        props.update(
-            SupportsStatusRequest=False,
-			SupportsBatteryLevel=True,
-            SupportsOnState=False,
-            SupportsSensorValue=True
-        )
+        props.update(SupportsOnState=False, SupportsSensorValue=True)
         return props
-    
+
     def update_state_image(self):
         self.device.updateStateImageOnServer(indigo.kStateImageSel.TemperatureSensor)
 
@@ -34,27 +26,35 @@ class ShellyBLUHT(ShellyBLU):
         """
         Build the device state list for the device.
         """
-        states = super(ShellyBLUHT, self).get_device_state_list()
-        states.extend([
-            indigo.activePlugin.getDeviceStateDictForNumberType("temperature", "Temperature", "Temperature"),
-            indigo.activePlugin.getDeviceStateDictForNumberType("humidity", "Humidity", "Humidity")
-        ])
+        states = super().get_device_state_list()
+        states.extend(
+            [
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "temperature", "Temperature", "Temperature"
+                ),
+                indigo.activePlugin.getDeviceStateDictForNumberType(
+                    "humidity", "Humidity", "Humidity"
+                ),
+            ]
+        )
         return states
-    
+
     def process_ble_data(self, data: BLEData):
         """
         Process a BTHome data packet.
         """
-        super().process_ble_data(data) 
+        super().process_ble_data(data)
         state_updates = []
 
         if (temperature := data.sensors.get("temperature")) is not None:
             unit = self.device.pluginProps.get("temp-unit", "F")
             try:
                 offset = float(self.device.pluginProps.get("temp-offset") or 0)
-            except TypeError as e:
-                self.logger.error(f"'{self.device.name}' has an invalid temperature offset")
-                raise e
+            except TypeError:
+                self.logger.error(
+                    f"'{self.device.name}' has an invalid temperature offset"
+                )
+                raise
 
             # Convert the temperature reading to fahrenheit if desired
             if unit == "F":
@@ -63,11 +63,26 @@ class ShellyBLUHT(ShellyBLU):
             # Apply a temperature offset after converting units
             temperature += offset
 
-            state_updates.append({'key': "temperature", 'value': temperature, 'uiValue': f"{temperature:.1f} °{unit}", 'decimalPlaces': 1})
-            state_updates.append({'key': "sensorValue", 'value': temperature, 'uiValue': f"{temperature:.1f} °{unit}", 'decimalPlaces': 1})  
+            state_updates.append(
+                {
+                    "key": "temperature",
+                    "value": temperature,
+                    "uiValue": f"{temperature:.1f} °{unit}",
+                    "decimalPlaces": 1,
+                }
+            )
+            state_updates.append(
+                {
+                    "key": "sensorValue",
+                    "value": temperature,
+                    "uiValue": f"{temperature:.1f} °{unit}",
+                    "decimalPlaces": 1,
+                }
+            )
 
         if (humidity := data.sensors.get("humidity")) is not None:
-            state_updates.append({'key': "humidity", 'value': humidity, 'uiValue': f"{humidity}%"})
+            state_updates.append(
+                {"key": "humidity", "value": humidity, "uiValue": f"{humidity}%"}
+            )
 
         self.device.updateStatesOnServer(state_updates)
-

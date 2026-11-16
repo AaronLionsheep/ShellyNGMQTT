@@ -1,4 +1,4 @@
-import indigo  # pyright: ignore[reportMissingModuleSource]
+from typing import Any
 
 from .ShellyBLU import ShellyBLU
 
@@ -11,12 +11,8 @@ class ShellyBLUButton1(ShellyBLU):
     display_name = "Shelly BLU Button1"
     button_count = 1
 
-    def __init__(self, device_id):
-        super(ShellyBLUButton1, self).__init__(device_id)
-
-    def get_device_state_list(self):
-        """
-        Build the device state list for the device.
-        """
-        states = super(ShellyBLUButton1, self).get_device_state_list()
-        return states
+    @classmethod
+    def plugin_props(cls) -> dict[str, Any]:
+        props = super().plugin_props()
+        props.update(SupportsOnState=False, SupportsSensorValue=False)
+        return props

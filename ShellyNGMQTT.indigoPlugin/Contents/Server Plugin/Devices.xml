@@ -1180,11 +1180,6 @@
 	<Device type="sensor" subType="kSensorDeviceSubType.DoorWindow" id="shelly-blu-doorwindow">
 		<Name>Shelly BLU Door/Window</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
-
 			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
 				<Label>No configuration options are available for this device.</Label>
 			</Field>
@@ -1196,11 +1191,6 @@
 	<Device type="sensor" id="shelly-blu-button1">
 		<Name>Shelly BLU Button1</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
-
 			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
 				<Label>No configuration options are available for this device.</Label>
 			</Field>
@@ -1212,11 +1202,6 @@
 	<Device type="sensor" subType="kSensorDeviceSubType.Binary" id="shelly-blu-rc-button-4">
 		<Name>Shelly BLU RC Button 4</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
-			
 			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
 				<Label>No configuration options are available for this device.</Label>
 			</Field>
@@ -1228,11 +1213,6 @@
 	<Device type="sensor" id="shelly-blu-distance">
 		<Name>Shelly BLU Distance</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="true" hidden="true" />
-			<Field type="checkbox" id="SupportsBatteryLevel" defaultValue="true" hidden="true" />
-
 			<Field id="offset" type="textfield">
 				<Label>Offset (mm):</Label>
 			</Field>
