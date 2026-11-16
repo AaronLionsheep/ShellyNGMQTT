@@ -1,7 +1,7 @@
 import json
 import uuid
 
-import indigo  # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
 from ..components.system.system import System
 from .shelly import Shelly

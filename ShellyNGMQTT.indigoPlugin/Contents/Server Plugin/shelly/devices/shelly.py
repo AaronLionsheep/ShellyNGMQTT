@@ -1,6 +1,6 @@
 import logging
 
-import indigo  # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
 
 class Shelly:

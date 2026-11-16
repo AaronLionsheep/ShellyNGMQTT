@@ -1,4 +1,4 @@
-import indigo  # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
 from ..component import Component
 

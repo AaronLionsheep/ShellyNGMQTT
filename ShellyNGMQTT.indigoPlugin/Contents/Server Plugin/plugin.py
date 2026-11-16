@@ -4,7 +4,7 @@ import sys
 from collections import defaultdict
 from queue import Queue
 
-import indigo  # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 from shelly.components.system.script import MAX_BLE_PACKET_AGE
 from shelly.devices.shelly import Shelly
 from shelly.devices.shelly_blu import MAX_BLE_EVENT_AGE, ShellyBLU

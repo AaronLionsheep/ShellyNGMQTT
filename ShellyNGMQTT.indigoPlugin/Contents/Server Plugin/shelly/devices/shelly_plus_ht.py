@@ -1,4 +1,4 @@
-import indigo  # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
 from ..components.functional.humidity import Humidity
 from ..components.functional.temperature import Temperature
@@ -55,9 +55,7 @@ class ShellyPlusHT(ShellyMQTT):
         :param status: Data for the notification.
         :return: None
         """
-        super().handle_notify_status(
-            component_type, instance_id, status
-        )
+        super().handle_notify_status(component_type, instance_id, status)
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -68,9 +66,7 @@ class ShellyPlusHT(ShellyMQTT):
         :param event: The event to handle.
         :return: None
         """
-        super().handle_notify_event(
-            component_type, instance_id, event
-        )
+        super().handle_notify_event(component_type, instance_id, event)
 
     def handle_action(self, action):
         """

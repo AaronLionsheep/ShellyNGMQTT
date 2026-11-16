@@ -1,4 +1,3 @@
-
 from ..components.functional.switch import Switch
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
@@ -46,9 +45,7 @@ class ShellyPlusPlugUK(ShellyMQTT):
         :return: None
         """
 
-        super().handle_notify_status(
-            component_type, instance_id, status
-        )
+        super().handle_notify_status(component_type, instance_id, status)
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -60,9 +57,7 @@ class ShellyPlusPlugUK(ShellyMQTT):
         :return: None
         """
 
-        super().handle_notify_event(
-            component_type, instance_id, event
-        )
+        super().handle_notify_event(component_type, instance_id, event)
 
     def handle_action(self, action):
         """

@@ -1,4 +1,3 @@
-
 from ..components.functional.light import Light
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
@@ -45,9 +44,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param status: Data for the notification.
         :return: None
         """
-        super().handle_notify_status(
-            component_type, instance_id, status
-        )
+        super().handle_notify_status(component_type, instance_id, status)
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -58,9 +55,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param event: The event to handle.
         :return: None
         """
-        super().handle_notify_event(
-            component_type, instance_id, event
-        )
+        super().handle_notify_event(component_type, instance_id, event)
 
     def handle_action(self, action):
         """

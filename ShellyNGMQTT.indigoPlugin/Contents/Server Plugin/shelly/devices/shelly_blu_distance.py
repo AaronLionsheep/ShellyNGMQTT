@@ -1,6 +1,6 @@
 from typing import Any
 
-import indigo  # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
 from .shelly_blu import BLEData, ShellyBLU
 
