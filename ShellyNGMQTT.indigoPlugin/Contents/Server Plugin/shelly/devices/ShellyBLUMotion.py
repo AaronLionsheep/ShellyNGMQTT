@@ -13,9 +13,6 @@ class ShellyBLUMotion(ShellyBLU):
     display_name = "Shelly BLU Motion"
     button_count = 1
 
-    def __init__(self, device_id):
-        super(ShellyBLUMotion, self).__init__(device_id)
-
     @classmethod
     def plugin_props(cls) -> dict[str, Any]:
         props = super().plugin_props()
@@ -29,8 +26,7 @@ class ShellyBLUMotion(ShellyBLU):
         """
         Build the device state list for the device.
         """
-        states = super(ShellyBLUMotion, self).get_device_state_list()
-
+        states = super().get_device_state_list()
         states.extend(
             [
                 indigo.activePlugin.getDeviceStateDictForNumberType(
@@ -38,7 +34,6 @@ class ShellyBLUMotion(ShellyBLU):
                 )
             ]
         )
-
         return states
 
     def process_ble_data(self, data: BLEData):

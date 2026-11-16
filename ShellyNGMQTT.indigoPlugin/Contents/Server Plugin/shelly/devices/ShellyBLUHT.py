@@ -13,9 +13,6 @@ class ShellyBLUHT(ShellyBLU):
     display_name = "Shelly BLU H&T"
     button_count = 1
 
-    def __init__(self, device_id):
-        super(ShellyBLUHT, self).__init__(device_id)
-
     @classmethod
     def plugin_props(cls) -> dict[str, Any]:
         props = super().plugin_props()
@@ -29,7 +26,7 @@ class ShellyBLUHT(ShellyBLU):
         """
         Build the device state list for the device.
         """
-        states = super(ShellyBLUHT, self).get_device_state_list()
+        states = super().get_device_state_list()
         states.extend(
             [
                 indigo.activePlugin.getDeviceStateDictForNumberType(
@@ -53,11 +50,11 @@ class ShellyBLUHT(ShellyBLU):
             unit = self.device.pluginProps.get("temp-unit", "F")
             try:
                 offset = float(self.device.pluginProps.get("temp-offset") or 0)
-            except TypeError as e:
+            except TypeError:
                 self.logger.error(
                     f"'{self.device.name}' has an invalid temperature offset"
                 )
-                raise e
+                raise
 
             # Convert the temperature reading to fahrenheit if desired
             if unit == "F":

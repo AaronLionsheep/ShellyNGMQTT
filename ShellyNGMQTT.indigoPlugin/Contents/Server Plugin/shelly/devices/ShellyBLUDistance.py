@@ -13,9 +13,6 @@ class ShellyBLUDistance(ShellyBLU):
     display_name = "Shelly BLU Distance"
     button_count = 1
 
-    def __init__(self, device_id):
-        super().__init__(device_id)
-
     @classmethod
     def plugin_props(cls) -> dict[str, Any]:
         props = super().plugin_props()
