@@ -4,8 +4,9 @@ from collections import defaultdict
 from queue import Queue
 
 import indigo  # pyright: ignore[reportMissingModuleSource]
+from shelly.components.system.script import MAX_BLE_PACKET_AGE
 from shelly.devices.Shelly import Shelly
-from shelly.devices.ShellyBLU import ShellyBLU
+from shelly.devices.ShellyBLU import MAX_BLE_EVENT_AGE, ShellyBLU
 from shelly.devices.ShellyBLUButton1 import ShellyBLUButton1
 from shelly.devices.ShellyBLUDistance import ShellyBLUDistance
 from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
@@ -783,8 +784,39 @@ class Plugin(indigo.PluginBase):
     #
     # Plugin utilities
     #
+    def get_prefs_config_ui_values(self):
+        values_dict, errors = super().get_prefs_config_ui_values()
+
+        # Show the defaults for unset BLE age preferences (ex: after an upgrade)
+        if not values_dict.get("ble-max-packet-age", "").strip():
+            values_dict["ble-max-packet-age"] = f"{MAX_BLE_PACKET_AGE:g}"
+        if not values_dict.get("ble-max-event-age", "").strip():
+            values_dict["ble-max-event-age"] = f"{MAX_BLE_EVENT_AGE:g}"
+
+        return values_dict, errors
+
     def validate_prefs_config_ui(self, values_dict: dict):
         errors = indigo.Dict()
+
+        # Save the defaults when no value was entered
+        if not values_dict.get("ble-max-packet-age", "").strip():
+            values_dict["ble-max-packet-age"] = f"{MAX_BLE_PACKET_AGE:g}"
+        if not values_dict.get("ble-max-event-age", "").strip():
+            values_dict["ble-max-event-age"] = f"{MAX_BLE_EVENT_AGE:g}"
+
+        try:
+            valid = float(values_dict["ble-max-packet-age"]) > 0
+        except ValueError:
+            valid = False
+        if not valid:
+            errors["ble-max-packet-age"] = "Must be a positive number of seconds."
+
+        try:
+            valid = float(values_dict["ble-max-event-age"]) > 0
+        except ValueError:
+            valid = False
+        if not valid:
+            errors["ble-max-event-age"] = "Must be a positive number of seconds."
 
         return len(errors) == 0, values_dict, errors
 
