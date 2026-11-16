@@ -8,7 +8,7 @@ from ..components.system.ht_ui import HT_UI
 from ..components.system.mqtt import MQTT
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
-from .ShellyMQTT import ShellyMQTT
+from .shelly_mqtt import ShellyMQTT
 
 
 class ShellyPlusHT(ShellyMQTT):

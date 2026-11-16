@@ -1,21 +1,19 @@
 
-from ..components.functional.input import Input
-from ..components.functional.switch import Switch
+from ..components.functional.light import Light
 from ..components.system.ble import BLE
-from ..components.system.ethernet import Ethernet
 from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
-from .ShellyMQTT import ShellyMQTT
+from .shelly_mqtt import ShellyMQTT
 
 
-class ShellyPro2PM(ShellyMQTT):
+class ShellyPlusWallDimmer(ShellyMQTT):
     """
-    Creates a Shelly Pro 2 PM device class.
+    Creates a Shelly Plus WallDimmer device class.
     """
 
-    display_name = "Shelly Pro 2 PM"
+    display_name = "Shelly Plus WallDimmer"
 
     def __init__(self, device_id):
         super().__init__(device_id)
@@ -23,34 +21,20 @@ class ShellyPro2PM(ShellyMQTT):
         self.system_components = {
             "system": System(self),
             "wifi": WiFi(self),
-            "ethernet": Ethernet(self),
             "ble": BLE(self),
             "mqtt": MQTT(self),
             "script": Script(self),
         }
 
-        self.switch_0 = self.register_component(
-            Switch,
-            "Switch 1",
-            comp_id=0,
+        self.switch = self.register_component(
+            Light,
+            "Light",
             props={
                 "SupportsPowerMeter": "true",
                 "SupportsEnergyMeter": "true",
                 "SupportsEnergyMeterCurPower": "true",
             },
         )
-        self.switch_1 = self.register_component(
-            Switch,
-            "Switch 2",
-            comp_id=1,
-            props={
-                "SupportsPowerMeter": "true",
-                "SupportsEnergyMeter": "true",
-                "SupportsEnergyMeterCurPower": "true",
-            },
-        )
-        self.input_0 = self.register_component(Input, "Input 1", comp_id=0)
-        self.input_1 = self.register_component(Input, "Input 2", comp_id=1)
 
     def handle_notify_status(self, component_type, instance_id, status):
         """
@@ -61,7 +45,6 @@ class ShellyPro2PM(ShellyMQTT):
         :param status: Data for the notification.
         :return: None
         """
-
         super().handle_notify_status(
             component_type, instance_id, status
         )
@@ -75,7 +58,6 @@ class ShellyPro2PM(ShellyMQTT):
         :param event: The event to handle.
         :return: None
         """
-
         super().handle_notify_event(
             component_type, instance_id, event
         )
@@ -87,5 +69,4 @@ class ShellyPro2PM(ShellyMQTT):
         :param action: The Indigo action.
         :return: None
         """
-
         super().handle_action(action)

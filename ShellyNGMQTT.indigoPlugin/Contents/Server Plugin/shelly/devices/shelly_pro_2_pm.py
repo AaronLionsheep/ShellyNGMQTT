@@ -7,15 +7,15 @@ from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
-from .ShellyMQTT import ShellyMQTT
+from .shelly_mqtt import ShellyMQTT
 
 
-class ShellyPro4PM(ShellyMQTT):
+class ShellyPro2PM(ShellyMQTT):
     """
-    Creates a Shelly Pro 4 PM device class.
+    Creates a Shelly Pro 2 PM device class.
     """
 
-    display_name = "Shelly Pro 4 PM"
+    display_name = "Shelly Pro 2 PM"
 
     def __init__(self, device_id):
         super().__init__(device_id)
@@ -49,30 +49,8 @@ class ShellyPro4PM(ShellyMQTT):
                 "SupportsEnergyMeterCurPower": "true",
             },
         )
-        self.switch_2 = self.register_component(
-            Switch,
-            "Switch 3",
-            comp_id=2,
-            props={
-                "SupportsPowerMeter": "true",
-                "SupportsEnergyMeter": "true",
-                "SupportsEnergyMeterCurPower": "true",
-            },
-        )
-        self.switch_3 = self.register_component(
-            Switch,
-            "Switch 4",
-            comp_id=3,
-            props={
-                "SupportsPowerMeter": "true",
-                "SupportsEnergyMeter": "true",
-                "SupportsEnergyMeterCurPower": "true",
-            },
-        )
         self.input_0 = self.register_component(Input, "Input 1", comp_id=0)
         self.input_1 = self.register_component(Input, "Input 2", comp_id=1)
-        self.input_2 = self.register_component(Input, "Input 3", comp_id=2)
-        self.input_3 = self.register_component(Input, "Input 4", comp_id=3)
 
     def handle_notify_status(self, component_type, instance_id, status):
         """

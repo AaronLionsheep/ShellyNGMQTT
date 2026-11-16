@@ -4,7 +4,7 @@ from typing import TypedDict
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
-from ...devices.ShellyBLU import BLERelayPacket, ShellyBLU
+from ...devices.shelly_blu import BLERelayPacket, ShellyBLU
 from ..component import Component
 
 # Relayed BLE packets older than this (in seconds) are discarded, since their sensor

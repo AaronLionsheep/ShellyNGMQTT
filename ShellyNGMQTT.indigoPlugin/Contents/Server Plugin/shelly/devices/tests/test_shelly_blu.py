@@ -1,5 +1,5 @@
 import pytest
-from shelly.devices.ShellyBLU import (
+from shelly.devices.shelly_blu import (
     BTHOME_MEAS_TYPES,
     BLEData,
     BLERelayPacket,

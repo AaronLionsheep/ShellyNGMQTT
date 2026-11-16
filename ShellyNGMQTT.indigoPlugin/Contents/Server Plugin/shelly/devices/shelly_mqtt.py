@@ -4,7 +4,7 @@ import uuid
 import indigo  # pyright: ignore[reportMissingModuleSource]
 
 from ..components.system.system import System
-from .Shelly import Shelly
+from .shelly import Shelly
 
 
 class ShellyMQTT(Shelly):

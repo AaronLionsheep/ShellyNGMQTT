@@ -1,19 +1,21 @@
 
+from ..components.functional.input import Input
 from ..components.functional.switch import Switch
 from ..components.system.ble import BLE
+from ..components.system.ethernet import Ethernet
 from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
-from .ShellyMQTT import ShellyMQTT
+from .shelly_mqtt import ShellyMQTT
 
 
-class ShellyPlusPlugUK(ShellyMQTT):
+class ShellyPro1PM(ShellyMQTT):
     """
-    Creates a Shelly Plus Plug UK device class.
+    Creates a Shelly Pro 1 PM device class.
     """
 
-    display_name = "Shelly Plus Plug UK"
+    display_name = "Shelly Pro 1 PM"
 
     def __init__(self, device_id):
         super().__init__(device_id)
@@ -21,6 +23,7 @@ class ShellyPlusPlugUK(ShellyMQTT):
         self.system_components = {
             "system": System(self),
             "wifi": WiFi(self),
+            "ethernet": Ethernet(self),
             "ble": BLE(self),
             "mqtt": MQTT(self),
             "script": Script(self),
@@ -35,6 +38,8 @@ class ShellyPlusPlugUK(ShellyMQTT):
                 "SupportsEnergyMeterCurPower": "true",
             },
         )
+        self.input_0 = self.register_component(Input, "Input 1", comp_id=0)
+        self.input_1 = self.register_component(Input, "Input 2", comp_id=1)
 
     def handle_notify_status(self, component_type, instance_id, status):
         """

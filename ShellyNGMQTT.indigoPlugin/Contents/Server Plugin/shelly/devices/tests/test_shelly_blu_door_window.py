@@ -1,5 +1,5 @@
-from shelly.devices.ShellyBLU import ShellyBLU
-from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
+from shelly.devices.shelly_blu import ShellyBLU
+from shelly.devices.shelly_blu_door_window import ShellyBLUDoorWindow
 
 
 class TestShellyBLUDoorWindow:

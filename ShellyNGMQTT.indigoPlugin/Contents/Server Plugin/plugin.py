@@ -6,29 +6,29 @@ from queue import Queue
 
 import indigo  # pyright: ignore[reportMissingModuleSource]
 from shelly.components.system.script import MAX_BLE_PACKET_AGE
-from shelly.devices.Shelly import Shelly
-from shelly.devices.ShellyBLU import MAX_BLE_EVENT_AGE, ShellyBLU
-from shelly.devices.ShellyBLUButton1 import ShellyBLUButton1
-from shelly.devices.ShellyBLUDistance import ShellyBLUDistance
-from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
-from shelly.devices.ShellyBLUHT import ShellyBLUHT
-from shelly.devices.ShellyBLUMotion import ShellyBLUMotion
-from shelly.devices.ShellyBLURCButton4 import ShellyBLURCButton4
-from shelly.devices.ShellyMQTT import ShellyMQTT
-from shelly.devices.ShellyPlus1 import ShellyPlus1
-from shelly.devices.ShellyPlus1PM import ShellyPlus1PM
-from shelly.devices.ShellyPlus2PM import ShellyPlus2PM
-from shelly.devices.ShellyPlusHT import ShellyPlusHT
-from shelly.devices.ShellyPlusI4 import ShellyPlusI4
-from shelly.devices.ShellyPlusPlug import ShellyPlusPlug
-from shelly.devices.ShellyPlusPlugS import ShellyPlusPlugS
-from shelly.devices.ShellyPlusPlugUK import ShellyPlusPlugUK
-from shelly.devices.ShellyPlusWallDimmer import ShellyPlusWallDimmer
-from shelly.devices.ShellyPro1 import ShellyPro1
-from shelly.devices.ShellyPro1PM import ShellyPro1PM
-from shelly.devices.ShellyPro2 import ShellyPro2
-from shelly.devices.ShellyPro2PM import ShellyPro2PM
-from shelly.devices.ShellyPro4PM import ShellyPro4PM
+from shelly.devices.shelly import Shelly
+from shelly.devices.shelly_blu import MAX_BLE_EVENT_AGE, ShellyBLU
+from shelly.devices.shelly_blu_button1 import ShellyBLUButton1
+from shelly.devices.shelly_blu_distance import ShellyBLUDistance
+from shelly.devices.shelly_blu_door_window import ShellyBLUDoorWindow
+from shelly.devices.shelly_blu_ht import ShellyBLUHT
+from shelly.devices.shelly_blu_motion import ShellyBLUMotion
+from shelly.devices.shelly_blu_rc_button_4 import ShellyBLURCButton4
+from shelly.devices.shelly_mqtt import ShellyMQTT
+from shelly.devices.shelly_plus_1 import ShellyPlus1
+from shelly.devices.shelly_plus_1_pm import ShellyPlus1PM
+from shelly.devices.shelly_plus_2_pm import ShellyPlus2PM
+from shelly.devices.shelly_plus_ht import ShellyPlusHT
+from shelly.devices.shelly_plus_i4 import ShellyPlusI4
+from shelly.devices.shelly_plus_plug import ShellyPlusPlug
+from shelly.devices.shelly_plus_plug_s import ShellyPlusPlugS
+from shelly.devices.shelly_plus_plug_uk import ShellyPlusPlugUK
+from shelly.devices.shelly_plus_walldimmer import ShellyPlusWallDimmer
+from shelly.devices.shelly_pro_1 import ShellyPro1
+from shelly.devices.shelly_pro_1_pm import ShellyPro1PM
+from shelly.devices.shelly_pro_2 import ShellyPro2
+from shelly.devices.shelly_pro_2_pm import ShellyPro2PM
+from shelly.devices.shelly_pro_4_pm import ShellyPro4PM
 
 shelly_model_classes = {
     "shelly-blu-doorwindow": ShellyBLUDoorWindow,

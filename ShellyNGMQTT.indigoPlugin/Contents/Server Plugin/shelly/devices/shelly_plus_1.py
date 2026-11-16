@@ -1,19 +1,20 @@
 
-from ..components.functional.light import Light
+from ..components.functional.input import Input
+from ..components.functional.switch import Switch
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
-from .ShellyMQTT import ShellyMQTT
+from .shelly_mqtt import ShellyMQTT
 
 
-class ShellyPlusWallDimmer(ShellyMQTT):
+class ShellyPlus1(ShellyMQTT):
     """
-    Creates a Shelly Plus WallDimmer device class.
+    Creates a Shelly Plus 1 device class.
     """
 
-    display_name = "Shelly Plus WallDimmer"
+    display_name = "Shelly Plus 1"
 
     def __init__(self, device_id):
         super().__init__(device_id)
@@ -26,15 +27,8 @@ class ShellyPlusWallDimmer(ShellyMQTT):
             "script": Script(self),
         }
 
-        self.switch = self.register_component(
-            Light,
-            "Light",
-            props={
-                "SupportsPowerMeter": "true",
-                "SupportsEnergyMeter": "true",
-                "SupportsEnergyMeterCurPower": "true",
-            },
-        )
+        self.switch = self.register_component(Switch, "Switch")
+        self.input = self.register_component(Input, "Input")
 
     def handle_notify_status(self, component_type, instance_id, status):
         """
@@ -45,6 +39,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param status: Data for the notification.
         :return: None
         """
+
         super().handle_notify_status(
             component_type, instance_id, status
         )
@@ -58,9 +53,8 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param event: The event to handle.
         :return: None
         """
-        super().handle_notify_event(
-            component_type, instance_id, event
-        )
+
+        super().handle_notify_event(component_type, instance_id, event)
 
     def handle_action(self, action):
         """
@@ -69,4 +63,5 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param action: The Indigo action.
         :return: None
         """
+
         super().handle_action(action)
