@@ -1,7 +1,5 @@
 from typing import Any
 
-import indigo  # pyright: ignore[reportMissingModuleSource]
-
 from .ShellyBLU import ShellyBLU
 
 
