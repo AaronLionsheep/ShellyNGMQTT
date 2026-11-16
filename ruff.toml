@@ -1,0 +1,2 @@
+[lint.pep8-naming]
+ignore-names = ["Server Plugin"]

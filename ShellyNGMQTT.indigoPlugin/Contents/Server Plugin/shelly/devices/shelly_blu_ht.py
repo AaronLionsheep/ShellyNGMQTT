@@ -1,8 +1,8 @@
 from typing import Any
 
-import indigo  # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
-from .ShellyBLU import BLEData, ShellyBLU
+from .shelly_blu import BLEData, ShellyBLU
 
 
 class ShellyBLUHT(ShellyBLU):

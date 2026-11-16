@@ -7,7 +7,7 @@ from bthome_ble.const import MEAS_TYPES, MeasTypes
 from bthome_ble.parser import BTHomeBluetoothDeviceData, UuidType
 from habluetooth import BluetoothServiceInfoBleak
 
-from .Shelly import Shelly
+from .shelly import Shelly
 
 BUTTON_TRIGGER_TYPES = {
     "press": "single-push",

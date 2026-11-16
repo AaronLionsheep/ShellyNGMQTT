@@ -1,5 +1,5 @@
-from shelly.devices.ShellyBLU import ShellyBLU
-from shelly.devices.ShellyBLUButton1 import ShellyBLUButton1
+from shelly.devices.shelly_blu import ShellyBLU
+from shelly.devices.shelly_blu_button1 import ShellyBLUButton1
 
 
 class TestShellyBLUButton1:

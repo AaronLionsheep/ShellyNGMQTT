@@ -16,7 +16,7 @@ class Ethernet(Component):
         :param shelly: The Shelly device object.
         """
 
-        super(Ethernet, self).__init__(shelly)
+        super().__init__(shelly)
 
     def get_config(self):
         """
@@ -47,9 +47,7 @@ class Ethernet(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
         self.shelly.publish_rpc("Eth.GetStatus", params, callback=self.process_status)
 
@@ -62,11 +60,11 @@ class Ethernet(Component):
         :return:
         """
 
-        if error and error.get('code', 0) != 404:
+        if error and error.get("code", 0) != 404:
             self.logger.error(error)
             return
 
-        if status and status.get('ip', None):
-            self.shelly.device.updateStatesOnServer([
-                {'key': "ip-address", 'value': status.get('ip_address', None)}
-            ])
+        if status and status.get("ip", None):
+            self.shelly.device.updateStatesOnServer(
+                [{"key": "ip-address", "value": status.get("ip_address", None)}]
+            )

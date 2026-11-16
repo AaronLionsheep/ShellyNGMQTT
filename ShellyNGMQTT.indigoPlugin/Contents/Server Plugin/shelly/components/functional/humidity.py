@@ -1,5 +1,4 @@
-# coding=utf-8
-import indigo # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
 from ..component import Component
 
@@ -19,7 +18,7 @@ class Humidity(Component):
         :param shelly: The Shelly device object.
         :param comp_id: The integer identifier for the component
         """
-        super(Humidity, self).__init__(shelly, device_id, comp_id)
+        super().__init__(shelly, device_id, comp_id)
 
     def update_state_image(self):
         """
@@ -49,7 +48,7 @@ class Humidity(Component):
         :param event: The event from the device.
         :return: None
         """
-        super(Humidity, self).handle_notify_event(event)
+        super().handle_notify_event(event)
 
     def handle_notify_status(self, status):
         """
@@ -67,7 +66,9 @@ class Humidity(Component):
         :return: config
         """
 
-        self.shelly.publish_rpc("Humidity.GetConfig", {'id': self.comp_id}, callback=self.process_config)
+        self.shelly.publish_rpc(
+            "Humidity.GetConfig", {"id": self.comp_id}, callback=self.process_config
+        )
 
     def process_config(self, config, error=None):
         """
@@ -83,9 +84,9 @@ class Humidity(Component):
             return
 
         self.latest_config = {
-            'name': config.get("name", ""),
-            'report-threshold': config.get("report_thr", ""),
-            'offset': config.get("offset", "")
+            "name": config.get("name", ""),
+            "report-threshold": config.get("report_thr", ""),
+            "offset": config.get("offset", ""),
         }
 
         props = self.device.pluginProps
@@ -100,7 +101,11 @@ class Humidity(Component):
         :return: None
         """
 
-        self.shelly.publish_rpc("Humidity.SetConfig", {'id': self.comp_id, 'config': config}, callback=self.process_set_config)
+        self.shelly.publish_rpc(
+            "Humidity.SetConfig",
+            {"id": self.comp_id, "config": config},
+            callback=self.process_set_config,
+        )
 
     def process_set_config(self, status, error=None):
         """
@@ -112,10 +117,14 @@ class Humidity(Component):
         """
 
         if error:
-            self.logger.error("Error writing input configuration: {}".format(error.get("message", "<Unknown>")))
+            self.logger.error(
+                "Error writing input configuration: {}".format(
+                    error.get("message", "<Unknown>")
+                )
+            )
             return
 
-        if status.get('restart_required', False):
+        if status.get("restart_required", False):
             self.log_command_received("rebooting...")
 
     def get_status(self):
@@ -126,11 +135,11 @@ class Humidity(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
-        self.shelly.publish_rpc("Humidity.GetStatus", params, callback=self.process_status)
+        self.shelly.publish_rpc(
+            "Humidity.GetStatus", params, callback=self.process_status
+        )
 
     def process_status(self, status, error=None):
         """
@@ -142,8 +151,15 @@ class Humidity(Component):
         """
         updated_states = []
 
-        humidity = status.get('rh', None)
-        updated_states.append({'key': "sensorValue", 'value': humidity, 'uiValue': "{}%".format(humidity), 'decimalPlaces': 1})
+        humidity = status.get("rh", None)
+        updated_states.append(
+            {
+                "key": "sensorValue",
+                "value": humidity,
+                "uiValue": f"{humidity}%",
+                "decimalPlaces": 1,
+            }
+        )
 
         self.device.updateStatesOnServer(updated_states)
         self.update_state_image()

@@ -1,10 +1,10 @@
 import json
 import uuid
 
-import indigo  # pyright: ignore[reportMissingModuleSource]
+import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
 from ..components.system.system import System
-from .Shelly import Shelly
+from .shelly import Shelly
 
 
 class ShellyMQTT(Shelly):

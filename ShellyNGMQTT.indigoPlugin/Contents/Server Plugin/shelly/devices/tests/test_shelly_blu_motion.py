@@ -1,5 +1,5 @@
-from shelly.devices.ShellyBLU import ShellyBLU
-from shelly.devices.ShellyBLUMotion import ShellyBLUMotion
+from shelly.devices.shelly_blu import ShellyBLU
+from shelly.devices.shelly_blu_motion import ShellyBLUMotion
 
 
 class TestShellyBLUMotion:

@@ -1,5 +1,5 @@
-from shelly.devices.ShellyBLU import ShellyBLU
-from shelly.devices.ShellyBLUDoorWindow import ShellyBLUDoorWindow
+from shelly.devices.shelly_blu import ShellyBLU
+from shelly.devices.shelly_blu_door_window import ShellyBLUDoorWindow
 
 
 class TestShellyBLUDoorWindow:
@@ -26,4 +26,6 @@ class TestShellyBLUDoorWindow:
 
     def test_plugin_props_returns_new_dict(self):
         """Each call returns a separate dict so devices never share props"""
-        assert ShellyBLUDoorWindow.plugin_props() is not ShellyBLUDoorWindow.plugin_props()
+        assert (
+            ShellyBLUDoorWindow.plugin_props() is not ShellyBLUDoorWindow.plugin_props()
+        )

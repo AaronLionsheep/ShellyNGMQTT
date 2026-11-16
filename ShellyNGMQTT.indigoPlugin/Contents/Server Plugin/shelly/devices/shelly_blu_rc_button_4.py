@@ -1,15 +1,15 @@
 from typing import Any
 
-from .ShellyBLU import ShellyBLU
+from .shelly_blu import ShellyBLU
 
 
-class ShellyBLUButton1(ShellyBLU):
+class ShellyBLURCButton4(ShellyBLU):
     """
-    Creates a Shelly BLU Button1 device class.
+    Creates a Shelly BLU RC Button 4 device class.
     """
 
-    display_name = "Shelly BLU Button1"
-    button_count = 1
+    display_name = "Shelly BLU RC Button 4"
+    button_count = 4
 
     @classmethod
     def plugin_props(cls) -> dict[str, Any]:

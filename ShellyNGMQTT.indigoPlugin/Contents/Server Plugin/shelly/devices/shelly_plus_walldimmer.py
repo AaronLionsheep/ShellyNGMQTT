@@ -1,12 +1,10 @@
-import indigo  # pyright: ignore[reportMissingModuleSource]
-
 from ..components.functional.light import Light
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
-from .ShellyMQTT import ShellyMQTT
+from .shelly_mqtt import ShellyMQTT
 
 
 class ShellyPlusWallDimmer(ShellyMQTT):
@@ -17,7 +15,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
     display_name = "Shelly Plus WallDimmer"
 
     def __init__(self, device_id):
-        super(ShellyPlusWallDimmer, self).__init__(device_id)
+        super().__init__(device_id)
 
         self.system_components = {
             "system": System(self),
@@ -46,9 +44,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param status: Data for the notification.
         :return: None
         """
-        super(ShellyPlusWallDimmer, self).handle_notify_status(
-            component_type, instance_id, status
-        )
+        super().handle_notify_status(component_type, instance_id, status)
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -59,9 +55,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param event: The event to handle.
         :return: None
         """
-        super(ShellyPlusWallDimmer, self).handle_notify_event(
-            component_type, instance_id, event
-        )
+        super().handle_notify_event(component_type, instance_id, event)
 
     def handle_action(self, action):
         """
@@ -70,4 +64,4 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         :param action: The Indigo action.
         :return: None
         """
-        super(ShellyPlusWallDimmer, self).handle_action(action)
+        super().handle_action(action)

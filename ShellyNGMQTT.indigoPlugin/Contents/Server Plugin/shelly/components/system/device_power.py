@@ -16,7 +16,7 @@ class DevicePower(Component):
         :param shelly: The Shelly device object.
         """
 
-        super(DevicePower, self).__init__(shelly)
+        super().__init__(shelly)
 
     def get_config(self):
         """
@@ -25,7 +25,9 @@ class DevicePower(Component):
         :return: config
         """
 
-        self.shelly.publish_rpc("DevicePower.GetConfig", {}, callback=self.process_config)
+        self.shelly.publish_rpc(
+            "DevicePower.GetConfig", {}, callback=self.process_config
+        )
 
     def process_config(self, config, error=None):
         """
@@ -45,7 +47,11 @@ class DevicePower(Component):
         :return: None
         """
 
-        self.shelly.publish_rpc("DevicePower.SetConfig", {'config': config}, callback=self.process_set_config)
+        self.shelly.publish_rpc(
+            "DevicePower.SetConfig",
+            {"config": config},
+            callback=self.process_set_config,
+        )
 
     def process_set_config(self, status, error=None):
         """
@@ -57,10 +63,14 @@ class DevicePower(Component):
         """
 
         if error:
-            self.logger.error("Error writing configuration: {}".format(error.get("message", "<Unknown>")))
+            self.logger.error(
+                "Error writing configuration: {}".format(
+                    error.get("message", "<Unknown>")
+                )
+            )
             return
 
-        if status.get('restart_required', False):
+        if status.get("restart_required", False):
             self.log_command_received("rebooting...")
 
     def get_status(self):
@@ -71,11 +81,11 @@ class DevicePower(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
-        self.shelly.publish_rpc("DevicePower.GetStatus", params, callback=self.process_status)
+        self.shelly.publish_rpc(
+            "DevicePower.GetStatus", params, callback=self.process_status
+        )
 
     def process_status(self, status, error=None):
         """
@@ -90,13 +100,19 @@ class DevicePower(Component):
             self.logger.error(error)
             return
 
-        voltage = status.get('battery', {}).get("V", None)
-        level = status.get('battery', {}).get("percent", None)
-        external = status.get('external', {}).get("present", False)
+        voltage = status.get("battery", {}).get("V", None)
+        level = status.get("battery", {}).get("percent", None)
+        external = status.get("external", {}).get("present", False)
 
-        self.shelly.device.updateStatesOnServer([
-            {"key": "battery-voltage", "value": voltage, "uiValue": "{} V".format(voltage)},
-            {"key": "batteryLevel", "value": level, "uiValue": "{}%".format(level)},
-            {"key": "external-power", "value": external}
-        ])
+        self.shelly.device.updateStatesOnServer(
+            [
+                {
+                    "key": "battery-voltage",
+                    "value": voltage,
+                    "uiValue": f"{voltage} V",
+                },
+                {"key": "batteryLevel", "value": level, "uiValue": f"{level}%"},
+                {"key": "external-power", "value": external},
+            ]
+        )
         self.shelly.update_state_image()

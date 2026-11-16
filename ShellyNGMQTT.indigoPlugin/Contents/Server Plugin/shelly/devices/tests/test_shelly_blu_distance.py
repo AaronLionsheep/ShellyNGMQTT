@@ -1,5 +1,5 @@
-from shelly.devices.ShellyBLU import ShellyBLU
-from shelly.devices.ShellyBLUDistance import ShellyBLUDistance
+from shelly.devices.shelly_blu import ShellyBLU
+from shelly.devices.shelly_blu_distance import ShellyBLUDistance
 
 
 class TestShellyBLUDistance:

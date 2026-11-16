@@ -1,24 +1,21 @@
-import indigo  # pyright: ignore[reportMissingModuleSource]
-
 from ..components.functional.input import Input
-from ..components.functional.switch import Switch
 from ..components.system.ble import BLE
 from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
-from .ShellyMQTT import ShellyMQTT
+from .shelly_mqtt import ShellyMQTT
 
 
-class ShellyPlus1PM(ShellyMQTT):
+class ShellyPlusI4(ShellyMQTT):
     """
-    Creates a Shelly Plus 1 PM device class.
+    Creates a Shelly Plus I4 device class.
     """
 
-    display_name = "Shelly Plus 1 PM"
+    display_name = "Shelly Plus I4"
 
     def __init__(self, device_id):
-        super(ShellyPlus1PM, self).__init__(device_id)
+        super().__init__(device_id)
 
         self.system_components = {
             "system": System(self),
@@ -28,16 +25,10 @@ class ShellyPlus1PM(ShellyMQTT):
             "script": Script(self),
         }
 
-        self.switch = self.register_component(
-            Switch,
-            "Switch",
-            props={
-                "SupportsPowerMeter": "true",
-                "SupportsEnergyMeter": "true",
-                "SupportsEnergyMeterCurPower": "true",
-            },
-        )
-        self.input = self.register_component(Input, "Input")
+        self.input_0 = self.register_component(Input, "Input 1", comp_id=0)
+        self.input_1 = self.register_component(Input, "Input 2", comp_id=1)
+        self.input_2 = self.register_component(Input, "Input 3", comp_id=2)
+        self.input_3 = self.register_component(Input, "Input 4", comp_id=3)
 
     def handle_notify_status(self, component_type, instance_id, status):
         """
@@ -49,9 +40,7 @@ class ShellyPlus1PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus1PM, self).handle_notify_status(
-            component_type, instance_id, status
-        )
+        super().handle_notify_status(component_type, instance_id, status)
 
     def handle_notify_event(self, component_type, instance_id, event):
         """
@@ -63,9 +52,7 @@ class ShellyPlus1PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus1PM, self).handle_notify_event(
-            component_type, instance_id, event
-        )
+        super().handle_notify_event(component_type, instance_id, event)
 
     def handle_action(self, action):
         """
@@ -75,4 +62,4 @@ class ShellyPlus1PM(ShellyMQTT):
         :return: None
         """
 
-        super(ShellyPlus1PM, self).handle_action(action)
+        super().handle_action(action)

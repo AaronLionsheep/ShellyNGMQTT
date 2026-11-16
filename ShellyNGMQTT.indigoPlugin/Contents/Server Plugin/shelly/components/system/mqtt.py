@@ -16,7 +16,7 @@ class MQTT(Component):
         :param shelly: The Shelly device object.
         """
 
-        super(MQTT, self).__init__(shelly)
+        super().__init__(shelly)
 
     def get_config(self):
         """
@@ -46,9 +46,7 @@ class MQTT(Component):
         :return: status (dict)
         """
 
-        params = {
-            'id': self.comp_id
-        }
+        params = {"id": self.comp_id}
 
         self.shelly.publish_rpc("MQTT.GetStatus", params, callback=self.process_status)
 
@@ -62,4 +60,3 @@ class MQTT(Component):
         """
 
         # Nothing very useful, just the MQTT connection state, which would always be true
-        pass
