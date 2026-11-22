@@ -21,20 +21,20 @@ In the tables below:
 
 | Model | Indigo devices created | Power metering | BLU gateway |
 | --- | --- | :---: | :---: |
-| Shelly Plus 1 | 1 Switch, 1 Input | | ✓ |
-| Shelly Plus 1 PM | 1 Switch, 1 Input | ✓ | ✓ |
-| Shelly Plus 2 PM | 2 Switches and 2 Inputs, or 1 Cover and 2 Inputs | ✓ | ✓ |
-| Shelly Plus WallDimmer | 1 Light | ✓ | ✓ |
-| Shelly Plus I4 | 4 Inputs | | ✓ |
+| Shelly Plus 1 | 1 Switch, 1 Input | | :white_check_mark: |
+| Shelly Plus 1 PM | 1 Switch, 1 Input | :white_check_mark: | :white_check_mark: |
+| Shelly Plus 2 PM | 2 Switches and 2 Inputs, or 1 Cover and 2 Inputs | :white_check_mark: | :white_check_mark: |
+| Shelly Plus WallDimmer | 1 Light | :white_check_mark: | :white_check_mark: |
+| Shelly Plus I4 | 4 Inputs | | :white_check_mark: |
 | Shelly Plus H&T | 1 Temperature, 1 Humidity | | |
-| Shelly Plus Plug (US/IT) | 1 Switch | ✓ | ✓ |
-| Shelly Plus Plug S | 1 Switch | ✓ | ✓ |
-| Shelly Plus Plug UK | 1 Switch | ✓ | ✓ |
-| Shelly Pro 1 | 1 Switch, 2 Inputs | | ✓ |
-| Shelly Pro 1 PM | 1 Switch, 2 Inputs | ✓ | ✓ |
-| Shelly Pro 2 | 2 Switches, 2 Inputs | | ✓ |
-| Shelly Pro 2 PM | 2 Switches, 2 Inputs | ✓ | ✓ |
-| Shelly Pro 4 PM | 4 Switches, 4 Inputs | ✓ | ✓ |
+| Shelly Plus Plug (US/IT) | 1 Switch | :white_check_mark: | :white_check_mark: |
+| Shelly Plus Plug S | 1 Switch | :white_check_mark: | :white_check_mark: |
+| Shelly Plus Plug UK | 1 Switch | :white_check_mark: | :white_check_mark: |
+| Shelly Pro 1 | 1 Switch, 2 Inputs | | :white_check_mark: |
+| Shelly Pro 1 PM | 1 Switch, 2 Inputs | :white_check_mark: | :white_check_mark: |
+| Shelly Pro 2 | 2 Switches, 2 Inputs | | :white_check_mark: |
+| Shelly Pro 2 PM | 2 Switches, 2 Inputs | :white_check_mark: | :white_check_mark: |
+| Shelly Pro 4 PM | 4 Switches, 4 Inputs | :white_check_mark: | :white_check_mark: |
 
 - **Shelly Plus 2 PM:** choose the **Switch** or **Cover (Roller/Shutter)** profile in the device settings, matching the profile set on the Shelly. Use Cover for roller shutters, blinds, and garage doors.
 - **Shelly Plus H&T:** battery powered. It sleeps between readings, so it only reports when it wakes up, and it can't act as a BLU gateway.
@@ -64,7 +64,7 @@ Inputs set up as buttons on the Shelly can also fire [button events](events.md#b
 
 ## BLU Gateways
 
-Shelly BLU devices broadcast over Bluetooth, so they reach Indigo through a nearby MQTT device acting as a gateway: any device marked ✓ in the BLU gateway column above. When you turn on the BLU relay for a gateway in Indigo, the plugin installs and manages a small script on it that relays BLU broadcasts over MQTT, so no scripting is needed on your part.
+Shelly BLU devices broadcast over Bluetooth, so they reach Indigo through a nearby MQTT device acting as a gateway: any device marked :white_check_mark: in the BLU gateway column above. When you turn on the BLU relay for a gateway in Indigo, the plugin installs and manages a small script on it that relays BLU broadcasts over MQTT, so no scripting is needed on your part.
 
 - **Multiple gateways:** turn on the relay on several devices around your home to reach BLU devices out of range of a single gateway. A broadcast heard by more than one gateway is only processed once.
 - **Signal strength:** each BLU device's RSSI state shows how well the gateway that relayed its latest broadcast heard it, which helps with placing gateways.

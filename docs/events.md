@@ -10,12 +10,12 @@ Button events fire when a button or input is pressed. Each one asks for a **Devi
 
 | Event | Fires when | Input components | BLU devices |
 | --- | --- | :---: | --- |
-| Button Down | A button is pressed down | ✓ | |
-| Button Up | A button is released | ✓ | |
-| Single Push | A button is pressed once | ✓ | All |
-| Double Push | A button is pressed twice quickly | ✓ | Button1, RC Button 4 |
-| Triple Push | A button is pressed three times quickly | ✓ | Button1, RC Button 4 |
-| Long Push | A button is held, then released | ✓ | Button1, RC Button 4 |
+| Button Down | A button is pressed down | :white_check_mark: | |
+| Button Up | A button is released | :white_check_mark: | |
+| Single Push | A button is pressed once | :white_check_mark: | All |
+| Double Push | A button is pressed twice quickly | :white_check_mark: | Button1, RC Button 4 |
+| Triple Push | A button is pressed three times quickly | :white_check_mark: | Button1, RC Button 4 |
+| Long Push | A button is held, then released | :white_check_mark: | Button1, RC Button 4 |
 | Hold Push | A button has been held long enough, while it's still held | | Button1, RC Button 4, Door/Window, Motion, H&T |
 | Long Double Push (Pending) | A button is pressed once, then pressed and held | | BLU+ZB devices |
 | Long Triple Push (Pending) | A button is pressed twice, then pressed and held | | BLU+ZB devices |

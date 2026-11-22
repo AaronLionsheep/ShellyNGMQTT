@@ -8,9 +8,9 @@ These are Indigo's built-in actions, found under **Device Actions** when you add
 
 | Component | Turn On | Turn Off | Toggle | Set Brightness | Brighten By / Dim By |
 | --- | :---: | :---: | :---: | :---: | :---: |
-| Switch | ✓ | ✓ | ✓ | | |
-| Light | ✓ | ✓ | ✓ | ✓ | |
-| Cover | Open | Close | ✓ | Set position | Move by |
+| Switch | :white_check_mark: | :white_check_mark: | :white_check_mark: | | |
+| Light | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | |
+| Cover | Open | Close | :white_check_mark: | Set position | Move by |
 
 ### Covers
 
