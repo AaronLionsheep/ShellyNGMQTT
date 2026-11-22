@@ -1,3 +1,4 @@
+import math
 from typing import Any
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
@@ -18,6 +19,21 @@ class ShellyBLUHT(ShellyBLU):
         props = super().plugin_props()
         props.update(SupportsOnState=False, SupportsSensorValue=True)
         return props
+
+    @classmethod
+    def validate_config_ui(cls, values_dict) -> dict[str, str]:
+        errors = super().validate_config_ui(values_dict)
+
+        try:
+            valid = math.isfinite(
+                float(values_dict.get("temp-offset", "").strip() or 0)
+            )
+        except ValueError:
+            valid = False
+        if not valid:
+            errors["temp-offset"] = "Must be a number."
+
+        return errors
 
     def update_state_image(self):
         self.device.updateStateImageOnServer(indigo.kStateImageSel.TemperatureSensor)
@@ -48,13 +64,7 @@ class ShellyBLUHT(ShellyBLU):
 
         if (temperature := data.sensors.get("temperature")) is not None:
             unit = self.device.pluginProps.get("temp-unit", "F")
-            try:
-                offset = float(self.device.pluginProps.get("temp-offset") or 0)
-            except TypeError:
-                self.logger.error(
-                    f"'{self.device.name}' has an invalid temperature offset"
-                )
-                raise
+            offset = self.get_number_prop("temp-offset") or 0
 
             # Convert the temperature reading to fahrenheit if desired
             if unit == "F":
