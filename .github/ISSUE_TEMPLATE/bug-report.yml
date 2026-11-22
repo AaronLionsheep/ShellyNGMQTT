@@ -1,0 +1,124 @@
+name: Bug report
+description: Report something in the plugin that isn't working as expected
+type: Bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! For setup questions or general help, the [Indigo forum](https://forums.indigodomo.com/viewforum.php?f=330) is usually the faster route.
+
+        **Fill in what you can.** Only a few fields are required. If you don't know an answer or a step doesn't apply, skip it. We'll ask in the comments for anything else that's needed.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before reporting
+      options:
+        - label: I searched [existing issues](https://github.com/AaronLionsheep/ShellyNGMQTT/issues?q=is%3Aissue) and didn't find this bug
+        - label: I'm running the latest version of the plugin
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the problem, and what you expected to happen instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How can the bug be triggered? Leave this blank if you're not sure.
+      placeholder: |
+        1. Create a Shelly Plus 1 device
+        2. Turn the switch on from Indigo
+        3. ...
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Versions
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: Shown in Indigo under Plugins → Manage Plugins.
+      placeholder: "1.4.0"
+    validations:
+      required: true
+
+  - type: input
+    id: indigo-version
+    attributes:
+      label: Indigo version
+      placeholder: "2025.2"
+
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS version
+      placeholder: "26.1"
+
+  - type: dropdown
+    id: mac-type
+    attributes:
+      label: Mac type
+      options:
+        - Apple Silicon (M1 or newer)
+        - Intel
+        - Not sure
+
+  - type: input
+    id: mqtt-connector-version
+    attributes:
+      label: MQTT Connector version
+
+  - type: input
+    id: broker
+    attributes:
+      label: MQTT broker
+      description: Which broker you use and where it runs.
+      placeholder: Mosquitto on a Raspberry Pi
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Device
+
+        Leave these blank if the bug isn't specific to a device.
+
+  - type: input
+    id: device-model
+    attributes:
+      label: Shelly model
+      placeholder: Shelly Plus 1
+
+  - type: input
+    id: firmware
+    attributes:
+      label: Shelly firmware version
+      description: Shown in the Shelly web UI under Settings → Firmware.
+      placeholder: "1.4.4"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Logs
+
+        Logs are often the quickest way to find the cause. In the plugin's Configure dialog, set the log level to Debug (and turn on Debug BLE Activity for BLU devices), reproduce the bug, then copy the related lines from the Indigo event log.
+
+        Remove Wi-Fi passwords, MQTT credentials, BLU bind keys, and public IP addresses before posting.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log output
+      render: text
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else?
+      description: Screenshots, MQTT messages from the device, or anything else that might help.

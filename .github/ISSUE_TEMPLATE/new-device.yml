@@ -1,0 +1,125 @@
+name: New device request
+description: Request support for a Shelly device the plugin doesn't support yet
+title: "Add support for "
+labels: ["new device"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for requesting a new device! The plugin is built from the data the device reports, so the more of it you can share below, the faster support can be added.
+
+        **Fill in what you can.** Only the first few fields are required. If a step is confusing or doesn't work for your device, skip it and say so in the last box. We'll help you gather anything else that's needed in the comments.
+
+        Before posting, please search [existing issues](https://github.com/AaronLionsheep/ShellyNGMQTT/issues?q=is%3Aissue) to see if the device has already been requested.
+
+  - type: input
+    id: model
+    attributes:
+      label: Device model
+      description: The full model name as printed on the device or packaging.
+      placeholder: Shelly Pro 3EM
+    validations:
+      required: true
+
+  - type: input
+    id: link
+    attributes:
+      label: Product link
+      description: A link to the device on shelly.com or the Shelly knowledge base.
+      placeholder: https://kb.shelly.cloud/...
+
+  - type: dropdown
+    id: family
+    attributes:
+      label: Device family
+      options:
+        - Plus (Gen2)
+        - Pro (Gen2)
+        - Gen3
+        - Gen4
+        - BLU (Bluetooth)
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware version
+      description: Shown in the Shelly web UI under Settings → Firmware.
+      placeholder: "1.4.4"
+
+  - type: textarea
+    id: features
+    attributes:
+      label: Features you'd like in Indigo
+      description: Which parts of the device do you want to use (relays, power metering, inputs, sensors, buttons, ...)? Anything you don't need can be left out.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Device data
+
+        **Wi-Fi/Ethernet devices:** open each URL below in a browser on the same network as the device, replacing `<ip>` with the device's IP address, and paste the output. If the device has authentication enabled, your browser will prompt for the password.
+
+        **BLU devices:** skip these three fields and fill in the BLU section further down instead.
+
+        Remove Wi-Fi passwords, MQTT credentials, and anything else sensitive before posting.
+
+  - type: textarea
+    id: device-info
+    attributes:
+      label: Shelly.GetDeviceInfo
+      description: "`http://<ip>/rpc/Shelly.GetDeviceInfo`"
+      render: json
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Shelly.GetConfig
+      description: "`http://<ip>/rpc/Shelly.GetConfig`"
+      render: json
+
+  - type: textarea
+    id: status
+    attributes:
+      label: Shelly.GetStatus
+      description: "`http://<ip>/rpc/Shelly.GetStatus`"
+      render: json
+
+  - type: markdown
+    attributes:
+      value: |
+        ## BLU devices
+
+        If you already have a supported Shelly gateway with the BLU relay set up in the plugin, set the log level to Debug in the plugin's Configure dialog, trigger the device a few times (press buttons, open/close, wave at the motion sensor, ...), then copy the `Processing:` lines for the device from the Indigo event log.
+
+  - type: textarea
+    id: blu-packets
+    attributes:
+      label: BLU relay log lines
+      description: A few log lines for each kind of event the device reports. Say which action produced each group of lines.
+      render: text
+
+  - type: input
+    id: blu-encryption
+    attributes:
+      label: BLU encryption
+      description: Is encryption enabled on the device? Don't post the bind key.
+      placeholder: "No"
+
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Can you help?
+      options:
+        - label: I own this device and can test pre-release versions of the plugin
+        - label: I'm interested in contributing the code (see the [contributing guide](https://github.com/AaronLionsheep/ShellyNGMQTT/blob/master/docs/CONTRIBUTING.md#adding-a-new-device))
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else?
+      description: Quirks, related devices that might share support, or links to Shelly API docs for this device.

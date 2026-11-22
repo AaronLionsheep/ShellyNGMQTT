@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and setup help
+    url: https://forums.indigodomo.com/viewforum.php?f=330
+    about: Ask on the ShellyNGMQTT section of the Indigo forum. If you're not sure whether something is a bug, start here.
+  - name: User guide
+    url: https://github.com/AaronLionsheep/ShellyNGMQTT/blob/master/docs/user-guide.md
+    about: Installation, setup, supported devices, and troubleshooting.
