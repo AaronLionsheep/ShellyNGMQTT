@@ -5,6 +5,7 @@
     { "type": "feat", "hidden": false, "section": "Features" },
     { "type": "fix", "hidden": false, "section": "Bug Fixes" },
     { "type": "chore", "hidden": false, "section": "Miscellaneous Chores" },
+    { "type": "ci", "hidden": false, "section": "Miscellaneous Chores" },
     { "type": "build", "hidden": false, "section": "Miscellaneous Chores" },
     { "type": "docs", "hidden": false, "section": "Docs" }
   ],
