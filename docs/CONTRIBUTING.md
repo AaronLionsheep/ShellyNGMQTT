@@ -91,7 +91,7 @@ CI runs the suite on Apple Silicon and Intel macOS with Python 3.11 and 3.13, so
 3. **Add the device to `Devices.xml`.** The `id` is the Indigo device type ID (for example `shelly-plus-1`), and its `<Name>` must match `display_name`.
 4. **Register the class** in the `shelly_model_classes` mapping in `plugin.py`.
 5. **Add tests** in the matching `tests/` folder. At minimum, cover `display_name`, the plugin props, and any parsing or state logic. See `shelly/devices/tests/test_shelly_blu_motion.py` for an example.
-6. **Update the docs.** Add the device to the list in the [README](../README.md) and to the right table in [Supported Devices](supported-devices.md).
+6. **Update the docs.** Add the device to the list in the [README](../README.md) and to the right table in [Supported Devices](supported-devices.md), linking the model name to its [Shelly Knowledge Base](https://kb.shelly.cloud) page.
 7. **Test on real hardware** if you can, and say in the pull request which models and firmware versions you tested.
 
 ## Pull Requests

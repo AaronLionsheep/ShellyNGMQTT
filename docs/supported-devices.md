@@ -23,20 +23,20 @@ In the tables below:
 
 | Model | Indigo devices created | Power metering | BLU gateway |
 | --- | --- | :---: | :---: |
-| Shelly Plus 1 | 1 Switch, 1 Input | :heavy_minus_sign: | :white_check_mark: |
-| Shelly Plus 1 PM | 1 Switch, 1 Input | :white_check_mark: | :white_check_mark: |
-| Shelly Plus 2 PM | 2 Switches and 2 Inputs, or 1 Cover and 2 Inputs | :white_check_mark: | :white_check_mark: |
-| Shelly Plus WallDimmer | 1 Light | :white_check_mark: | :white_check_mark: |
-| Shelly Plus I4 | 4 Inputs | :heavy_minus_sign: | :white_check_mark: |
-| Shelly Plus H&T | 1 Temperature, 1 Humidity | :heavy_minus_sign: | :heavy_minus_sign: |
-| Shelly Plus Plug (US/IT) | 1 Switch | :white_check_mark: | :white_check_mark: |
-| Shelly Plus Plug S | 1 Switch | :white_check_mark: | :white_check_mark: |
-| Shelly Plus Plug UK | 1 Switch | :white_check_mark: | :white_check_mark: |
-| Shelly Pro 1 | 1 Switch, 2 Inputs | :heavy_minus_sign: | :white_check_mark: |
-| Shelly Pro 1 PM | 1 Switch, 2 Inputs | :white_check_mark: | :white_check_mark: |
-| Shelly Pro 2 | 2 Switches, 2 Inputs | :heavy_minus_sign: | :white_check_mark: |
-| Shelly Pro 2 PM | 2 Switches, 2 Inputs | :white_check_mark: | :white_check_mark: |
-| Shelly Pro 4 PM | 4 Switches, 4 Inputs | :white_check_mark: | :white_check_mark: |
+| [Shelly Plus 1](https://kb.shelly.cloud/knowledge-base/shelly-plus-1) ([Mini](https://kb.shelly.cloud/knowledge-base/shelly-plus-1-mini)) | 1 Switch, 1 Input | :heavy_minus_sign: | :white_check_mark: |
+| [Shelly Plus 1 PM](https://kb.shelly.cloud/knowledge-base/shelly-plus-1pm) | 1 Switch, 1 Input | :white_check_mark: | :white_check_mark: |
+| [Shelly Plus 2 PM](https://kb.shelly.cloud/knowledge-base/shelly-plus-2pm) | 2 Switches and 2 Inputs, or 1 Cover and 2 Inputs | :white_check_mark: | :white_check_mark: |
+| [Shelly Plus WallDimmer](https://kb.shelly.cloud/knowledge-base/shelly-plus-wall-dimmer) | 1 Light | :white_check_mark: | :white_check_mark: |
+| [Shelly Plus I4](https://kb.shelly.cloud/knowledge-base/shelly-plus-i4) ([I4DC](https://kb.shelly.cloud/knowledge-base/shelly-plus-i4dc)) | 4 Inputs | :heavy_minus_sign: | :white_check_mark: |
+| [Shelly Plus H&T](https://kb.shelly.cloud/knowledge-base/shelly-plus-h-t) | 1 Temperature, 1 Humidity | :heavy_minus_sign: | :heavy_minus_sign: |
+| Shelly Plus Plug ([US](https://kb.shelly.cloud/knowledge-base/shelly-plus-plug-us)/[IT](https://kb.shelly.cloud/knowledge-base/shelly-plus-plug-it)) | 1 Switch | :white_check_mark: | :white_check_mark: |
+| [Shelly Plus Plug S](https://kb.shelly.cloud/knowledge-base/shelly-plus-plug-s) | 1 Switch | :white_check_mark: | :white_check_mark: |
+| [Shelly Plus Plug UK](https://kb.shelly.cloud/knowledge-base/shelly-plus-plug-uk) | 1 Switch | :white_check_mark: | :white_check_mark: |
+| [Shelly Pro 1](https://kb.shelly.cloud/knowledge-base/shelly-pro-1) | 1 Switch, 2 Inputs | :heavy_minus_sign: | :white_check_mark: |
+| [Shelly Pro 1 PM](https://kb.shelly.cloud/knowledge-base/shelly-pro-1pm) | 1 Switch, 2 Inputs | :white_check_mark: | :white_check_mark: |
+| [Shelly Pro 2](https://kb.shelly.cloud/knowledge-base/shelly-pro-2) | 2 Switches, 2 Inputs | :heavy_minus_sign: | :white_check_mark: |
+| [Shelly Pro 2 PM](https://kb.shelly.cloud/knowledge-base/shelly-pro-2pm) | 2 Switches, 2 Inputs | :white_check_mark: | :white_check_mark: |
+| [Shelly Pro 4 PM](https://kb.shelly.cloud/knowledge-base/shelly-pro-4pm) | 4 Switches, 4 Inputs | :white_check_mark: | :white_check_mark: |
 
 - **Shelly Plus 2 PM:** choose the **Switch** or **Cover (Roller/Shutter)** profile in the device settings, matching the profile set on the Shelly. Use Cover for roller shutters, blinds, and garage doors.
 - **Shelly Plus H&T:** battery powered. It sleeps between readings, so it only reports when it wakes up, and it can't act as a BLU gateway.
@@ -81,11 +81,11 @@ Encrypted BLU devices aren't supported yet, so leave encryption turned off on BL
 
 | Model | Main state | Sensor value | Other states | Buttons | Settings |
 | --- | --- | --- | --- | :---: | --- |
-| Shelly BLU Button1 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 1 | :heavy_minus_sign: |
-| Shelly BLU RC Button 4 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 4 | :heavy_minus_sign: |
-| Shelly BLU Door/Window | Open/closed | :heavy_minus_sign: | Illuminance, rotation (tilt angle) | 1 | :heavy_minus_sign: |
-| Shelly BLU Motion | Motion detected | :heavy_minus_sign: | Illuminance | 1 | :heavy_minus_sign: |
-| Shelly BLU H&T | :heavy_minus_sign: | Temperature | Temperature, humidity | 1 | Temperature unit (°F/°C), temperature offset |
+| [Shelly BLU Button1](https://kb.shelly.cloud/knowledge-base/shellyblu-button1) | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 1 | :heavy_minus_sign: |
+| [Shelly BLU RC Button 4](https://kb.shelly.cloud/knowledge-base/shelly-blu-rc-button-4-us) | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 4 | :heavy_minus_sign: |
+| [Shelly BLU Door/Window](https://kb.shelly.cloud/knowledge-base/shellyblu-door-window) | Open/closed | :heavy_minus_sign: | Illuminance, rotation (tilt angle) | 1 | :heavy_minus_sign: |
+| [Shelly BLU Motion](https://kb.shelly.cloud/knowledge-base/shellyblu-motion) | Motion detected | :heavy_minus_sign: | Illuminance | 1 | :heavy_minus_sign: |
+| [Shelly BLU H&T](https://kb.shelly.cloud/knowledge-base/shelly-blu-h-t) | :heavy_minus_sign: | Temperature | Temperature, humidity | 1 | Temperature unit (°F/°C), temperature offset |
 
 - **Shelly BLU H&T:** the temperature offset is applied in the selected temperature unit.
 
@@ -95,7 +95,7 @@ BLU+ZB devices support both Bluetooth and Zigbee. The plugin uses their Bluetoot
 
 | Model | Main state | Sensor value | Other states | Buttons | Settings |
 | --- | --- | --- | --- | :---: | --- |
-| Shelly BLU Distance | :heavy_minus_sign: | Distance (mm), or how full a container is (%) | Distance, vibration | 1 | Distance offset, container level measurement |
+| [Shelly BLU Distance](https://kb.shelly.cloud/knowledge-base/shelly-blu-distance) | :heavy_minus_sign: | Distance (mm), or how full a container is (%) | Distance, vibration | 1 | Distance offset, container level measurement |
 
 - **Shelly BLU Distance:** turn on **Measure Level** and enter the container height and the sensor's height above the bottom of the container. The sensor value then shows how full the container is as a percentage, instead of the distance to the contents.
 
