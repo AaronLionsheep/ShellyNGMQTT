@@ -3,7 +3,7 @@ name: release-please
 on:
   push:
     branches:
-      - main
+      - master
 
 permissions:
   contents: write
@@ -14,4 +14,14 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
+      - id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
+
+      - name: Upload Release Artifact
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          zip -r ShellyNGMQTT.indigoPlugin.zip ShellyNGMQTT.indigoPlugin
+          gh release upload ${{ steps.release.outputs.tag_name }} ShellyNGMQTT.indigoPlugin.zip
+
