@@ -29,6 +29,16 @@ class Shelly:
 
         self.update_state_image()
 
+    @classmethod
+    def validate_config_ui(cls, values_dict) -> dict[str, str]:
+        """
+        Validate the values from the device settings dialog.
+
+        :param values_dict: The values from the dialog.
+        :return: Error messages keyed by field id, empty when the values are valid.
+        """
+        return {}
+
     @property
     def device(self):
         """
@@ -73,6 +83,31 @@ class Shelly:
         """
         address = self.device.pluginProps.get("address") or ""
         return address.strip().rstrip("/") or None
+
+    def get_number_prop(self, key: str, number_type: type = float, minimum=None):
+        """
+        Read a numeric pluginProp, where a blank value is 0.
+
+        An invalid value (ex: saved before the settings were validated) is warned about
+        each time it's used so the configuration error isn't missed.
+
+        :param key: The pluginProp to read.
+        :param number_type: The type to convert the value to (ex: int).
+        :param minimum: The smallest valid value, if any.
+        :return: The number, or None when the value is invalid.
+        """
+        value = self.device.pluginProps.get(key, "").strip()
+        try:
+            number = number_type(value or 0)
+            if minimum is None or number >= minimum:
+                return number
+        except ValueError:
+            pass
+
+        self.logger.warning(
+            f"'{self.device.name}' is ignoring an invalid {key} setting: '{value}'"
+        )
+        return None
 
     def get_component_for_device(self, device):
         """

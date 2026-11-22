@@ -1,3 +1,4 @@
+import pytest
 from shelly.devices.shelly_blu import ShellyBLU
 from shelly.devices.shelly_blu_ht import ShellyBLUHT
 
@@ -27,3 +28,29 @@ class TestShellyBLUHT:
     def test_plugin_props_returns_new_dict(self):
         """Each call returns a separate dict so devices never share props"""
         assert ShellyBLUHT.plugin_props() is not ShellyBLUHT.plugin_props()
+
+
+class TestValidateConfigUi:
+    @pytest.mark.parametrize(
+        "offset", ["0", "1", "-2", "1.5", "-0.25", "1e1", " 3 ", "", "   "]
+    )
+    def test_valid_temp_offset(self, offset):
+        """Whole, decimal, and blank (no adjustment) offsets are accepted"""
+        assert ShellyBLUHT.validate_config_ui({"temp-offset": offset}) == {}
+
+    def test_missing_temp_offset(self):
+        """Settings without an offset (ex: created before it existed) are valid"""
+        assert ShellyBLUHT.validate_config_ui({}) == {}
+
+    @pytest.mark.parametrize(
+        "offset", ["abc", "1,5", "2F", "--1", "nan", "inf", "-inf"]
+    )
+    def test_invalid_temp_offset(self, offset):
+        """Offsets that would fail or corrupt every temperature reading are rejected"""
+        assert ShellyBLUHT.validate_config_ui({"temp-offset": offset}) == {
+            "temp-offset": "Must be a number."
+        }
+
+    def test_other_values_ignored(self):
+        """Only the offset is validated, since the unit is picked from a menu"""
+        assert ShellyBLUHT.validate_config_ui({"temp-unit": "abc"}) == {}

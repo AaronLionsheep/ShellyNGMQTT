@@ -617,14 +617,18 @@ class Plugin(indigo.PluginBase):
 
     def validateDeviceConfigUi(self, values_dict, type_id, dev_id):
         """
+        Validate the device settings with the model class so invalid values aren't saved.
 
         :param values_dict:
         :param type_id:
         :param dev_id:
         :return:
         """
+        # Component devices don't have a model class and are saved as entered
+        model_class = shelly_model_classes.get(type_id)
+        errors = model_class.validate_config_ui(values_dict) if model_class else {}
 
-        return True, values_dict
+        return len(errors) == 0, values_dict, indigo.Dict(errors)
 
     def closedDeviceConfigUi(self, values_dict, user_cancelled, type_id, dev_id):
         """

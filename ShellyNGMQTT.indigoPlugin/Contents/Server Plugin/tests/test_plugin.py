@@ -325,6 +325,76 @@ class TestValidateEventConfigUi:
         assert values_dict is values
 
 
+class TestValidateDeviceConfigUi:
+    def test_valid_model_settings(self, plugin):
+        """Valid settings for a model with validation are saved"""
+        is_valid, _, errors = plugin.validateDeviceConfigUi(
+            indigo.Dict({"temp-offset": "1.5"}), "shelly-blu-ht", 123
+        )
+
+        assert is_valid
+        assert errors == {}
+
+    def test_invalid_model_settings(self, plugin):
+        """The model class's field errors are shown in the device dialog"""
+        is_valid, _, errors = plugin.validateDeviceConfigUi(
+            indigo.Dict(
+                {
+                    "offset": "abc",
+                    "measure-contents-level": True,
+                    "measure-contents-level-container-height": "0",
+                    "measure-contents-level-sensor-height": "100",
+                }
+            ),
+            "shelly-blu-distance",
+            123,
+        )
+
+        assert not is_valid
+        assert errors == {
+            "offset": "Must be a whole number of mm.",
+            "measure-contents-level-container-height": (
+                "Must be a whole number of mm greater than 0."
+            ),
+        }
+
+    def test_errors_are_indigo_dict(self, plugin):
+        """Indigo needs an indigo.Dict to show the field errors"""
+        _, _, errors = plugin.validateDeviceConfigUi(
+            indigo.Dict({"temp-offset": "abc"}), "shelly-blu-ht", 123
+        )
+
+        assert isinstance(errors, indigo.Dict)
+
+    @pytest.mark.parametrize("type_id", ["shelly-plus-1", "shelly-blu-button1"])
+    def test_model_without_validation(self, plugin, type_id):
+        """Models without their own validation use the base class and are saved as entered"""
+        is_valid, _, errors = plugin.validateDeviceConfigUi(
+            indigo.Dict({"temp-offset": "abc"}), type_id, 123
+        )
+
+        assert is_valid
+        assert errors == {}
+
+    @pytest.mark.parametrize("type_id", ["component-humidity", "component-switch"])
+    def test_component_device(self, plugin, type_id):
+        """Component devices have no model class and are saved as entered"""
+        is_valid, _, errors = plugin.validateDeviceConfigUi(
+            indigo.Dict({"offset": "abc"}), type_id, 123
+        )
+
+        assert is_valid
+        assert errors == {}
+
+    def test_returns_values_dict(self, plugin):
+        """The values are saved as entered, without changes"""
+        values = indigo.Dict({"temp-offset": "1"})
+
+        _, values_dict, _ = plugin.validateDeviceConfigUi(values, "shelly-blu-ht", 123)
+
+        assert values_dict is values
+
+
 class TestDeviceFactoryModelChanged:
     @pytest.mark.parametrize(
         "model", ["shelly-blu-ht", "shelly-blu-button1", "shelly-blu-rc-button-4"]
