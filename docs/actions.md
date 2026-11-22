@@ -1,4 +1,4 @@
-# Actions
+# :joystick: Actions
 
 ShellyNGMQTT devices work with Indigo's standard device actions, so you control them the same way as any other relay or dimmer: from the device list, control pages, action groups, schedules, and triggers. The plugin also adds actions for managing firmware.
 

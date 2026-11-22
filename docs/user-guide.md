@@ -1,4 +1,4 @@
-# User Guide
+# :book: User Guide
 
 ShellyNGMQTT connects Shelly Gen2+ devices to Indigo over MQTT, along with Shelly BLU Bluetooth devices relayed through them. Gen1 devices are supported by the [ShellyMQTT](https://www.indigodomo.com/pluginstore/236/) plugin instead.
 

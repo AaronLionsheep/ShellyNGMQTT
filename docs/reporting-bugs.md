@@ -1,4 +1,4 @@
-# Reporting Bugs
+# :bug: Reporting Bugs
 
 Found something that isn't working? Thanks for taking the time to report it. This page explains where to report, what helps get a bug fixed quickly, and how to collect it. Don't worry about getting everything perfect: a report with partial information is far better than no report at all.
 

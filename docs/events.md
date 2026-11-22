@@ -1,4 +1,4 @@
-# Trigger Events
+# :zap: Trigger Events
 
 Besides Indigo's built-in triggers on device states (like a switch turning on), ShellyNGMQTT provides events for things that don't change a state, like a button being double-pressed or a firmware update finishing.
 

@@ -1,4 +1,4 @@
-# BLU Relay
+# :satellite: BLU Relay
 
 Shelly BLU devices (buttons, door/window sensors, motion sensors, and so on) talk over Bluetooth Low Energy, not Wi-Fi, so Indigo can't hear them directly. The BLU relay solves this by turning your Wi-Fi Shelly devices into Bluetooth gateways: a small script on each gateway listens for BLU broadcasts and forwards them to the plugin over MQTT.
 

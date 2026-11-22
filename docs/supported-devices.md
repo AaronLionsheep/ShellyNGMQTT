@@ -1,4 +1,4 @@
-# Supported Devices
+# :electric_plug: Supported Devices
 
 ShellyNGMQTT supports Shelly Gen2+ Wi-Fi devices over MQTT, and Shelly BLU Bluetooth devices relayed through them. Gen1 devices are supported by the [ShellyMQTT](https://www.indigodomo.com/pluginstore/236/) plugin instead.
 

@@ -1,4 +1,4 @@
-# Contributing
+# :handshake: Contributing
 
 Thanks for your interest in improving ShellyNGMQTT! Bug reports, new device support, fixes, tests, and documentation are all welcome.
 
