@@ -294,9 +294,54 @@ class ShellyBLU(Shelly):
             ),
         )
 
+    def get_state_updates(self, data: BLEData) -> list[dict[str, Any]]:
+        """
+        Build the state updates for BLE data.
+
+        Subclasses extend the list with their own states, so all of a packet's
+        states are written at once.
+        """
+        # Base states from sensor data shared across all BLU devices
+        state_updates = []
+        state_updates.append({"key": "pid", "value": data.sensors.get("packet_id", -1)})
+        state_updates.append({"key": "rssi", "value": data.rssi})
+        state_updates.append({"key": "address", "value": data.address})
+        if (battery := data.sensors.get("battery")) is not None:
+            state_updates.append({"key": "batteryLevel", "value": battery})
+        return state_updates
+
+    @staticmethod
+    def get_prop_updates(data: BLEData, props: dict[str, Any]) -> dict[str, Any]:
+        """
+        Build the plugin prop updates for BLE data.
+
+        Only changed device information is included, since replacing props writes
+        to the database and notifies device-updated listeners.
+
+        :param data: The BLE data.
+        :param props: The device's current plugin props.
+        :return: The props to update, or an empty dict when nothing changed.
+        """
+        prop_updates = {}
+        firmware_version = data.device_info.firmware_version
+        if firmware_version and props.get("version") != firmware_version:
+            prop_updates["version"] = firmware_version
+
+        # TODO: Use data.device_info.device_type_id to identify BLU devices.
+        #  Shelly's device ids are listed at https://shelly-api-docs.shelly.cloud/docs-ble/common
+        #  (ex: 0x0003 is the BLU H&T). Options:
+        #  - A class attribute on each ShellyBLU model class holding its device id
+        #  - A mapping table from device ids to the internal model identifiers (ex: "shelly-blu-ht")
+        #  - A generated device name to show when identifying an unknown/discovered device
+
+        return prop_updates
+
     def process_ble_data(self, data: BLEData):
         """
         Process BLE data.
+
+        All states are written before triggers fire, so trigger conditions and
+        actions see the packet's values.
         """
         # Log BLE activity
         if indigo.activePlugin.pluginPrefs.get("debug-ble-activity", False):
@@ -312,29 +357,12 @@ class ShellyBLU(Shelly):
                 f"events={data.events} "
             )
 
-        # Update base states from sensor data shared across all BLU devices
-        state_updates = []
-        state_updates.append({"key": "pid", "value": data.sensors.get("packet_id", -1)})
-        state_updates.append({"key": "rssi", "value": data.rssi})
-        state_updates.append({"key": "address", "value": data.address})
-        if (battery := data.sensors.get("battery")) is not None:
-            state_updates.append({"key": "batteryLevel", "value": battery})
-        self.device.updateStatesOnServer(state_updates)
+        self.device.updateStatesOnServer(self.get_state_updates(data))
+        self.update_state_image()
 
-        # Update device properties, only when device information is sent
+        # Update device properties, only when device information changes
         props = self.device.pluginProps
-        prop_updates = {}
-        if firmware_version := data.device_info.firmware_version:
-            prop_updates["version"] = firmware_version
-
-        # TODO: Use data.device_info.device_type_id to identify BLU devices.
-        #  Shelly's device ids are listed at https://shelly-api-docs.shelly.cloud/docs-ble/common
-        #  (ex: 0x0003 is the BLU H&T). Options:
-        #  - A class attribute on each ShellyBLU model class holding its device id
-        #  - A mapping table from device ids to the internal model identifiers (ex: "shelly-blu-ht")
-        #  - A generated device name to show when identifying an unknown/discovered device
-
-        if prop_updates:
+        if prop_updates := self.get_prop_updates(data, props):
             props.update(prop_updates)
             self.device.replacePluginPropsOnServer(props)
 
@@ -354,7 +382,6 @@ class ShellyBLU(Shelly):
     def handle_ble_relay_packet(self, packet: BLERelayPacket):
         ble_data = self.parse_packet(packet)
         self.process_ble_data(ble_data)
-        self.update_state_image()
 
     def trigger_button_events(self, events: dict[str, dict[str, Any]]):
         for event_key, event in events.items():

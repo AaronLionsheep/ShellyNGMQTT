@@ -344,3 +344,102 @@ class TestShellyBLU:
     )
     def test_normalize_address(self, address):
         assert ShellyBLU.normalize_address(address) == "b0:c7:de:04:1c:ff"
+
+
+def make_data(sensors: dict, device_info: BTHomeDeviceInfo | None = None) -> BLEData:
+    """Build BLE data with the given sensor values and device info, and no events."""
+    return BLEData(
+        packet=BLERelayPacket(
+            version=1,
+            relay_device_id=1,
+            address="b0:c7:de:04:1c:ff",
+            rssi=-77,
+            service_data={},  # pyright: ignore[reportArgumentType]
+            timestamp=0,
+        ),
+        sensors=sensors,
+        events={},
+        device_info=device_info or BTHomeDeviceInfo(),
+    )
+
+
+class TestGetStateUpdates:
+    @staticmethod
+    def get_state_updates(sensors: dict) -> list[dict]:
+        # Skip __init__, which looks up the Indigo device
+        return ShellyBLU.get_state_updates(
+            object.__new__(ShellyBLU), make_data(sensors)
+        )
+
+    def test_base_states(self):
+        """Packet id, signal strength and address are written from every packet"""
+        assert self.get_state_updates({"packet_id": 75}) == [
+            {"key": "pid", "value": 75},
+            {"key": "rssi", "value": -77},
+            {"key": "address", "value": "b0:c7:de:04:1c:ff"},
+        ]
+
+    def test_battery(self):
+        """The battery level is written when the packet includes it"""
+        state_updates = self.get_state_updates({"packet_id": 75, "battery": 100})
+        assert state_updates[-1] == {"key": "batteryLevel", "value": 100}
+
+    def test_zero_battery(self):
+        """A battery level of 0 is still written, not treated as missing"""
+        state_updates = self.get_state_updates({"packet_id": 75, "battery": 0})
+        assert {"key": "batteryLevel", "value": 0} in state_updates
+
+    def test_missing_packet_id(self):
+        """A packet without a packet id reports -1, so the state is never stale"""
+        assert self.get_state_updates({})[0] == {"key": "pid", "value": -1}
+
+    def test_returns_new_list(self):
+        """Subclasses extend the returned list, so each call must build a new one"""
+        assert self.get_state_updates({}) is not self.get_state_updates({})
+
+
+class TestGetPropUpdates:
+    @staticmethod
+    def get_prop_updates(props: dict, **device_info) -> dict:
+        data = make_data({}, BTHomeDeviceInfo(**device_info))
+        return ShellyBLU.get_prop_updates(data, props)
+
+    def test_new_firmware_version(self):
+        """The version is saved the first time a device reports its firmware"""
+        assert self.get_prop_updates({}, firmware_version="1.0.3") == {
+            "version": "1.0.3"
+        }
+
+    def test_changed_firmware_version(self):
+        """A firmware update replaces the saved version"""
+        assert self.get_prop_updates(
+            {"version": "1.0.3"}, firmware_version="1.0.4"
+        ) == {"version": "1.0.4"}
+
+    def test_unchanged_firmware_version(self):
+        """An unchanged version isn't rewritten, since every relayed packet carries it"""
+        assert (
+            self.get_prop_updates({"version": "1.0.3"}, firmware_version="1.0.3") == {}
+        )
+
+    @pytest.mark.parametrize(
+        "props",
+        [
+            pytest.param({}, id="no-saved-version"),
+            pytest.param({"version": "1.0.3"}, id="saved-version"),
+        ],
+    )
+    def test_missing_firmware_version(self, props):
+        """Packets without device information never change or clear the saved version"""
+        assert self.get_prop_updates(props) == {}
+
+    def test_device_type_id_only(self):
+        """The device type id isn't saved as a prop yet"""
+        assert self.get_prop_updates({}, device_type_id=3) == {}
+
+    def test_other_props_ignored(self):
+        """Only changed props are returned, so the caller merges them into the full props"""
+        props = {"version": "1.0.3", "temp-unit": "F"}
+        assert self.get_prop_updates(props, firmware_version="1.0.4") == {
+            "version": "1.0.4"
+        }
