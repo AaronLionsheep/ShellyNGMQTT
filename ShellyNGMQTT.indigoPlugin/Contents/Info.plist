@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>PluginVersion</key>
+	<!-- x-release-please-start-version -->
 	<string>1.4.0</string>
+	<!-- x-release-please-end -->
 	<key>ServerApiVersion</key>
 	<string>3.4</string>
 	<key>IwsApiVersion</key>
