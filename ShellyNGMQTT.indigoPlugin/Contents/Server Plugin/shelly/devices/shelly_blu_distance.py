@@ -36,12 +36,11 @@ class ShellyBLUDistance(ShellyBLU):
         )
         return states
 
-    def process_ble_data(self, data: BLEData):
+    def get_state_updates(self, data: BLEData) -> list[dict[str, Any]]:
         """
-        Process a BTHome data packet.
+        Build the state updates for a BTHome data packet.
         """
-        super().process_ble_data(data)
-        state_updates = []
+        state_updates = super().get_state_updates(data)
 
         if (distance := data.sensors.get("distance")) is not None:
             distance += int(self.device.pluginProps.get("offset") or 0)
@@ -83,4 +82,4 @@ class ShellyBLUDistance(ShellyBLU):
         if (vibration := data.sensors.get("vibration")) is not None:
             state_updates.append({"key": "vibration", "value": vibration == 1})
 
-        self.device.updateStatesOnServer(state_updates)
+        return state_updates

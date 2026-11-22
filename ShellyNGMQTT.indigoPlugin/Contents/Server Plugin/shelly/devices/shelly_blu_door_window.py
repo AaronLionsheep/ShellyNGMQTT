@@ -44,12 +44,11 @@ class ShellyBLUDoorWindow(ShellyBLU):
             else indigo.kStateImageSel.SensorOff
         )
 
-    def process_ble_data(self, data: BLEData):
+    def get_state_updates(self, data: BLEData) -> list[dict[str, Any]]:
         """
-        Process a BTHome data packet.
+        Build the state updates for a BTHome data packet.
         """
-        super().process_ble_data(data)
-        state_updates = []
+        state_updates = super().get_state_updates(data)
 
         if (illuminance := data.sensors.get("illuminance")) is not None:
             state_updates.append({"key": "illuminance", "value": illuminance})
@@ -67,4 +66,4 @@ class ShellyBLUDoorWindow(ShellyBLU):
                 }
             )
 
-        self.device.updateStatesOnServer(state_updates)
+        return state_updates
