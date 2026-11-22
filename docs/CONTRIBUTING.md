@@ -27,6 +27,11 @@ conda run -n shellyngmqtt-dev ruff check
 conda run -n shellyngmqtt-dev ruff format
 ```
 
+The two dependency files have separate jobs:
+
+- `ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt` lists runtime dependencies only. Indigo installs these on users' machines, so only add packages the plugin needs when it runs.
+- [environment.yml](../environment.yml) defines the development environment. Dev-only tools like ruff, pytest, and pytest-indigo go here, never in `requirements.txt`.
+
 If `requirements.txt` or `environment.yml` changes, update the environment with `conda env update -f environment.yml --prune`.
 
 ### Testing in Indigo
@@ -98,12 +103,31 @@ CI runs the suite on Apple Silicon and Intel macOS with Python 3.11 and 3.13, so
 
 1. Branch from `master`. Name the branch after the issue it addresses, for example `issue-77`.
 2. Keep each pull request focused on one change. Unrelated fixes should go in their own pull requests.
-3. Write commit messages as one short line in the imperative mood, for example `Add Shelly Pro 3EM support`.
+3. Write commit messages as one short line in the imperative mood. [Conventional Commits](https://www.conventionalcommits.org) style is encouraged but not required, for example `feat: add Shelly Pro 3EM support` or `Add Shelly Pro 3EM support`.
 4. Before pushing, run `ruff format`, `ruff check`, and `pytest`.
 5. Open the pull request against `master` and link the issue (`Closes #77`). Describe what changed and how you tested it, including hardware and firmware versions where relevant.
+6. **Give the pull request a [Conventional Commits](https://www.conventionalcommits.org) title**, for example `feat: add Shelly Pro 3EM support` or `fix: handle missing BLU battery level`. This is required: the title becomes the commit message on `master`, and release-please uses it to write the changelog and choose the next version (see [Releasing](#releasing)).
+
+Common title types:
+
+| Type | Use for | Version bump |
+| --- | --- | --- |
+| `feat` | New features and device support | Minor |
+| `fix` | Bug fixes | Patch |
+| `docs` | Documentation only | None |
+| `build` | Dependencies and packaging | None |
+| `chore` | Maintenance that doesn't fit elsewhere | None |
+| `ci` | GitHub workflows | None |
+| `test` | Tests only | None |
+| `refactor` | Code changes that don't change behavior | None |
+
+An optional scope in parentheses after the type narrows down what changed, for example `feat(device): add Shelly 1 PM Gen 3` when adding a new device.
+
+Add `!` after the type (for example `feat!: drop support for Indigo 2023.1`) for a breaking change, which bumps the major version.
 
 Every pull request runs:
 
+- **Lint PR:** checks that the title follows Conventional Commits
 - **Code Quality:** `ruff check` and `ruff format --check`
 - **Test:** unit tests on macOS (Apple Silicon and Intel) with Python 3.11 and 3.13
 - **Install Dependencies:** installs `requirements.txt` on the same matrix and fails if a package unexpectedly builds from source
@@ -112,9 +136,12 @@ Dependency updates are opened automatically by Renovate (see [renovate.json](../
 
 ## Releasing
 
-Maintainers only.
+Releases are automated with [release-please](https://github.com/googleapis/release-please). Don't bump versions or edit the changelog by hand.
 
-1. Bump `PluginVersion` in `ShellyNGMQTT.indigoPlugin/Contents/Info.plist`. If the release needs features from a newer Indigo, update `ServerApiVersion` too.
-2. Merge to `master` and tag the release with the bare version number (for example `1.4.0`).
-3. Zip `ShellyNGMQTT.indigoPlugin` (without `Contents/Packages`) and attach it to a GitHub release with release notes.
-4. <!-- TODO: Indigo Plugin Store / forum announcement steps -->
+1. Every merge to `master` updates an open release pull request. It collects the Conventional Commits titles merged since the last release, writes the changelog, and bumps the version in [.release-please-manifest.json](../.release-please-manifest.json) and `PluginVersion` in `ShellyNGMQTT.indigoPlugin/Contents/Info.plist`.
+2. When it's time to release, a maintainer merges the release pull request. Release-please then tags the release and creates the GitHub release, and the workflow zips `ShellyNGMQTT.indigoPlugin` and attaches it.
+3. <!-- TODO: Indigo Plugin Store / forum announcement steps -->
+
+If a release needs features from a newer Indigo, update `ServerApiVersion` in `Info.plist` in a regular pull request before merging the release pull request.
+
+Configuration lives in [release-please-config.json](../release-please-config.json) and [.github/workflows/release-please.yml](../.github/workflows/release-please.yml).
