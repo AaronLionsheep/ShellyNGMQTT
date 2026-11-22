@@ -4,6 +4,8 @@ ShellyNGMQTT supports Shelly Gen2+ Wi-Fi devices over MQTT, and Shelly BLU Bluet
 
 Don't see your device? Open a [new device request](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=new-device.yml).
 
+In the tables on this page, :white_check_mark: means the device has the feature and the plugin supports it, and :heavy_minus_sign: means the device itself doesn't have it.
+
 ## How Devices Appear in Indigo
 
 When you create a Wi-Fi Shelly device, the plugin creates one Indigo device for each part of it, called a component. For example, a Shelly Plus 1 becomes two Indigo devices: a **Switch** for the relay and an **Input** for the switch terminal. The devices are grouped together in Indigo, and editing any one of them opens the settings for the whole Shelly.
@@ -21,18 +23,18 @@ In the tables below:
 
 | Model | Indigo devices created | Power metering | BLU gateway |
 | --- | --- | :---: | :---: |
-| Shelly Plus 1 | 1 Switch, 1 Input | | :white_check_mark: |
+| Shelly Plus 1 | 1 Switch, 1 Input | :heavy_minus_sign: | :white_check_mark: |
 | Shelly Plus 1 PM | 1 Switch, 1 Input | :white_check_mark: | :white_check_mark: |
 | Shelly Plus 2 PM | 2 Switches and 2 Inputs, or 1 Cover and 2 Inputs | :white_check_mark: | :white_check_mark: |
 | Shelly Plus WallDimmer | 1 Light | :white_check_mark: | :white_check_mark: |
-| Shelly Plus I4 | 4 Inputs | | :white_check_mark: |
-| Shelly Plus H&T | 1 Temperature, 1 Humidity | | |
+| Shelly Plus I4 | 4 Inputs | :heavy_minus_sign: | :white_check_mark: |
+| Shelly Plus H&T | 1 Temperature, 1 Humidity | :heavy_minus_sign: | :heavy_minus_sign: |
 | Shelly Plus Plug (US/IT) | 1 Switch | :white_check_mark: | :white_check_mark: |
 | Shelly Plus Plug S | 1 Switch | :white_check_mark: | :white_check_mark: |
 | Shelly Plus Plug UK | 1 Switch | :white_check_mark: | :white_check_mark: |
-| Shelly Pro 1 | 1 Switch, 2 Inputs | | :white_check_mark: |
+| Shelly Pro 1 | 1 Switch, 2 Inputs | :heavy_minus_sign: | :white_check_mark: |
 | Shelly Pro 1 PM | 1 Switch, 2 Inputs | :white_check_mark: | :white_check_mark: |
-| Shelly Pro 2 | 2 Switches, 2 Inputs | | :white_check_mark: |
+| Shelly Pro 2 | 2 Switches, 2 Inputs | :heavy_minus_sign: | :white_check_mark: |
 | Shelly Pro 2 PM | 2 Switches, 2 Inputs | :white_check_mark: | :white_check_mark: |
 | Shelly Pro 4 PM | 4 Switches, 4 Inputs | :white_check_mark: | :white_check_mark: |
 
@@ -56,9 +58,9 @@ Each component type is a standard Indigo device type, so it works with Indigo's 
 | Switch | Relay | On/off | Device temperature (°C and °F); with power metering: power, energy, voltage, current, power factor |
 | Light | Dimmer | On/off and brightness | Device temperature (°C and °F); with power metering: power, energy, voltage, current, power factor |
 | Cover | Dimmer | Position (0-100%, 0 is closed) | Cover state (opening, closing, stopped, ...), device temperature (°C and °F); with power metering: power, energy, voltage |
-| Input | Sensor | On/off (pressed or switch closed) | |
+| Input | Sensor | On/off (pressed or switch closed) | :heavy_minus_sign: |
 | Temperature | Sensor | Temperature | Temperature in °C and °F |
-| Humidity | Sensor | Humidity (%) | |
+| Humidity | Sensor | Humidity (%) | :heavy_minus_sign: |
 
 Inputs set up as buttons on the Shelly can also fire [button events](events.md#button-events) for button down/up and single, double, triple, and long presses.
 
@@ -79,11 +81,11 @@ Encrypted BLU devices aren't supported yet, so leave encryption turned off on BL
 
 | Model | Main state | Sensor value | Other states | Buttons | Settings |
 | --- | --- | --- | --- | :---: | --- |
-| Shelly BLU Button1 | | | | 1 | |
-| Shelly BLU RC Button 4 | | | | 4 | |
-| Shelly BLU Door/Window | Open/closed | | Illuminance, rotation (tilt angle) | 1 | |
-| Shelly BLU Motion | Motion detected | | Illuminance | 1 | |
-| Shelly BLU H&T | | Temperature | Temperature, humidity | 1 | Temperature unit (°F/°C), temperature offset |
+| Shelly BLU Button1 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 1 | :heavy_minus_sign: |
+| Shelly BLU RC Button 4 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 4 | :heavy_minus_sign: |
+| Shelly BLU Door/Window | Open/closed | :heavy_minus_sign: | Illuminance, rotation (tilt angle) | 1 | :heavy_minus_sign: |
+| Shelly BLU Motion | Motion detected | :heavy_minus_sign: | Illuminance | 1 | :heavy_minus_sign: |
+| Shelly BLU H&T | :heavy_minus_sign: | Temperature | Temperature, humidity | 1 | Temperature unit (°F/°C), temperature offset |
 
 - **Shelly BLU H&T:** the temperature offset is applied in the selected temperature unit.
 
@@ -93,7 +95,7 @@ BLU+ZB devices support both Bluetooth and Zigbee. The plugin uses their Bluetoot
 
 | Model | Main state | Sensor value | Other states | Buttons | Settings |
 | --- | --- | --- | --- | :---: | --- |
-| Shelly BLU Distance | | Distance (mm), or how full a container is (%) | Distance, vibration | 1 | Distance offset, container level measurement |
+| Shelly BLU Distance | :heavy_minus_sign: | Distance (mm), or how full a container is (%) | Distance, vibration | 1 | Distance offset, container level measurement |
 
 - **Shelly BLU Distance:** turn on **Measure Level** and enter the container height and the sensor's height above the bottom of the container. The sensor value then shows how full the container is as a percentage, instead of the distance to the contents.
 
