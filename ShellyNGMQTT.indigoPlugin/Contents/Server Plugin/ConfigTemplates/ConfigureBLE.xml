@@ -11,6 +11,10 @@
 		<Description>if bluetooth is enabled</Description>
 	</Field>
 
+	<Field id="ble-enable-help" type="label" fontColor="blue" fontSize="small" alignWithControl="true" visibleBindingId="settings-section" visibleBindingValue="ble">
+		<Label>Ignored on firmware 2.0+, which enables bluetooth automatically.</Label>
+	</Field>
+
 	<Field id="ble-config-write-sep" type="separator" visibleBindingId="settings-section" visibleBindingValue="ble"/>
 
 	<Field id="ble-config-write-help" type="label" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="ble">
