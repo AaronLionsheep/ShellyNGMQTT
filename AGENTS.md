@@ -44,9 +44,10 @@ CI runs `ruff check`, `ruff format --check`, and the test suite on Apple Silicon
 
 ### Dependencies
 
-- `ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt` lists the plugin's runtime dependencies only. Indigo installs these on users' machines, so only add packages the plugin needs when it runs.
-- `environment.yml` defines the development environment: Python, ruff, pytest, pytest-cov, pytest-indigo, plus everything from `requirements.txt`. Dev-only tools go here, never in `requirements.txt`.
-- After either file changes, update the environment with `conda env update -f environment.yml --prune`.
+- `ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.in` lists the runtime packages the plugin imports directly, with only the version limits it needs. Indigo installs these on users' machines, so only add packages the plugin needs when it runs.
+- `requirements.txt` next to it is a universal lockfile generated from `requirements.in` for both Apple Silicon and Intel Macs. Never edit it by hand. After changing `requirements.in`, regenerate it from the repo root with `conda run -n shellyngmqtt-dev scripts/compile-requirements.sh` (extra arguments go to `uv pip compile`). Keep the generated header; Renovate reads the command from it. CI fails if the lockfile is out of date.
+- `environment.yml` defines the development environment: Python, ruff, pytest, pytest-cov, pytest-indigo, uv, plus everything from `requirements.txt`. Dev-only tools go here, never in `requirements.in`.
+- After any of these files change, update the environment with `conda env update -f environment.yml --prune`.
 
 ## Rules
 
@@ -54,7 +55,7 @@ CI runs `ruff check`, `ruff format --check`, and the test suite on Apple Silicon
 - **Model-specific logic goes on the model class.** Add a default classmethod on `Shelly` in `shelly.py` and override it per model; call it from `plugin.py` via `shelly_model_classes`. Never add `if type_id == ...` branches in `plugin.py`. Shared helpers go on `Shelly`, not on a subclass like `ShellyBLU`.
 - **Keep code minimal.** Read preferences and write simple checks inline. Don't add helper functions, dataclasses, or abstraction layers for simple logic. Propose the lean version first when scope is unclear.
 - **Parsing code is the exception.** New parsing logic (BTHome bytes, RPC payloads) gets a dedicated dataclass and thorough tests (normal values, edge cases, malformed input) in the same change. Reuse `bthome_ble` definitions such as `MeasTypes` where they fit.
-- **Intel Macs must keep working.** `bthome-ble` stays below 3.24 (it needs `cryptography>=49`, which has no Intel wheels). Backport newer `bthome-ble` features into `shelly_blu.py` instead of upgrading. New dependencies must install from pre-built wheels on both architectures.
+- **Intel Macs must keep working.** `bthome-ble` stays on 3.23.4 (3.23.5+ needs `cryptography>=49`, which has no Intel wheels). Backport newer `bthome-ble` features into `shelly_blu.py` instead of upgrading. New dependencies must install from pre-built wheels on both architectures.
 
 ## Testing
 

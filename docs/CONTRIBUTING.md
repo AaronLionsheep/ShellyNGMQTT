@@ -29,8 +29,16 @@ conda run -n shellyngmqtt-dev ruff format
 
 The two dependency files have separate jobs:
 
-- `ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt` lists runtime dependencies only. Indigo installs these on users' machines, so only add packages the plugin needs when it runs.
-- [environment.yml](../environment.yml) defines the development environment. Dev-only tools like ruff, pytest, and pytest-indigo go here, never in `requirements.txt`.
+- `ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.in` lists the runtime packages the plugin imports directly, with only the version limits it needs (such as the Intel Mac limits). Indigo installs these on users' machines, so only add packages the plugin needs when it runs.
+- [environment.yml](../environment.yml) defines the development environment. Dev-only tools like ruff, pytest, pytest-indigo, and uv go here, never in `requirements.in`.
+
+`requirements.txt` next to it is a lockfile generated from `requirements.in`, pinning every package (including indirect ones) for both Apple Silicon and Intel Macs. Indigo installs from it. Don't edit it by hand; after changing `requirements.in`, regenerate it from the repo root with [scripts/compile-requirements.sh](../scripts/compile-requirements.sh). Extra arguments are passed to `uv pip compile`, for example `--upgrade-package habluetooth`:
+
+```sh
+conda run -n shellyngmqtt-dev scripts/compile-requirements.sh
+```
+
+Keep the generated header: Renovate reads the `uv pip compile` command from it to regenerate the lockfile, so the script must keep calling uv directly. Renovate opens a PR for each new release of a package in `requirements.in` that only updates the lockfile, and a regular lockfile maintenance PR that updates the indirect packages.
 
 If `requirements.txt` or `environment.yml` changes, update the environment with `conda env update -f environment.yml --prune`.
 
@@ -70,7 +78,7 @@ All plugin code lives in `ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/`:
 - **Put model-specific logic on the model class.** Per-model behavior belongs in classmethods on that model's class, not in `if model == ...` branches in `plugin.py`. Logic shared by many models goes on the `Shelly` base class in `shelly.py`.
 - **Keep it minimal.** Write simple checks and preference reads inline. Don't add helper functions, dataclasses, or abstractions for simple logic. The exception is parsing code, which should get a dedicated dataclass (see [Testing](#testing)).
 - **Dependencies:** every new dependency must work on both Apple Silicon and Intel Macs, preferably from pre-built wheels. CI fails if a package unexpectedly builds from source.
-- **`bthome-ble` stays below 3.24.** Version 3.24 requires `cryptography>=49`, which has no Intel Mac wheels. If you need a feature from a newer release, backport it into `shelly_blu.py` instead of upgrading.
+- **`bthome-ble` stays on 3.23.4.** Version 3.23.5 and newer require `cryptography>=49`, which has no Intel Mac wheels. If you need a feature from a newer release, backport it into `shelly_blu.py` instead of upgrading.
 
 ## Testing
 
@@ -130,6 +138,7 @@ Every pull request runs:
 - **Lint PR:** checks that the title follows Conventional Commits
 - **Code Quality:** `ruff check` and `ruff format --check`
 - **Test:** unit tests on macOS (Apple Silicon and Intel) with Python 3.11 and 3.13
+- **Lockfile Up to Date:** regenerates `requirements.txt` and fails if it doesn't match `requirements.in`
 - **Install Dependencies:** installs `requirements.txt` on the same matrix and fails if a package unexpectedly builds from source
 
 Dependency updates are opened automatically by Renovate (see [renovate.json](../renovate.json)).
