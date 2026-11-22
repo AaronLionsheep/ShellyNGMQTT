@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<Template>
+	<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
+		<Label>BLU Relay:</Label>
+		<Description>Relay Shelly BLU device messages to the plugin</Description>
+	</Field>
+
+	<Field id="blu-relay-help" type="label" fontColor="darkgray" visibleBindingId="settings-section" visibleBindingValue="indigo">
+		<Label>Only BTHome advertisements from Shelly BLU devices are relayed, not other Bluetooth traffic. The relay script is synced to the device when it starts or reconnects. To force a re-sync, disable and re-enable communication for this device, or save once with BLU Relay unticked and again with it ticked.</Label>
+	</Field>
+</Template>

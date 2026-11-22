@@ -231,6 +231,7 @@ class TestBLERelayPacket:
             relay_device_id=1,
             timestamp=0,
             event_data={
+                "version": 1,
                 "address": address,
                 "rssi": -77,
                 "service_data": {
@@ -254,6 +255,7 @@ class TestBLERelayPacket:
             relay_device_id=1,
             timestamp=0,
             event_data={
+                "version": 1,
                 "address": "b0:c7:de:04:1c:ff",
                 "rssi": -77,
                 "service_data": {"fcd2": "44005001642e3545ef00"},
@@ -270,11 +272,30 @@ class TestBLERelayPacket:
             timestamp=0,
         )
 
+    def test_from_mqtt_event_does_not_modify_event_data(self):
+        """The caller's event data is left intact, since it is logged after parsing"""
+        event_data = {
+            "version": 1,
+            "address": "b0:c7:de:04:1c:ff",
+            "rssi": -77,
+            "service_data": {"fcd2": "44005001642e3545ef00"},
+        }
+        BLERelayPacket.from_mqtt_event(
+            relay_device_id=1, timestamp=0, event_data=event_data
+        )
+        assert event_data == {
+            "version": 1,
+            "address": "b0:c7:de:04:1c:ff",
+            "rssi": -77,
+            "service_data": {"fcd2": "44005001642e3545ef00"},
+        }
+
     def test_str(self):
         packet = BLERelayPacket.from_mqtt_event(
             relay_device_id=1,
             timestamp=0,
             event_data={
+                "version": 1,
                 "address": "b0:c7:de:04:1c:ff",
                 "rssi": -77,
                 "service_data": {

@@ -5,7 +5,6 @@ from collections import defaultdict
 from queue import Queue
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
-from shelly.components.system.script import MAX_BLE_PACKET_AGE
 from shelly.devices.shelly import Shelly
 from shelly.devices.shelly_blu import MAX_BLE_EVENT_AGE, ShellyBLU
 from shelly.devices.shelly_blu_button1 import ShellyBLUButton1
@@ -29,6 +28,7 @@ from shelly.devices.shelly_pro_1_pm import ShellyPro1PM
 from shelly.devices.shelly_pro_2 import ShellyPro2
 from shelly.devices.shelly_pro_2_pm import ShellyPro2PM
 from shelly.devices.shelly_pro_4_pm import ShellyPro4PM
+from shelly.scripts.blu_relay import MAX_BLE_PACKET_AGE
 
 shelly_model_classes = {
     "shelly-blu-doorwindow": ShellyBLUDoorWindow,

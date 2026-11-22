@@ -163,10 +163,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -217,10 +214,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -271,10 +265,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -325,10 +316,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -378,10 +366,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -480,10 +465,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -534,10 +516,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -588,10 +567,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -643,10 +619,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -701,10 +674,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -759,10 +729,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -817,10 +784,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
@@ -875,10 +839,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 
-			<Field id="blu-relay" type="checkbox" defaultValue="false" visibleBindingId="settings-section" visibleBindingValue="indigo">
-				<Label>BLU Relay:</Label>
-				<Description>Relay BLU (BLE) messages back to the plugin</Description>
-			</Field>
+			<Template file="ConfigTemplates/ConfigureBLURelay.xml"/>
 
 			<!-- System -->
 			<Template file="ConfigTemplates/ConfigureSystem.xml"/>
