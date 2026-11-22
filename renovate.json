@@ -4,6 +4,16 @@
     "config:recommended",
     "helpers:pinGitHubActionDigests"
   ],
+  "pip-compile": {
+    "managerFilePatterns": ["/(^|/)requirements\\.txt$/"],
+    "rangeStrategy": "update-lockfile"
+  },
+  "pip_requirements": {
+    "enabled": false
+  },
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "packageRules": [
     {
       "matchPackageNames": ["cryptography"],

@@ -34,6 +34,25 @@ jobs:
       - name: Test
         run: pytest
 
+  lockfile:
+    name: Lockfile Up to Date
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+
+      # Existing pins are kept, so this only fails when requirements.in changed without regenerating requirements.txt
+      - name: Check requirements.txt matches requirements.in
+        run: |
+          scripts/compile-requirements.sh
+          git diff --exit-code
+
   install-dependencies:
     name: Install Dependencies
     strategy:

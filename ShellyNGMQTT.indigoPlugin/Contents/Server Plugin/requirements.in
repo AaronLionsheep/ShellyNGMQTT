@@ -1,0 +1,11 @@
+# Packages the plugin imports directly, with only the version limits it needs.
+# requirements.txt is generated from this file; don't edit it by hand. After changing this file, run from the repo root:
+#   scripts/compile-requirements.sh
+
+# bthome-ble 3.23.5+ requires cryptography>=49, which doesn't provide wheels for intel macs.
+# Don't upgrade past 3.23.4 until intel mac support can be dropped. Features from newer
+# versions (ex: device info objects 0xF0-0xF2) are backported in shelly/devices/shelly_blu.py.
+bthome-ble<3.23.5
+# cryptography 49.0.0 stopped providing wheels for intel macs
+cryptography<49; sys_platform == 'darwin' and platform_machine == 'x86_64'
+habluetooth

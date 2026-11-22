@@ -20,7 +20,7 @@ BUTTON_TRIGGER_TYPES = {
 }
 
 # BTHome device information objects, matching their definitions in bthome-ble>=3.24.
-# These are not parsed by bthome-ble<3.24, which is required to support intel macs.
+# These are not parsed by bthome-ble 3.23.4, the newest version that supports intel macs.
 DEVICE_INFO_MEAS_TYPES = {
     0xF0: MeasTypes(
         meas_format=None,  # pyright: ignore[reportArgumentType]
