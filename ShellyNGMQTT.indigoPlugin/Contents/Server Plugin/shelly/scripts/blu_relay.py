@@ -31,6 +31,20 @@ class BluRelayScript(ManagedScript):
         """
         return self.script.shelly.device.pluginProps.get("blu-relay", False)
 
+    def started(self):
+        def check_scanning(status, error=None):
+            # Only firmware 2.0+ reports whether Bluetooth is scanning
+            if error or "flags" not in status:
+                return
+
+            if "scanning" not in status["flags"]:
+                self.logger.warning(
+                    f"{self.display_name} script is running on {self.device_name}, but Bluetooth is not scanning. "
+                    "Check that Bluetooth is enabled and see the script's log on the device."
+                )
+
+        self.script.shelly.publish_rpc("BLE.GetStatus", {}, check_scanning)
+
     def handle_notify_event(self, event):
         # Outdated relay scripts are replaced when the device starts or reconnects
         event_data = event.get("data") or {}

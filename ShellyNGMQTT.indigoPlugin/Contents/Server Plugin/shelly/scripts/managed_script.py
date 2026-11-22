@@ -79,6 +79,12 @@ class ManagedScript:
         :param event: The event from the device.
         """
 
+    def started(self):
+        """
+        Called after the script is synced and started. Subclasses override this to
+        check that the script is working.
+        """
+
     def _if_current_generation(self, callback):
         """
         Wrap an RPC callback so it only runs if no newer enable or disable has
@@ -157,6 +163,7 @@ class ManagedScript:
             log(
                 f"{self.display_name} script is synced, running, and configured to run at device boot for {self.device_name}"
             )
+            self.started()
 
         def found(script):
             nonlocal changed
