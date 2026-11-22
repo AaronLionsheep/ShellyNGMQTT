@@ -131,24 +131,29 @@ class System(Component):
         if "last_sync_ts" in status:
             self._last_ntp_sync_ts = status["last_sync_ts"]
 
-        self.shelly.device.updateStatesOnServer(
-            [
-                {"key": "mac-address", "value": status.get("mac", None)},
-                {"key": "uptime", "value": status.get("uptime", None)},
+        # NotifyStatus only carries the fields that changed, so leave the rest
+        states = []
+        if "mac" in status:
+            states.append({"key": "mac-address", "value": status["mac"]})
+        if "uptime" in status:
+            states.append({"key": "uptime", "value": status["uptime"]})
+        if "available_updates" in status:
+            updates = status["available_updates"]
+            states.append(
                 {
                     "key": "available-firmware",
-                    "value": status.get("available_updates", {})
-                    .get("stable", {})
-                    .get("version", None),
-                },
+                    "value": updates.get("stable", {}).get("version", None),
+                }
+            )
+            states.append(
                 {
                     "key": "available-beta-firmware",
-                    "value": status.get("available_updates", {})
-                    .get("beta", {})
-                    .get("version", None),
-                },
-            ]
-        )
+                    "value": updates.get("beta", {}).get("version", None),
+                }
+            )
+
+        if states:
+            self.shelly.device.updateStatesOnServer(states)
 
     def clock_trusted(self) -> bool:
         """
