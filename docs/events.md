@@ -24,6 +24,8 @@ Button events fire when a button or input is pressed. Each one asks for a **Devi
 
 **Long Push vs. Hold Push:** Long Push fires *after* the button is released, if it was held long enough. Hold Push fires *while* the button is still held, as soon as it's been held long enough. Use Hold Push when the action should happen without waiting for the release.
 
+Because Hold Push fires while the button is held, one press can fire two events: Hold Push while the button is held, then Long Push, Long Double Push, or Long Triple Push when it's released. If a button has triggers for both Hold Push and one of the Long events, both run on the same press, so use only one of them for each button.
+
 ### Input Components
 
 Input components on MQTT devices (for example, the Shelly Plus I4 or the switch input on a Shelly Plus 1) fire button events only when the input is set to **Button** mode on the Shelly. In **Switch** mode, use a trigger on the Input device's on/off state instead.
