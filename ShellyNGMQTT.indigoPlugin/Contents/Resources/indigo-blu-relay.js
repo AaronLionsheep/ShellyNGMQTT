@@ -1,24 +1,25 @@
-let BTHOME_SVC_ID = "fcd2";
+let S = BLE.Scanner;
 
-function BLEScanCallback(event, result) {
-  if (event !== BLE.Scanner.SCAN_RESULT) return;
-  if (typeof result !== "object") return;
-  if (!result.service_data || !result.service_data[BTHOME_SVC_ID]) return;
-  let data = { version: 1, address: result.addr, rssi: result.rssi, service_data: {} };
-  data.service_data[BTHOME_SVC_ID] = btoh(result.service_data[BTHOME_SVC_ID]);
-  Shelly.emitEvent("indigo-blu-relay", data);
+// 1.5+ needs a scan request. Before 1.5, Start returns null if another
+// client owns the scan, but Subscribe still gets results.
+function scan() {
+  if (S.Start({ duration_ms: S.INFINITE_SCAN, active: false }) !== null) return;
+  console.log(S.isRunning() ? "BLE scan owned by other client" : "Error: BLE scan failed!");
 }
 
-function init() {
-  if (Shelly.getComponentConfig("ble").enable === false) {
-    console.log("Error: Bluetooth must be enabled!");
-    return;
-  }
-
-  // Always request a scan: the 1.5+ scan manager requires it. Before 1.5,
-  // Start fails if another client owns the scan, but Subscribe still gets its results.
-  BLE.Scanner.Start({ duration_ms: BLE.Scanner.INFINITE_SCAN, active: false });
-  BLE.Scanner.Subscribe(BLEScanCallback);
+function onScan(event, res) {
+  // Before 1.5, another client's scan can stop: rescan
+  if (event === S.SCAN_STOP) return scan();
+  if (event !== S.SCAN_RESULT || typeof res !== "object") return;
+  // fcd2 is the BTHome service UUID
+  let sd = res.service_data;
+  if (!sd || !sd.fcd2) return;
+  Shelly.emitEvent("indigo-blu-relay", { version: 1, address: res.addr, rssi: res.rssi, service_data: { fcd2: btoh(sd.fcd2) } });
 }
 
-init();
+if (Shelly.getComponentConfig("ble").enable === false) {
+  console.log("Error: Bluetooth must be enabled!");
+} else {
+  scan();
+  S.Subscribe(onScan);
+}
