@@ -6,6 +6,7 @@ from ..components.system.mqtt import MQTT
 from ..components.system.script import Script
 from ..components.system.system import System
 from ..components.system.wifi import WiFi
+from ..scripts.blu_relay import BluRelayScript
 from .shelly_mqtt import ShellyMQTT
 
 
@@ -27,6 +28,8 @@ class ShellyPro1(ShellyMQTT):
             "mqtt": MQTT(self),
             "script": Script(self),
         }
+        self.blu_relay = BluRelayScript(self.system_components["script"])
+        self.blu_relay.sync()
 
         self.switch = self.register_component(Switch, "Switch")
         self.input_0 = self.register_component(Input, "Input 1", comp_id=0)
