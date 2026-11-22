@@ -129,23 +129,19 @@ class BLERelayPacket:
 
     @classmethod
     def from_mqtt_event(cls, relay_device_id: int, timestamp: float, event_data: dict):
-        version = int(event_data.get("version", 1))
-        address = ShellyBLU.normalize_address(event_data["address"])
-        rssi = event_data["rssi"]
-        service_data = event_data["service_data"]
-
-        # Convert short BTHome V2 service UUID to the long format
-        if "fcd2" in service_data:
-            service_data[UuidType.V2.value] = service_data.pop("fcd2")
+        service_data = ServiceData()
+        for service, data in event_data["service_data"].items():
+            # Convert short BTHome V2 service UUID to the long format
+            if service == "fcd2":
+                service = UuidType.V2.value
+            service_data[service] = bytes.fromhex(data)
 
         return cls(
-            version=version,
+            version=event_data["version"],
             relay_device_id=relay_device_id,
-            address=address,
-            rssi=rssi,
-            service_data=ServiceData(
-                {service: bytes.fromhex(data) for service, data in service_data.items()}
-            ),
+            address=ShellyBLU.normalize_address(event_data["address"]),
+            rssi=event_data["rssi"],
+            service_data=service_data,
             timestamp=timestamp,
         )
 

@@ -9,6 +9,10 @@ from .managed_script import ManagedScript
 # values are stale (ex: queued while the plugin was not running).
 MAX_BLE_PACKET_AGE = 60.0
 
+# The event name and payload version emitted by indigo-blu-relay.js
+RELAY_EVENT = "indigo-blu-relay"
+RELAY_VERSION = 1
+
 
 class BluRelayScript(ManagedScript):
     """
@@ -28,11 +32,15 @@ class BluRelayScript(ManagedScript):
         return self.script.shelly.device.pluginProps.get("blu-relay", False)
 
     def handle_notify_event(self, event):
-        if event.get("name") != "shelly-blu":
+        # Outdated relay scripts are replaced when the device starts or reconnects
+        event_data = event.get("data") or {}
+        if (
+            event.get("name") != RELAY_EVENT
+            or event_data.get("version") != RELAY_VERSION
+        ):
             return
 
         shelly = self.script.shelly
-        event_data = event.get("data", {})
 
         # The script may still be running if the disable RPCs were missed
         if not self.enabled:

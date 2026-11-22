@@ -6,7 +6,7 @@ function BLEScanCallback(event, result) {
   if (!result.service_data || !result.service_data[BTHOME_SVC_ID]) return;
   let data = { version: 1, address: result.addr, rssi: result.rssi, service_data: {} };
   data.service_data[BTHOME_SVC_ID] = btoh(result.service_data[BTHOME_SVC_ID]);
-  Shelly.emitEvent("shelly-blu", data);
+  Shelly.emitEvent("indigo-blu-relay", data);
 }
 
 function init() {
