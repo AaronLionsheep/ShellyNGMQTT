@@ -229,7 +229,14 @@ class ShellyMQTT(Shelly):
 
         if topic == f"{self.get_address()}/online":
             is_online = payload == "true"
+            was_online = self.device.states.get("online", False)
             self.device.updateStateOnServer(key="online", value=is_online)
+
+            # Script RPCs are lost while the device is offline, so re-sync on reconnect
+            script = self.system_components.get("script")
+            if script and is_online and not was_online:
+                for managed_script in script.managed_scripts:
+                    managed_script.sync()
         elif topic == f"{self.get_address()}/rpc":
             rpc = json.loads(payload)
             # Only process a response, which does not have a method
