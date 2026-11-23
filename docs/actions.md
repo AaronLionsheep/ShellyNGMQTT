@@ -9,7 +9,7 @@ These are Indigo's built-in actions, found under **Device Actions** when you add
 | Component | Turn On | Turn Off | Toggle | Set Brightness | Brighten By / Dim By |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | Switch | :white_check_mark: | :white_check_mark: | :white_check_mark: | :heavy_minus_sign: | :heavy_minus_sign: |
-| Light | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| Light | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Cover | Open | Close | :white_check_mark: | Set position | Move by |
 
 :white_check_mark: means supported, :x: means not supported yet (see [Not Supported](#not-supported)), and :heavy_minus_sign: means the action doesn't apply to that component.
