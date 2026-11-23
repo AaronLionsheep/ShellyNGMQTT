@@ -35,10 +35,10 @@ In the tables below:
 | [Shelly Pro 1](https://kb.shelly.cloud/knowledge-base/shelly-pro-1) | 0.3.0 | 1 Switch, 2 Inputs | :heavy_minus_sign: | :white_check_mark: |
 | [Shelly Pro 1 PM](https://kb.shelly.cloud/knowledge-base/shelly-pro-1pm) | 0.3.0 | 1 Switch, 2 Inputs | :white_check_mark: | :white_check_mark: |
 | [Shelly Pro 2](https://kb.shelly.cloud/knowledge-base/shelly-pro-2) | 0.3.0 | 2 Switches, 2 Inputs | :heavy_minus_sign: | :white_check_mark: |
-| [Shelly Pro 2 PM](https://kb.shelly.cloud/knowledge-base/shelly-pro-2pm) | 0.3.0 | 2 Switches, 2 Inputs | :white_check_mark: | :white_check_mark: |
+| [Shelly Pro 2 PM](https://kb.shelly.cloud/knowledge-base/shelly-pro-2pm) | 0.3.0 | 2 Switches and 2 Inputs, or 1 Cover and 2 Inputs | :white_check_mark: | :white_check_mark: |
 | [Shelly Pro 4 PM](https://kb.shelly.cloud/knowledge-base/shelly-pro-4pm) | 1.1.0 | 4 Switches, 4 Inputs | :white_check_mark: | :white_check_mark: |
 
-- **Shelly Plus 2 PM:** choose the **Switch** or **Cover (Roller/Shutter)** profile in the device settings, matching the profile set on the Shelly. Use Cover for roller shutters, blinds, and garage doors. The Cover profile requires plugin version 1.4.0 or later.
+- **Shelly Plus 2 PM / Shelly Pro 2 PM:** choose the **Switch** or **Cover (Roller/Shutter)** profile in the device settings, matching the profile set on the Shelly. Use Cover for roller shutters, blinds, and garage doors. The Cover profile requires plugin version 1.4.0 or later.
 - **Shelly Plus H&T:** battery powered. It sleeps between readings, so it only reports when it wakes up, and it can't act as a BLU gateway.
 
 ### Gen3
