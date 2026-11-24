@@ -642,6 +642,12 @@ class Plugin(indigo.PluginBase):
             verified_devices[model]["verified_by"]
         )
 
+        # Indigo matches visibleBindingValue lists by substring, so "shelly-pro-2" would match "shelly-pro-2-pm"
+        model_class = shelly_model_classes.get(model)
+        valuesDict["supports-cover-profile"] = bool(
+            model_class and model_class.supports_cover_profile
+        )
+
         return valuesDict
 
     def validateDeviceConfigUi(self, values_dict, type_id, dev_id):

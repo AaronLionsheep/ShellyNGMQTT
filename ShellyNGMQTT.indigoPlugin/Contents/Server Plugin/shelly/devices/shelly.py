@@ -18,6 +18,8 @@ class Shelly:
     """
 
     display_name = "ShellyBase"
+    supports_cover_profile = False
+    """Whether the device factory offers the cover (roller/shutter) profile"""
 
     def __init__(self, device_id):
         """Create a new Shelly device.

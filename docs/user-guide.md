@@ -87,7 +87,7 @@ Leave the two age settings blank to use the defaults. See [BLU Relay](blu-relay.
    - **MQTT devices:** choose the **MQTT Broker** device, enter the Shelly's full topic prefix as the **Base MQTT Topic** (for example `shellies-ng/shellyplugusg4-acebe6f78ecc`), and enter the **Message Type** from your MQTT Connector trigger (`shellies-ng`).
    - **BLU devices:** choose the device from **Discovered MAC Addresses**, or type its **MAC Address**. Discovered addresses come from your BLU gateways; click **Refresh** if the device isn't listed yet, and press its button to make it broadcast. See [BLU Relay](blu-relay.md#setting-up-a-gateway).
 4. Enter an **Initial Name**, like `Kitchen Light`. The plugin names the main device with it, and names each component device after it, like `Kitchen Light Switch` and `Kitchen Light Input`.
-5. **Shelly Plus 2 PM only:** choose the **Device Profile**, **Switch** or **Cover (Roller/Shutter)**, matching the profile set on the Shelly.
+5. **Shelly Plus 2 PM and Pro 2 PM only:** choose the **Device Profile**, **Switch** or **Cover (Roller/Shutter)**, matching the profile set on the Shelly.
 6. Click **Submit**.
 
 Some models are added from Shelly's API documentation before anyone has tried them on a real device. For these, the dialog shows an orange warning when you choose the model, and the plugin logs a warning each time the device starts. They usually work, but if one doesn't, please [report it](reporting-bugs.md). Models that someone has confirmed work show a green note saying they've been verified by the community instead.
