@@ -30,7 +30,16 @@
   },
   "shelly-blu-motion": {
     "name": "Shelly BLU Motion",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "cuhouse",
+        "indigo_username": "CUHouse",
+        "anonymous": false,
+        "firmware": "1.0.23.0",
+        "plugin_version": "1.4.3",
+        "issue": 166
+      }
+    ]
   },
   "shelly-blu-motion-zb": {
     "name": "Shelly BLU Motion ZB",
