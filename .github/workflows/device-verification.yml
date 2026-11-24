@@ -68,6 +68,8 @@ jobs:
           if [ -z "$url" ]; then
             url=$(gh pr create --base "${{ github.event.repository.default_branch }}" --head "$BRANCH" \
               --title "chore(device): verify $MODEL" \
+              --reviewer "${{ github.repository_owner }}" \
+              --assignee "${{ github.repository_owner }}" \
               --body "Adds the $MODEL verification from #$ISSUE_NUMBER to \`verified_devices.json\`.
 
           Checks don't run on pull requests opened by GitHub Actions. Close and reopen this pull request to run them before merging.
