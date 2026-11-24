@@ -6,17 +6,17 @@ To use one, create a new trigger in Indigo, set **Type** to **ShellyNGMQTT Event
 
 ## Button Events
 
-Button events fire when a button or input is pressed. Each one asks for a **Device** and a **Button**. Most devices have a single button; the Shelly BLU RC Button 4, RC Button 4 ZB, and Wall Switch 4 ZB have buttons 1-4.
+Button events fire when a button or input is pressed. Each one asks for a **Device** and a **Button**. Most devices have a single button; the Shelly BLU RC Button 4, RC Button 4 ZB, Wall Switch 4, and Wall Switch 4 ZB have buttons 1-4.
 
 | Event | Fires when | Input components | BLU devices |
 | --- | --- | :---: | --- |
 | Button Down | A button is pressed down | :white_check_mark: | :heavy_minus_sign: |
 | Button Up | A button is released | :white_check_mark: | :heavy_minus_sign: |
 | Single Push | A button is pressed once | :white_check_mark: | All |
-| Double Push | A button is pressed twice quickly | :white_check_mark: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB |
-| Triple Push | A button is pressed three times quickly | :white_check_mark: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB |
-| Long Push | A button is held, then released | :white_check_mark: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB |
-| Hold Push | A button has been held long enough, while it's still held | :heavy_minus_sign: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB, Door/Window, Motion, H&T |
+| Double Push | A button is pressed twice quickly | :white_check_mark: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4, Wall Switch 4 ZB |
+| Triple Push | A button is pressed three times quickly | :white_check_mark: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4, Wall Switch 4 ZB |
+| Long Push | A button is held, then released | :white_check_mark: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4, Wall Switch 4 ZB |
+| Hold Push | A button has been held long enough, while it's still held | :heavy_minus_sign: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4, Wall Switch 4 ZB, Door/Window, Motion, H&T |
 | Long Double Push | A button is pressed once, then pressed and held | :heavy_minus_sign: | Button Tough 1 ZB, RC Button 4 ZB, Wall Switch 4 ZB |
 | Long Triple Push | A button is pressed twice, then pressed and held | :heavy_minus_sign: | Button Tough 1 ZB, RC Button 4 ZB, Wall Switch 4 ZB |
 

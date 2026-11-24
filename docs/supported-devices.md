@@ -83,6 +83,7 @@ Encrypted BLU devices aren't supported yet, so leave encryption turned off on BL
 | --- | :---: | --- | --- | --- | :---: | --- |
 | [Shelly BLU Button1](https://kb.shelly.cloud/knowledge-base/shellyblu-button1) | 1.2.0 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 1 | :heavy_minus_sign: |
 | [Shelly BLU RC Button 4](https://kb.shelly.cloud/knowledge-base/shelly-blu-rc-button-4-us) | 1.4.0 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 4 | :heavy_minus_sign: |
+| [Shelly BLU Wall Switch 4](https://kb.shelly.cloud/knowledge-base/shelly-blu-wall-switch-4) | 1.5.0 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 4 | :heavy_minus_sign: |
 | [Shelly BLU Door/Window](https://kb.shelly.cloud/knowledge-base/shellyblu-door-window) | 1.2.0 | Open/closed | :heavy_minus_sign: | Illuminance, rotation (tilt angle) | 1 | :heavy_minus_sign: |
 | [Shelly BLU Motion](https://kb.shelly.cloud/knowledge-base/shellyblu-motion) | 1.4.0 | Motion detected | :heavy_minus_sign: | Illuminance | 1 | :heavy_minus_sign: |
 | [Shelly BLU H&T](https://kb.shelly.cloud/knowledge-base/shelly-blu-h-t) | 1.4.0 | :heavy_minus_sign: | Temperature | Temperature, humidity | 1 | Temperature unit (°F/°C), temperature offset |
@@ -142,6 +143,7 @@ If a model works for you, report it with **Plugins → ShellyNGMQTT → Report D
 | Shelly BLU Motion ZB | :white_check_mark: Verified | [cuhouse](https://github.com/cuhouse) ([CUHouse](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=CUHouse)) |
 | Shelly BLU RC Button 4 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly BLU RC Button 4 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+RC+Button+4+ZB&model=Shelly+BLU+RC+Button+4+ZB) |
+| Shelly BLU Wall Switch 4 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Wall+Switch+4&model=Shelly+BLU+Wall+Switch+4) |
 | Shelly BLU Wall Switch 4 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Wall+Switch+4+ZB&model=Shelly+BLU+Wall+Switch+4+ZB) |
 | Shelly Plus 1 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus 1 PM | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
