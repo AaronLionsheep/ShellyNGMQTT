@@ -41,6 +41,7 @@
                         self.shelly-blu-rc-button-4-zb,
                         self.shelly-blu-wall-switch-4-zb,
                         self.shelly-blu-distance,
+                        self.shelly-blu-ht-zb,
                         self.shelly-blu-doorwindow,
                         self.shelly-blu-doorwindow-zb,
                         self.shelly-blu-motion,
