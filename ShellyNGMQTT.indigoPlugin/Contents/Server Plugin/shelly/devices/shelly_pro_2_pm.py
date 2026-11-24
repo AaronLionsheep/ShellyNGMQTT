@@ -17,6 +17,7 @@ class ShellyPro2PM(ShellyMQTT):
     """
 
     display_name = "Shelly Pro 2 PM"
+    supports_cover_profile = True
 
     def __init__(self, device_id):
         super().__init__(device_id)

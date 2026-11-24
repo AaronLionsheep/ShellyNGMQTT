@@ -66,6 +66,7 @@
 
 			<Field id="is-mqtt-model" type="checkbox" defaultValue="true" hidden="true" />
 			<Field id="is-blu-model" type="checkbox" defaultValue="false" hidden="true" />
+			<Field id="supports-cover-profile" type="checkbox" defaultValue="false" hidden="true" />
 
 			<Field id="broker-id" type="menu" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
 				<Label>MQTT Broker:</Label>
@@ -122,10 +123,10 @@
 				</Label>
 			</Field>
 
-			<Field id="model-specific-sep" type="separator" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm"/>
+			<Field id="model-specific-sep" type="separator" visibleBindingId="supports-cover-profile" visibleBindingValue="true"/>
 
 			<!-- Shelly Plus 2 PM / Shelly Pro 2 PM-->
-			<Field id="profile" type="menu" defaultValue="switch" visibleBindingId="shelly-model" visibleBindingValue="shelly-plus-2-pm,shelly-pro-2-pm" alwaysUseInDialogHeightCalc="true">
+			<Field id="profile" type="menu" defaultValue="switch" visibleBindingId="supports-cover-profile" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
 				<Label>Device Profile:</Label>
 				<List>
 					<Option value="switch">Switch</Option>

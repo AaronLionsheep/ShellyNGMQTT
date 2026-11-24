@@ -444,6 +444,26 @@ class TestDeviceFactoryModelChanged:
         assert values_dict["is-mqtt-model"] is True
         assert values_dict["is-blu-model"] is False
 
+    @pytest.mark.parametrize("model", ["shelly-plus-2-pm", "shelly-pro-2-pm"])
+    def test_cover_model_shows_profile(self, plugin, model):
+        """Models that can run as a cover offer the device profile menu"""
+        values_dict = plugin.deviceFactoryModelChanged(
+            indigo.Dict({"shelly-model": model}), "", 0
+        )
+
+        assert values_dict["supports-cover-profile"] is True
+
+    @pytest.mark.parametrize(
+        "model", ["shelly-pro-2", "shelly-plus-1", "shelly-blu-ht", ""]
+    )
+    def test_non_cover_model_hides_profile(self, plugin, model):
+        """The Pro 2 has no cover mode, so it can't be set up with the cover profile (issue #173)"""
+        values = indigo.Dict({"shelly-model": model, "supports-cover-profile": True})
+
+        values_dict = plugin.deviceFactoryModelChanged(values, "", 0)
+
+        assert values_dict["supports-cover-profile"] is False
+
     def test_other_values_kept(self, plugin):
         """Changing the model keeps the other values already entered"""
         values = indigo.Dict({"shelly-model": "shelly-blu-ht", "mac-address": "abc"})
