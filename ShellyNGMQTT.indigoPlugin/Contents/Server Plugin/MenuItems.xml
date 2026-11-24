@@ -19,7 +19,7 @@
         <ConfigUI>
             <Field id="device-id" type="menu">
                 <Label>Device:</Label>
-                <List class="self" method="get_shelly_devices" dynamicReload="true"/>
+                <List class="self" method="get_shelly_devices_for_verification" dynamicReload="true"/>
             </Field>
             <Field id="device-id-help" type="label" fontColor="darkgray" fontSize="small" alignWithControl="true">
                 <Label>Logs a pre-filled GitHub link to report the model works with this plugin version.</Label>

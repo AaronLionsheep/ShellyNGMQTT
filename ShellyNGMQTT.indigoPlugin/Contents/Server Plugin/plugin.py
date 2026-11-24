@@ -863,6 +863,43 @@ class Plugin(indigo.PluginBase):
         _shellies.sort(key=lambda d: d[1])
         return _shellies
 
+    def get_shelly_devices_for_verification(
+        self, filter="", valuesDict=None, typeId="", targetId=0
+    ):
+        """
+        List the started Shelly devices for the verification menu item, with
+        unverified models first so they're quick to find.
+
+        Each device shows its model, since one report covers every device of
+        that model. An em dash separates them because device names often
+        contain parentheses.
+
+        :return: The menu items.
+        """
+        unverified = []
+        verified = []
+        for shelly in sorted(
+            self.shellies.values(), key=lambda s: s.device.name.lower()
+        ):
+            item = (
+                str(shelly.device.id),
+                f"{shelly.device.name} — {shelly.display_name}",
+            )
+            if verified_devices[shelly.device.deviceTypeId]["verified_by"]:
+                verified.append(item)
+            else:
+                unverified.append(item)
+
+        return [
+            ("none", "%%disabled:Unverified Models%%"),
+            ("none", "%%separator%%"),
+            *(unverified or [("none", "%%disabled:None%%")]),
+            ("none", "%%disabled: %%"),
+            ("none", "%%disabled:Community Verified Models%%"),
+            ("none", "%%separator%%"),
+            *(verified or [("none", "%%disabled:None%%")]),
+        ]
+
     def report_device_verification(self, values_dict, menu_item_id):
         """
         Log a link to a device verification issue for the selected device, and
@@ -872,7 +909,8 @@ class Plugin(indigo.PluginBase):
         :param menu_item_id: The menu item id.
         :return: True to close the dialog, or a tuple with errors to keep it open.
         """
-        shelly = self.shellies.get(int(values_dict.get("device-id") or 0))
+        device_id = values_dict.get("device-id", "")
+        shelly = self.shellies.get(int(device_id)) if device_id.isdigit() else None
         if shelly is None:
             errors = indigo.Dict({"device-id": "You must select a device."})
             return False, values_dict, errors

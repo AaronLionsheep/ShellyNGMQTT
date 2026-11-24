@@ -491,13 +491,30 @@ class TestDeviceFactoryModelChanged:
 
 
 class TestReportDeviceVerification:
-    @pytest.mark.parametrize("values", [{}, {"device-id": ""}, {"device-id": "123"}])
+    @pytest.mark.parametrize(
+        "values",
+        [{}, {"device-id": ""}, {"device-id": "none"}, {"device-id": "123"}],
+    )
     def test_no_started_device(self, plugin, values):
-        """A device must be chosen, and it must be a started Shelly the plugin knows"""
+        """A device must be chosen, and menu headers or unknown ids don't count"""
         result = plugin.report_device_verification(indigo.Dict(values), "")
 
         assert result[0] is False
         assert result[2] == {"device-id": "You must select a device."}
+
+
+class TestGetShellyDevicesForVerification:
+    def test_no_devices(self, plugin):
+        """Both sections show a disabled "None" until a Shelly device has started"""
+        assert plugin.get_shelly_devices_for_verification() == [
+            ("none", "%%disabled:Unverified Models%%"),
+            ("none", "%%separator%%"),
+            ("none", "%%disabled:None%%"),
+            ("none", "%%disabled: %%"),
+            ("none", "%%disabled:Community Verified Models%%"),
+            ("none", "%%separator%%"),
+            ("none", "%%disabled:None%%"),
+        ]
 
 
 class TestGetDiscoveredBluAddresses:
