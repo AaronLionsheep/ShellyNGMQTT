@@ -58,7 +58,7 @@
 			</Field>
 
 			<Field id="is-verified-model" type="checkbox" defaultValue="true" hidden="true" />
-			<Field id="verified-model-note" type="label" fontColor="green" visibleBindingId="is-verified-model" visibleBindingValue="true">
+			<Field id="verified-model-note" type="label" fontColor="green" alignWithControl="true" visibleBindingId="is-verified-model" visibleBindingValue="true">
 				<Label>Verified on a real device by the community.</Label>
 			</Field>
 			<Field id="unverified-model-warning" type="label" fontColor="orange" visibleBindingId="is-verified-model" visibleBindingValue="false">
