@@ -51,7 +51,7 @@
 					<Option value="shelly-blu-ht-zb">Shelly BLU H&amp;T ZB</Option>
 					<Option value="shelly-blu-motion-zb">Shelly BLU Motion ZB</Option>
 					<Option value="shelly-blu-rc-button-4-zb">Shelly BLU RC Button 4 ZB</Option>
-					<Option value="-1">%%disabled:Shelly BLU Remote Control ZB (Not available)%%</Option>
+					<Option value="shelly-blu-remote-control-zb">Shelly BLU Remote Control ZB</Option>
 					<Option value="-1">%%disabled:Shelly BLU TRV (Not available)%%</Option>
 					<Option value="shelly-blu-wall-switch-4-zb">Shelly BLU Wall Switch 4 ZB</Option>
 				</List>
@@ -1193,6 +1193,17 @@
 
 	<Device type="sensor" id="shelly-blu-button-tough-1-zb">
 		<Name>Shelly BLU Button Tough 1 ZB</Name>
+		<ConfigUI>
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
+		</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Binary" id="shelly-blu-remote-control-zb">
+		<Name>Shelly BLU Remote Control ZB</Name>
 		<ConfigUI>
 			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
 				<Label>No configuration options are available for this device.</Label>

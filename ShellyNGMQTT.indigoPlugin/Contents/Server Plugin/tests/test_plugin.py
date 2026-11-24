@@ -398,7 +398,13 @@ class TestValidateDeviceConfigUi:
 
 class TestDeviceFactoryModelChanged:
     @pytest.mark.parametrize(
-        "model", ["shelly-blu-ht", "shelly-blu-button1", "shelly-blu-rc-button-4"]
+        "model",
+        [
+            "shelly-blu-ht",
+            "shelly-blu-button1",
+            "shelly-blu-rc-button-4",
+            "shelly-blu-remote-control-zb",
+        ],
     )
     def test_blu_model(self, plugin, model):
         """BLU models show the MAC address fields instead of the MQTT fields"""
