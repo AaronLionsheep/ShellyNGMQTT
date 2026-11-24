@@ -75,6 +75,10 @@
     "name": "Shelly BLU RC Button 4 ZB",
     "verified_by": []
   },
+  "shelly-blu-wall-switch-4-zb": {
+    "name": "Shelly BLU Wall Switch 4 ZB",
+    "verified_by": []
+  },
   "shelly-plus-1": {
     "name": "Shelly Plus 1",
     "verified_by": [
