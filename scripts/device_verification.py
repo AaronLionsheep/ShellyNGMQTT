@@ -6,10 +6,15 @@ ISSUE_BODY, ISSUE_AUTHOR, and ISSUE_NUMBER environment variables:
     python3 scripts/device_verification.py > comment.md
 
 It prints a Markdown comment for the issue. When the report is valid, it also adds
-the verification to verified_devices.json. It writes valid=true|false and the model
-name to GITHUB_OUTPUT for the workflow's later steps.
+the verification to verified_devices.json and regenerates the Community
+Verifications table in docs/supported-devices.md. It writes valid=true|false and
+the model name to GITHUB_OUTPUT for the workflow's later steps.
 
 The issue body is untrusted user input, so it's only ever read from the environment.
+
+After editing verified_devices.json by hand, regenerate the docs table with:
+
+    python3 scripts/device_verification.py --docs
 """
 
 import json
@@ -18,14 +23,24 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import urlencode
 
+REPO = Path(__file__).resolve().parent.parent
 REGISTRY = (
-    Path(__file__).resolve().parent.parent
+    REPO
     / "ShellyNGMQTT.indigoPlugin"
     / "Contents"
     / "Resources"
     / "verified_devices.json"
 )
+DOCS = REPO / "docs" / "supported-devices.md"
+
+# The generated table in DOCS sits between these markers
+DOCS_START = "<!-- Generated from verified_devices.json by scripts/device_verification.py --docs. Don't edit by hand. -->"
+DOCS_END = "<!-- End of generated table -->"
+
+FORM_URL = "https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new"
+FORUM_PROFILE_URL = "https://forums.indigodomo.com/memberlist.php"
 
 # GitHub fills fields left empty in an issue form with this placeholder
 NO_RESPONSE = "_No response_"
@@ -217,7 +232,94 @@ class Verification:
         )
 
 
-def main() -> int:
+def markdown_text(text: str) -> str:
+    """Escape the characters that would change how text renders in a Markdown link."""
+    return re.sub(r"([\\\[\]*_`])", r"\\\1", text)
+
+
+def verifier_credit(entry: dict) -> str:
+    """
+    Credit a verifier by name, linked to their profiles.
+
+    :param entry: A non-anonymous entry from a model's verified_by list.
+    :return: The GitHub username linked to their profile, followed by their Indigo
+        forum username in parentheses when both are known.
+    """
+    forum = None
+    if entry["indigo_username"]:
+        query = urlencode({"mode": "viewprofile", "un": entry["indigo_username"]})
+        forum = (
+            f"[{markdown_text(entry['indigo_username'])}]({FORUM_PROFILE_URL}?{query})"
+        )
+    if not entry["github_username"]:
+        return forum
+    github = (
+        f"[{entry['github_username']}](https://github.com/{entry['github_username']})"
+    )
+    return f"{github} ({forum})" if forum else github
+
+
+def verification_table(registry: dict) -> str:
+    """
+    A Markdown table of every model's verification status, sorted by model name.
+
+    Anonymous verifications count toward a model being verified, but are only
+    shown as a count.
+
+    :param registry: The verified device registry.
+    :return: The table.
+    """
+    lines = ["| Model | Status | Verified by |", "| --- | --- | --- |"]
+    for model in sorted(registry.values(), key=lambda model: model["name"]):
+        name = markdown_text(model["name"])
+        verified_by = model["verified_by"]
+        if not verified_by:
+            query = urlencode(
+                {
+                    "template": "device-verification.yml",
+                    "title": f"Verify {model['name']}",
+                    "model": model["name"],
+                }
+            )
+            lines.append(
+                f"| {name} | :warning: Not yet verified | [Report it]({FORM_URL}?{query}) |"
+            )
+            continue
+
+        credit = ", ".join(
+            verifier_credit(entry) for entry in verified_by if not entry["anonymous"]
+        )
+        anonymous = sum(entry["anonymous"] for entry in verified_by)
+        if anonymous:
+            credit = (
+                f"{credit} and {anonymous} anonymous"
+                if credit
+                else f"{anonymous} anonymous"
+            )
+        lines.append(f"| {name} | :white_check_mark: Verified | {credit} |")
+    return "\n".join(lines)
+
+
+def with_verification_table(docs: str, registry: dict) -> str:
+    """
+    Replace the generated table in the docs page.
+
+    :param docs: The page's Markdown, with the DOCS_START and DOCS_END markers.
+    :param registry: The verified device registry.
+    :return: The page with a regenerated table.
+    :raises ValueError: If a marker is missing.
+    """
+    start = docs.index(DOCS_START) + len(DOCS_START)
+    end = docs.index(DOCS_END)
+    return f"{docs[:start]}\n\n{verification_table(registry)}\n\n{docs[end:]}"
+
+
+def main(argv: list[str]) -> int:
+    if argv[1:] == ["--docs"]:
+        registry = json.loads(REGISTRY.read_text())
+        DOCS.write_text(with_verification_table(DOCS.read_text(), registry))
+        return 0
+
     verification = Verification.from_issue(
         os.environ["ISSUE_BODY"],
         os.environ["ISSUE_AUTHOR"],
@@ -230,6 +332,7 @@ def main() -> int:
     if valid:
         verification.add_to(registry)
         REGISTRY.write_text(json.dumps(registry, indent=2, ensure_ascii=False) + "\n")
+        DOCS.write_text(with_verification_table(DOCS.read_text(), registry))
 
     if "GITHUB_OUTPUT" in os.environ:
         with open(os.environ["GITHUB_OUTPUT"], "a") as f:
@@ -241,4 +344,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv))

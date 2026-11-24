@@ -426,6 +426,184 @@ class TestSummary:
         assert "| Model |" not in summary
 
 
+class TestMarkdownText:
+    @pytest.mark.parametrize(
+        ("text", "escaped"),
+        [
+            ("Forum Name", "Forum Name"),
+            ("snake_case", r"snake\_case"),
+            ("*bold*", r"\*bold\*"),
+            ("[link]", r"\[link\]"),
+            ("back\\slash", r"back\\slash"),
+            ("`code`", r"\`code\`"),
+        ],
+    )
+    def test_escapes(self, text, escaped):
+        """Names can't turn into emphasis, links, or code in the docs table"""
+        assert device_verification.markdown_text(text) == escaped
+
+
+class TestVerifierCredit:
+    def test_github_and_forum(self):
+        """Both usernames link to their profiles, with the forum name in parentheses"""
+        entry = make_entry(github_username="tester", indigo_username="Forum Name")
+
+        assert device_verification.verifier_credit(entry) == (
+            "[tester](https://github.com/tester) "
+            "([Forum Name](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=Forum+Name))"
+        )
+
+    def test_github_only(self):
+        """Without a forum username, only the GitHub profile is linked"""
+        entry = make_entry(github_username="tester")
+
+        assert device_verification.verifier_credit(entry) == (
+            "[tester](https://github.com/tester)"
+        )
+
+    def test_forum_only(self):
+        """Forum users filed for by someone else are linked to their forum profile"""
+        entry = make_entry(indigo_username="Forum Name")
+
+        assert device_verification.verifier_credit(entry) == (
+            "[Forum Name](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=Forum+Name)"
+        )
+
+    def test_forum_name_escaped(self):
+        """Forum names are escaped in the link text and encoded in the URL"""
+        entry = make_entry(indigo_username="a_b & c")
+
+        assert device_verification.verifier_credit(entry) == (
+            r"[a\_b & c](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=a_b+%26+c)"
+        )
+
+
+class TestVerificationTable:
+    def rows(self, registry):
+        """The table's rows, without the header and divider."""
+        return device_verification.verification_table(registry).split("\n")[2:]
+
+    def test_header(self):
+        """The table has model, status, and verifier columns"""
+        table = device_verification.verification_table({})
+
+        assert table == "| Model | Status | Verified by |\n| --- | --- | --- |"
+
+    def test_sorted_by_name(self):
+        """Models are listed alphabetically, not in registry order"""
+        rows = self.rows(make_registry())
+
+        assert rows[0].startswith("| Shelly Plus 1 |")
+        assert rows[1].startswith("| Shelly Pro 2 |")
+
+    def test_unverified(self):
+        """Unverified models link to a pre-filled verification form"""
+        registry = {"shelly-blu-ht": {"name": "Shelly BLU H&T", "verified_by": []}}
+
+        assert self.rows(registry) == [
+            (
+                "| Shelly BLU H&T | :warning: Not yet verified | [Report it]("
+                "https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml"
+                "&title=Verify+Shelly+BLU+H%26T&model=Shelly+BLU+H%26T) |"
+            )
+        ]
+
+    def test_verified(self):
+        """Verified models credit each verifier, in the order they verified"""
+        registry = {
+            "shelly-pro-2": {
+                "name": "Shelly Pro 2",
+                "verified_by": [
+                    make_entry(github_username="first"),
+                    make_entry(github_username="second"),
+                ],
+            }
+        }
+
+        assert self.rows(registry) == [
+            (
+                "| Shelly Pro 2 | :white_check_mark: Verified | [first](https://github.com/first), "
+                "[second](https://github.com/second) |"
+            )
+        ]
+
+    def test_anonymous_counted(self):
+        """Anonymous verifiers are counted after the named ones, never named"""
+        registry = {
+            "shelly-pro-2": {
+                "name": "Shelly Pro 2",
+                "verified_by": [
+                    make_entry(github_username="named"),
+                    make_entry(github_username="hidden", anonymous=True),
+                    make_entry(github_username="also-hidden", anonymous=True),
+                ],
+            }
+        }
+
+        (row,) = self.rows(registry)
+
+        assert row.endswith("[named](https://github.com/named) and 2 anonymous |")
+        assert "hidden" not in row
+
+    def test_only_anonymous(self):
+        """A model verified only anonymously is still verified"""
+        registry = {
+            "shelly-pro-2": {
+                "name": "Shelly Pro 2",
+                "verified_by": [make_entry(github_username="hidden", anonymous=True)],
+            }
+        }
+
+        assert self.rows(registry) == [
+            "| Shelly Pro 2 | :white_check_mark: Verified | 1 anonymous |"
+        ]
+
+
+class TestWithVerificationTable:
+    def page(self, table=""):
+        """A docs page with the generated table between its markers."""
+        return (
+            f"# Title\n\n{device_verification.DOCS_START}{table}"
+            f"{device_verification.DOCS_END}\nAfter\n"
+        )
+
+    def test_inserts_table(self):
+        """The table goes between the markers, with blank lines so it renders as a table"""
+        table = device_verification.verification_table(make_registry())
+
+        assert device_verification.with_verification_table(
+            self.page(), make_registry()
+        ) == self.page(f"\n\n{table}\n\n")
+
+    def test_replaces_table(self):
+        """Regenerating replaces the old table instead of adding another"""
+        once = device_verification.with_verification_table(self.page(), {})
+
+        twice = device_verification.with_verification_table(once, make_registry())
+
+        assert twice == device_verification.with_verification_table(
+            self.page(), make_registry()
+        )
+
+    @pytest.mark.parametrize(
+        "page", ["# No markers\n", f"{device_verification.DOCS_START}\n"]
+    )
+    def test_missing_markers(self, page):
+        """A page without both markers raises instead of being overwritten"""
+        with pytest.raises(ValueError):
+            device_verification.with_verification_table(page, {})
+
+
+def test_docs_up_to_date():
+    """The docs table matches verified_devices.json, so hand edits to either are caught"""
+    registry = json.loads(device_verification.REGISTRY.read_text())
+    docs = device_verification.DOCS.read_text()
+
+    assert device_verification.with_verification_table(docs, registry) == docs, (
+        "Run: python3 scripts/device_verification.py --docs"
+    )
+
+
 class TestMain:
     @pytest.fixture
     def registry_file(self, tmp_path, monkeypatch):
@@ -433,6 +611,17 @@ class TestMain:
         path = tmp_path / "verified_devices.json"
         path.write_text(json.dumps(make_registry()))
         monkeypatch.setattr(device_verification, "REGISTRY", path)
+        return path
+
+    @pytest.fixture(autouse=True)
+    def docs_file(self, tmp_path, monkeypatch):
+        """A docs page the script writes instead of the real one"""
+        path = tmp_path / "supported-devices.md"
+        path.write_text(
+            f"# Page\n{device_verification.DOCS_START}\n"
+            f"{device_verification.DOCS_END}\n"
+        )
+        monkeypatch.setattr(device_verification, "DOCS", path)
         return path
 
     @pytest.fixture
@@ -453,14 +642,18 @@ class TestMain:
 
         return _issue
 
-    def test_valid(self, registry_file, output, issue, capsys):
-        """Valid reports print the summary, update the registry, and output the model"""
+    def test_valid(self, registry_file, docs_file, output, issue, capsys):
+        """Valid reports print the summary, update the registry and docs, and output the model"""
         issue()
 
-        assert device_verification.main() == 0
+        assert device_verification.main(["script"]) == 0
         assert "| Model | Shelly Pro 2 (`shelly-pro-2`) |" in capsys.readouterr().out
         registry = json.loads(registry_file.read_text())
         assert registry["shelly-pro-2"]["verified_by"][0]["github_username"] == "tester"
+        assert (
+            "| Shelly Pro 2 | :white_check_mark: Verified | [tester]"
+            in docs_file.read_text()
+        )
         assert output.read_text() == "valid=true\nmodel=Shelly Pro 2\n"
 
     def test_summary_counts_earlier_verifications(
@@ -469,17 +662,19 @@ class TestMain:
         """The summary describes the registry before this report is added"""
         issue()
 
-        device_verification.main()
+        device_verification.main(["script"])
 
         assert "first verification" in capsys.readouterr().out
 
-    def test_invalid(self, registry_file, output, issue, capsys):
-        """Invalid reports print the problems and leave the registry unchanged"""
+    def test_invalid(self, registry_file, docs_file, output, issue, capsys):
+        """Invalid reports print the problems and leave the registry and docs unchanged"""
+        docs = docs_file.read_text()
         issue(tested="_No response_")
 
-        assert device_verification.main() == 0
+        assert device_verification.main(["script"]) == 0
         assert "Please describe what you tested." in capsys.readouterr().out
         assert json.loads(registry_file.read_text()) == make_registry()
+        assert docs_file.read_text() == docs
         assert output.read_text() == "valid=false\n"
 
     def test_keeps_unicode_and_format(self, registry_file, issue, monkeypatch):
@@ -487,8 +682,18 @@ class TestMain:
         monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
         issue(indigo_username="Jürgen")
 
-        assert device_verification.main() == 0
+        assert device_verification.main(["script"]) == 0
         text = registry_file.read_text()
         assert '"indigo_username": "Jürgen"' in text
         assert text.endswith("}\n")
         assert text.startswith('{\n  "shelly-pro-2"')
+
+    def test_docs_only(self, registry_file, docs_file, monkeypatch):
+        """--docs regenerates the table from the registry without an issue"""
+        monkeypatch.delenv("ISSUE_BODY", raising=False)
+
+        assert device_verification.main(["script", "--docs"]) == 0
+        assert (
+            "| Shelly Plus 1 | :white_check_mark: Verified |" in docs_file.read_text()
+        )
+        assert json.loads(registry_file.read_text()) == make_registry()
