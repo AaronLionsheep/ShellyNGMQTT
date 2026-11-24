@@ -11,6 +11,10 @@
     "name": "Shelly BLU Door/Window",
     "verified_by": []
   },
+  "shelly-blu-doorwindow-zb": {
+    "name": "Shelly BLU Door/Window ZB",
+    "verified_by": []
+  },
   "shelly-blu-ht": {
     "name": "Shelly BLU H&T",
     "verified_by": [

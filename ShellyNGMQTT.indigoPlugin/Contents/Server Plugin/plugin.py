@@ -10,6 +10,7 @@ from shelly.devices.shelly_blu import MAX_BLE_EVENT_AGE, ShellyBLU
 from shelly.devices.shelly_blu_button1 import ShellyBLUButton1
 from shelly.devices.shelly_blu_distance import ShellyBLUDistance
 from shelly.devices.shelly_blu_door_window import ShellyBLUDoorWindow
+from shelly.devices.shelly_blu_door_window_zb import ShellyBLUDoorWindowZB
 from shelly.devices.shelly_blu_ht import ShellyBLUHT
 from shelly.devices.shelly_blu_ht_display_zb import ShellyBLUHTDisplayZB
 from shelly.devices.shelly_blu_motion import ShellyBLUMotion
@@ -34,6 +35,7 @@ from shelly.scripts.blu_relay import MAX_BLE_PACKET_AGE
 
 shelly_model_classes = {
     "shelly-blu-doorwindow": ShellyBLUDoorWindow,
+    "shelly-blu-doorwindow-zb": ShellyBLUDoorWindowZB,
     "shelly-blu-button1": ShellyBLUButton1,
     "shelly-blu-rc-button-4": ShellyBLURCButton4,
     "shelly-blu-distance": ShellyBLUDistance,

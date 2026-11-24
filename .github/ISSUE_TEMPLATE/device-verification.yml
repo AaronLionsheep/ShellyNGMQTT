@@ -35,6 +35,7 @@ body:
         - Shelly BLU Button1
         - Shelly BLU Distance
         - Shelly BLU Door/Window
+        - Shelly BLU Door/Window ZB
         - Shelly BLU H&T
         - Shelly BLU H&T Display ZB
         - Shelly BLU Motion
