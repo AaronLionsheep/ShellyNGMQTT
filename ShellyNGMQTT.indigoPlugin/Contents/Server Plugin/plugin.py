@@ -94,7 +94,6 @@ class Plugin(indigo.PluginBase):
             "com.flyingdiver.indigoplugin.mqtt-message_queued",
             "message_handler",
         )
-        self.logger.info(self.pluginFolderPath)
 
     def shutdown(self):
         pass
