@@ -18,7 +18,7 @@
         <ButtonTitle>Get Link</ButtonTitle>
         <ConfigUI>
             <Field id="help" type="label">
-                <Label>Let others know a Shelly model works with the plugin.</Label>
+                <Label>Let others know a Shelly model works with the plugin.&#10;</Label>
             </Field>
 
             <Field id="device-id" type="menu">
@@ -38,7 +38,7 @@
             </Field>
 
             <Field id="disclaimer" type="label" fontColor="darkgray" fontSize="small">
-                <Label>A verification is a community note of support, not a warranty. You aren't responsible or liable for how the device or plugin works for anyone else.</Label>
+                <Label>&#10;A verification is a community note of support, not a warranty. You aren't responsible or liable for how the device or plugin works for anyone else.</Label>
             </Field>
         </ConfigUI>
     </MenuItem>
