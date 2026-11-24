@@ -38,6 +38,7 @@ body:
         - Shelly BLU H&T
         - Shelly BLU H&T Display ZB
         - Shelly BLU Motion
+        - Shelly BLU Motion ZB
         - Shelly BLU RC Button 4
     validations:
       required: true
