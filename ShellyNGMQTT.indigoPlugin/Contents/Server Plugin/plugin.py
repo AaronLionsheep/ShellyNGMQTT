@@ -1,13 +1,11 @@
-import json
 import logging
 import re
 import sys
 from collections import defaultdict
-from pathlib import Path
 from queue import Queue
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
-from shelly.devices.shelly import Shelly
+from shelly.devices.shelly import Shelly, verified_devices
 from shelly.devices.shelly_blu import MAX_BLE_EVENT_AGE, ShellyBLU
 from shelly.devices.shelly_blu_button1 import ShellyBLUButton1
 from shelly.devices.shelly_blu_distance import ShellyBLUDistance
@@ -54,11 +52,6 @@ shelly_model_classes = {
     "shelly-pro-2-pm": ShellyPro2PM,
     "shelly-pro-4-pm": ShellyPro4PM,
 }
-
-# Every model keyed by device type id, with the people who confirmed it works on a real device.
-# Models with an empty "verified_by" list were built from Shelly's API docs alone.
-with open(Path(__file__).parents[1] / "Resources" / "verified_devices.json") as f:
-    verified_devices: dict[str, dict] = json.load(f)
 
 
 class Plugin(indigo.PluginBase):

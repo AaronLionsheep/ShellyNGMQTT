@@ -1,7 +1,15 @@
+import json
 import logging
+from pathlib import Path
 from urllib.parse import urlencode
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
+
+# Every model keyed by device type id, with the people who confirmed it works on a real device.
+# Models with an empty "verified_by" list were built from Shelly's API docs alone.
+# Loaded here rather than in plugin.py, which Indigo runs without defining __file__.
+with open(Path(__file__).parents[3] / "Resources" / "verified_devices.json") as f:
+    verified_devices: dict[str, dict] = json.load(f)
 
 
 class Shelly:
