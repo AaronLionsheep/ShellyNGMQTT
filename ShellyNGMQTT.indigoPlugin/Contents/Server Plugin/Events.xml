@@ -39,7 +39,8 @@
                         self.shelly-blu-rc-button-4,
                         self.shelly-blu-distance,
                         self.shelly-blu-doorwindow,
-                        self.shelly-blu-motion
+                        self.shelly-blu-motion,
+                        self.shelly-blu-motion-zb
                     "
                 />
                 <CallbackMethod>refresh</CallbackMethod>

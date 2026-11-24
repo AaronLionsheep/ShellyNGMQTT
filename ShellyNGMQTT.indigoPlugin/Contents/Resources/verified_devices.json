@@ -23,6 +23,10 @@
     "name": "Shelly BLU Motion",
     "verified_by": []
   },
+  "shelly-blu-motion-zb": {
+    "name": "Shelly BLU Motion ZB",
+    "verified_by": []
+  },
   "shelly-blu-rc-button-4": {
     "name": "Shelly BLU RC Button 4",
     "verified_by": [

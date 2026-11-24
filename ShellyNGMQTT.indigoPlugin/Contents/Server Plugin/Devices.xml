@@ -48,7 +48,7 @@
 					<Option value="-1">%%disabled:Shelly BLU Door/Window ZB (Not available)%%</Option>
 					<Option value="shelly-blu-ht-display-zb">Shelly BLU H&amp;T Display ZB</Option>
 					<Option value="-1">%%disabled:Shelly BLU H&amp;T ZB (Not available)%%</Option>
-					<Option value="-1">%%disabled:Shelly BLU Motion ZB (Not available)%%</Option>
+					<Option value="shelly-blu-motion-zb">Shelly BLU Motion ZB</Option>
 					<Option value="-1">%%disabled:Shelly BLU RC Button 4 ZB (Not available)%%</Option>
 					<Option value="-1">%%disabled:Shelly BLU Remote Control ZB (Not available)%%</Option>
 					<Option value="-1">%%disabled:Shelly BLU TRV (Not available)%%</Option>
@@ -1261,6 +1261,17 @@
 
 	<Device type="sensor" subType="kSensorDeviceSubType.Motion" id="shelly-blu-motion">
 		<Name>Shelly BLU Motion</Name>
+		<ConfigUI>
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
+    	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Motion" id="shelly-blu-motion-zb">
+		<Name>Shelly BLU Motion ZB</Name>
 		<ConfigUI>
 			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
 				<Label>No configuration options are available for this device.</Label>
