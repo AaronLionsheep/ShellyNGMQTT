@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.3](https://github.com/AaronLionsheep/ShellyNGMQTT/compare/v1.4.2...v1.4.3) (2026-11-24)
+
+
+### Bug Fixes
+
+* **component/light:** Support BrightenBy and DimBy actions ([#134](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/134)) ([830be83](https://github.com/AaronLionsheep/ShellyNGMQTT/commit/830be830a3b809966304a2f61422935a4aa5741a))
+* **device:** Update Shelly Pro 2 PM to support the cover profile ([#135](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/135)) ([9da33f5](https://github.com/AaronLionsheep/ShellyNGMQTT/commit/9da33f571b3b925a7e5adb23eb3fb13994ebcd46))
+* remove plugin folder path log on startup ([#157](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/157)) ([ef185f4](https://github.com/AaronLionsheep/ShellyNGMQTT/commit/ef185f4b468baeaf2c8c25516a601baa2626aa7d))
+
+
+### Miscellaneous Chores
+
+* **deps:** update amannn/action-semantic-pull-request action to v6.1.4 ([#158](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/158)) ([4593901](https://github.com/AaronLionsheep/ShellyNGMQTT/commit/4593901f4e1f06a437373e15d46d0c5b2f30ed76))
+* run unit tests on Linux and macOS dependency checks only when dependencies change ([#160](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/160)) ([c04a015](https://github.com/AaronLionsheep/ShellyNGMQTT/commit/c04a01531753efa41d8c3d42dd3f8fae9a96159b))
+
 ## [1.4.2](https://github.com/AaronLionsheep/ShellyNGMQTT/compare/v1.4.1...v1.4.2) (2026-11-24)
 
 
