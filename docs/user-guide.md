@@ -198,7 +198,7 @@ Work through the path a message takes, from the Shelly to Indigo:
 | `MQTT Connector plugin not enabled, aborting.` | Enable MQTT Connector. The plugin checks again every minute. |
 | `'<device>' is not properly setup! Address is unknown.` or `Check the broker and topic root.` | Edit the device and fill in the **MQTT Broker** and **Base MQTT Topic**. |
 | `Error writing ... configuration: <message>` | The Shelly rejected a settings change. The message after the colon comes from the Shelly and explains why. |
-| `'<device>' is a <model>, which hadn't been verified on a real device as of this plugin version ...` | Nobody had confirmed this model works with the plugin when your version was released. Someone may have since, which a newer version will include. If it works for you, send a device verification report with **Plugins → ShellyNGMQTT → Report Device Verification...** (see [Creating Devices](#creating-devices)). |
+| `'<device>' (<model>) wasn't tested against a real device when this plugin version was released ...` | Nobody had confirmed this model works with the plugin when your version was released. Someone may have since, which a newer version will include. If it works for you, send a device verification report with **Plugins → ShellyNGMQTT → Report Device Verification...** (see [Creating Devices](#creating-devices)). |
 | `No trigger type found for button event: <event>` | A BLU device sent a kind of button press the plugin doesn't recognize. Please [report it](reporting-bugs.md), including the log lines. |
 | Messages mentioning the BLU Relay, Bluetooth scanning, or NTP sync | See [BLU Relay troubleshooting](blu-relay.md#troubleshooting). |
 
