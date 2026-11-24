@@ -21,23 +21,68 @@
   },
   "shelly-blu-rc-button-4": {
     "name": "Shelly BLU RC Button 4",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "AaronLionsheep",
+        "indigo_username": "aaronlionsheep",
+        "anonymous": false,
+        "firmware": null,
+        "plugin_version": null,
+        "issue": null
+      }
+    ]
   },
   "shelly-plus-1": {
     "name": "Shelly Plus 1",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "AaronLionsheep",
+        "indigo_username": "aaronlionsheep",
+        "anonymous": false,
+        "firmware": null,
+        "plugin_version": null,
+        "issue": null
+      }
+    ]
   },
   "shelly-plus-1-pm": {
     "name": "Shelly Plus 1 PM",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "AaronLionsheep",
+        "indigo_username": "aaronlionsheep",
+        "anonymous": false,
+        "firmware": null,
+        "plugin_version": null,
+        "issue": null
+      }
+    ]
   },
   "shelly-plus-2-pm": {
     "name": "Shelly Plus 2 PM",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "AaronLionsheep",
+        "indigo_username": "aaronlionsheep",
+        "anonymous": false,
+        "firmware": null,
+        "plugin_version": null,
+        "issue": null
+      }
+    ]
   },
   "shelly-plus-ht": {
     "name": "Shelly Plus H&T",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "AaronLionsheep",
+        "indigo_username": "aaronlionsheep",
+        "anonymous": false,
+        "firmware": null,
+        "plugin_version": null,
+        "issue": null
+      }
+    ]
   },
   "shelly-plus-i-4": {
     "name": "Shelly Plus I4",
@@ -45,7 +90,16 @@
   },
   "shelly-plus-plug": {
     "name": "Shelly Plus Plug",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "AaronLionsheep",
+        "indigo_username": "aaronlionsheep",
+        "anonymous": false,
+        "firmware": null,
+        "plugin_version": null,
+        "issue": null
+      }
+    ]
   },
   "shelly-plus-plug-s": {
     "name": "Shelly Plus Plug S",
@@ -61,7 +115,16 @@
   },
   "shelly-pro-1": {
     "name": "Shelly Pro 1",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "AaronLionsheep",
+        "indigo_username": "aaronlionsheep",
+        "anonymous": false,
+        "firmware": null,
+        "plugin_version": null,
+        "issue": null
+      }
+    ]
   },
   "shelly-pro-1-pm": {
     "name": "Shelly Pro 1 PM",
@@ -69,7 +132,16 @@
   },
   "shelly-pro-2": {
     "name": "Shelly Pro 2",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "AaronLionsheep",
+        "indigo_username": "aaronlionsheep",
+        "anonymous": false,
+        "firmware": null,
+        "plugin_version": null,
+        "issue": null
+      }
+    ]
   },
   "shelly-pro-2-pm": {
     "name": "Shelly Pro 2 PM",
