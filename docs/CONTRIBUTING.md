@@ -127,7 +127,7 @@ Each `verified_by` entry has these fields:
 | `plugin_version` | Plugin version tested |
 | `issue` | The device verification issue number |
 
-Users report verifications with the [device verification](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml) issue form. In Indigo, **Plugins → ShellyNGMQTT → Report Device Verification...** logs a link to the form with the model, firmware, and plugin version filled in. The [Device verification](../.github/workflows/device-verification.yml) workflow handles the rest, using [scripts/device_verification.py](../scripts/device_verification.py):
+Users report verifications with the [device verification](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml) issue form. In Indigo, **Plugins → ShellyNGMQTT → Report Device Verification...** logs a link to the form with the firmware and plugin version filled in and the model in the title (GitHub can't fill in dropdowns from a link, so the reporter picks the model). The firmware version is optional. The [Device verification](../.github/workflows/device-verification.yml) workflow handles the rest, using [scripts/device_verification.py](../scripts/device_verification.py):
 
 1. When an issue with the `device verification` label is opened or edited, the workflow checks the report and comments on the issue with what will be added, or the problems to fix first.
 2. For a valid report, it opens (or updates) a `chore(device): verify <model>` pull request that adds the entry, regenerates the Community Verifications table, and closes the issue. If an edit makes the report invalid, the pull request is closed until it's fixed.

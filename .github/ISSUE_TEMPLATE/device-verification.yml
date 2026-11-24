@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping verify a device! Some models are added from Shelly's API documentation before anyone has tried them on real hardware, and the plugin shows a warning for these until someone confirms they work. In Indigo, **Plugins → ShellyNGMQTT → Report Device Verification...** gives you a link to this form with your device's details filled in.
+        Thanks for helping verify a device! Some models are added from Shelly's API documentation before anyone has tried them on real hardware, and the plugin shows a warning for these until someone confirms they work. In Indigo, **Plugins → ShellyNGMQTT → Report Device Verification...** gives you a link to this form with your device's details filled in. GitHub can't fill in menus from a link, so choose the model named in the title from the **Device model** menu.
 
         **A verification is a community note of support, not a warranty.** It says the model worked for you. You aren't responsible or liable for how the device or the plugin works for anyone else.
 
@@ -53,10 +53,8 @@ body:
     id: firmware
     attributes:
       label: Firmware version
-      description: Shown in the Shelly web UI or app under Settings → Firmware. It may also appear in the Indigo device list.
+      description: Optional. Shown in the Shelly web UI or app under Settings → Firmware. It may also appear in the Indigo device list.
       placeholder: "1.4.4"
-    validations:
-      required: true
 
   - type: input
     id: plugin-version

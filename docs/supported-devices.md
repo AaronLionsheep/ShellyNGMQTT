@@ -131,33 +131,33 @@ If a model works for you, report it with **Plugins → ShellyNGMQTT → Report D
 
 | Model | Status | Verified by |
 | --- | --- | --- |
-| Shelly BLU Button Tough 1 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Button+Tough+1+ZB&model=Shelly+BLU+Button+Tough+1+ZB) |
-| Shelly BLU Button1 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Button1&model=Shelly+BLU+Button1) |
-| Shelly BLU Distance | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Distance&model=Shelly+BLU+Distance) |
-| Shelly BLU Door/Window | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Door%2FWindow&model=Shelly+BLU+Door%2FWindow) |
-| Shelly BLU Door/Window ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Door%2FWindow+ZB&model=Shelly+BLU+Door%2FWindow+ZB) |
+| Shelly BLU Button Tough 1 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Button+Tough+1+ZB) |
+| Shelly BLU Button1 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Button1) |
+| Shelly BLU Distance | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Distance) |
+| Shelly BLU Door/Window | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Door%2FWindow) |
+| Shelly BLU Door/Window ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Door%2FWindow+ZB) |
 | Shelly BLU H&T | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
-| Shelly BLU H&T Display ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+H%26T+Display+ZB&model=Shelly+BLU+H%26T+Display+ZB) |
-| Shelly BLU H&T ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+H%26T+ZB&model=Shelly+BLU+H%26T+ZB) |
+| Shelly BLU H&T Display ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+H%26T+Display+ZB) |
+| Shelly BLU H&T ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+H%26T+ZB) |
 | Shelly BLU Motion | :white_check_mark: Verified | [cuhouse](https://github.com/cuhouse) ([CUHouse](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=CUHouse)) |
 | Shelly BLU Motion ZB | :white_check_mark: Verified | [cuhouse](https://github.com/cuhouse) ([CUHouse](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=CUHouse)) |
 | Shelly BLU RC Button 4 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
-| Shelly BLU RC Button 4 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+RC+Button+4+ZB&model=Shelly+BLU+RC+Button+4+ZB) |
-| Shelly BLU Wall Switch 4 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Wall+Switch+4&model=Shelly+BLU+Wall+Switch+4) |
-| Shelly BLU Wall Switch 4 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Wall+Switch+4+ZB&model=Shelly+BLU+Wall+Switch+4+ZB) |
+| Shelly BLU RC Button 4 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+RC+Button+4+ZB) |
+| Shelly BLU Wall Switch 4 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Wall+Switch+4) |
+| Shelly BLU Wall Switch 4 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Wall+Switch+4+ZB) |
 | Shelly Plus 1 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus 1 PM | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus 2 PM | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus H&T | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
-| Shelly Plus I4 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+I4&model=Shelly+Plus+I4) |
+| Shelly Plus I4 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+I4) |
 | Shelly Plus Plug | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
-| Shelly Plus Plug S | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+Plug+S&model=Shelly+Plus+Plug+S) |
-| Shelly Plus Plug UK | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+Plug+UK&model=Shelly+Plus+Plug+UK) |
-| Shelly Plus WallDimmer | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+WallDimmer&model=Shelly+Plus+WallDimmer) |
+| Shelly Plus Plug S | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+Plug+S) |
+| Shelly Plus Plug UK | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+Plug+UK) |
+| Shelly Plus WallDimmer | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+WallDimmer) |
 | Shelly Pro 1 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
-| Shelly Pro 1 PM | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Pro+1+PM&model=Shelly+Pro+1+PM) |
+| Shelly Pro 1 PM | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Pro+1+PM) |
 | Shelly Pro 2 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
-| Shelly Pro 2 PM | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Pro+2+PM&model=Shelly+Pro+2+PM) |
-| Shelly Pro 4 PM | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Pro+4+PM&model=Shelly+Pro+4+PM) |
+| Shelly Pro 2 PM | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Pro+2+PM) |
+| Shelly Pro 4 PM | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Pro+4+PM) |
 
 <!-- End of generated table -->

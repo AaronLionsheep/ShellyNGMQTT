@@ -188,7 +188,7 @@ class TestFromIssue:
         result = Verification.from_issue("", "tester", 1)
 
         assert result.model == ""
-        assert result.firmware == ""
+        assert result.firmware is None
         assert result.github_username == "tester"
         assert result.anonymous
 
@@ -244,14 +244,18 @@ class TestErrors:
             "The firmware version should look like `1.4.4`, without spaces or other text."
         ]
 
-    def test_missing_versions(self):
-        """Both versions are required"""
-        result = verification(firmware="_No response_", plugin_version="_No response_")
+    def test_missing_firmware(self):
+        """Firmware is optional, since a model can be verified without knowing it"""
+        result = verification(firmware="_No response_")
 
-        assert result.errors(make_registry()) == [
-            "The firmware version is missing.",
-            "The plugin version is missing.",
-        ]
+        assert result.firmware is None
+        assert result.errors(make_registry()) == []
+
+    def test_missing_plugin_version(self):
+        """The plugin version is required"""
+        result = verification(plugin_version="_No response_")
+
+        assert result.errors(make_registry()) == ["The plugin version is missing."]
 
     def test_missing_tested(self):
         """The report must say what was tested"""
@@ -300,7 +304,7 @@ class TestErrors:
         """Every problem is listed at once, so one edit can fix them all"""
         result = Verification.from_issue("", "tester", 1)
 
-        assert len(result.errors(make_registry())) == 4
+        assert len(result.errors(make_registry())) == 3
 
 
 class TestEntry:
@@ -395,6 +399,12 @@ class TestSummary:
         assert "| Firmware | `1.4.4` |" in summary
         assert "| Plugin version | `1.5.0` |" in summary
         assert "This will be the first verification of this model." in summary
+
+    def test_missing_firmware(self):
+        """A report without firmware says so instead of showing an empty version"""
+        summary = verification(firmware="_No response_").summary(make_registry())
+
+        assert "| Firmware | Not given |" in summary
 
     def test_already_verified(self):
         """The maintainer can see a model already has verifications"""
@@ -497,14 +507,14 @@ class TestVerificationTable:
         assert rows[1].startswith("| Shelly Pro 2 |")
 
     def test_unverified(self):
-        """Unverified models link to a pre-filled verification form"""
+        """Unverified models link to the verification form titled with the model"""
         registry = {"shelly-blu-ht": {"name": "Shelly BLU H&T", "verified_by": []}}
 
         assert self.rows(registry) == [
             (
                 "| Shelly BLU H&T | :warning: Not yet verified | [Report it]("
                 "https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml"
-                "&title=Verify+Shelly+BLU+H%26T&model=Shelly+BLU+H%26T) |"
+                "&title=Verify+Shelly+BLU+H%26T) |"
             )
         ]
 

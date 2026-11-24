@@ -21,11 +21,11 @@ class TestVerificationUrl:
         )
 
     def test_model_details(self):
-        """The title and model menu are filled in from the model's display name"""
+        """The title names the model, since GitHub can't fill in the model dropdown from a link"""
         fields = query(ShellyBLUHT.verification_url())
 
         assert fields["title"] == "Verify Shelly BLU H&T"
-        assert fields["model"] == "Shelly BLU H&T"
+        assert "model" not in fields
 
     def test_versions(self):
         """Known versions are filled in so the reporter doesn't have to look them up"""
