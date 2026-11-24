@@ -72,7 +72,7 @@ jobs:
               --assignee "${{ github.repository_owner }}" \
               --body "Adds the $MODEL verification from #$ISSUE_NUMBER to \`verified_devices.json\`.
 
-          Checks don't run on pull requests opened by GitHub Actions. Close and reopen this pull request to run them before merging.
+          Checks on pull requests opened by GitHub Actions wait for a maintainer to approve them. Approve the workflows to run them before merging.
 
           Closes #$ISSUE_NUMBER")
           fi

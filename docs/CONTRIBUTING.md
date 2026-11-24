@@ -129,7 +129,7 @@ Users report verifications with the [device verification](https://github.com/Aar
 
 1. When an issue with the `device verification` label is opened or edited, the workflow checks the report and comments on the issue with what will be added, or the problems to fix first.
 2. For a valid report, it opens (or updates) a `chore(device): verify <model>` pull request that adds the entry and closes the issue. If an edit makes the report invalid, the pull request is closed until it's fixed.
-3. A maintainer reviews the pull request. Checks don't run on pull requests opened by GitHub Actions, so close and reopen it to run them, then merge it to approve the verification. To reject a report, close the issue, which also closes the pull request.
+3. The pull request requests a review from the repository owner and is assigned to them. Checks on pull requests opened by GitHub Actions wait for approval, so approve the workflows on the pull request to run them, then merge it to approve the verification. To reject a report, close the issue, which also closes the pull request.
 
 Leaving the **Credit** box unchecked sets `anonymous` to `true`. The usernames are still recorded, so a later verification by the same person replaces it, but anything that credits verifiers by name should leave anonymous entries out. It still counts toward the model being verified.
 
