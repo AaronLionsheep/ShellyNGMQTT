@@ -45,7 +45,7 @@ body:
     id: firmware
     attributes:
       label: Firmware version
-      description: Shown in the Shelly web UI or app under Settings → Firmware.
+      description: Shown in the Shelly web UI or app under Settings → Firmware. It may also appear in the Indigo device list.
       placeholder: "1.4.4"
     validations:
       required: true
