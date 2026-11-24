@@ -71,6 +71,10 @@
       }
     ]
   },
+  "shelly-blu-rc-button-4-zb": {
+    "name": "Shelly BLU RC Button 4 ZB",
+    "verified_by": []
+  },
   "shelly-plus-1": {
     "name": "Shelly Plus 1",
     "verified_by": [
