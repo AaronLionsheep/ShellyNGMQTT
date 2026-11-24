@@ -34,7 +34,16 @@
   },
   "shelly-blu-motion-zb": {
     "name": "Shelly BLU Motion ZB",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "cuhouse",
+        "indigo_username": "CUHouse",
+        "anonymous": false,
+        "firmware": "1.2.20",
+        "plugin_version": "1.4.3",
+        "issue": 164
+      }
+    ]
   },
   "shelly-blu-rc-button-4": {
     "name": "Shelly BLU RC Button 4",
