@@ -61,8 +61,8 @@
 			<Field id="verified-model-note" type="label" fontColor="green" alignWithControl="true" visibleBindingId="is-verified-model" visibleBindingValue="true">
 				<Label>✔︎ Verified on a real device by the community.</Label>
 			</Field>
-			<Field id="unverified-model-warning" type="label" fontColor="orange" visibleBindingId="is-verified-model" visibleBindingValue="false">
-				<Label>⚠︎ This model wasn't tested against a real device when this plugin version was released. If it works, report it with Plugins → ShellyNGMQTT → Report Device Verification...</Label>
+			<Field id="unverified-model-warning" type="label" fontColor="orange" alignWithControl="true" visibleBindingId="is-verified-model" visibleBindingValue="false">
+				<Label>⚠︎ Untested on a real device as of this plugin version. If it works, please report it from the plugin's menu.</Label>
 			</Field>
 
 			<Field id="is-mqtt-model" type="checkbox" defaultValue="true" hidden="true" />
