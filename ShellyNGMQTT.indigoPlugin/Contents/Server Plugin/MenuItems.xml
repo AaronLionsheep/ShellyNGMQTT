@@ -17,21 +17,16 @@
         <CallbackMethod>report_device_verification</CallbackMethod>
         <ButtonTitle>Get Link</ButtonTitle>
         <ConfigUI>
-            <Field id="help" type="label">
-                <Label>Let others know a Shelly model works with the plugin.&#10;</Label>
-            </Field>
-
             <Field id="device-id" type="menu">
                 <Label>Device:</Label>
                 <List class="self" method="get_shelly_devices" dynamicReload="true"/>
             </Field>
             <Field id="device-id-help" type="label" fontColor="darkgray" fontSize="small" alignWithControl="true">
-                <Label>Logs a link to a GitHub form with the device's details filled in.</Label>
+                <Label>Logs a pre-filled GitHub link to report the model works with this plugin version.</Label>
             </Field>
 
             <Field id="open-browser" type="checkbox" defaultValue="false">
-                <Label>Open in browser:</Label>
-                <Description>also open the link</Description>
+                <Description>Open in browser</Description>
             </Field>
             <Field id="open-browser-help" type="label" fontColor="darkgray" fontSize="small" alignWithControl="true">
                 <Label>Opens on the Indigo server Mac. From a remote client, copy the link from the event log.</Label>
