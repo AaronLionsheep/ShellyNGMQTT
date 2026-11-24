@@ -44,6 +44,7 @@
 					<Option value="-1">%%disabled:BLU + ZB%%</Option>
 					<Option value="-1">%%separator%%</Option>
 					<Option value="-1">%%disabled:Shelly BLU Wall Switch 4 (Not available)%%</Option>
+					<Option value="shelly-blu-button-tough-1-zb">Shelly BLU Button Tough 1 ZB</Option>
 					<Option value="shelly-blu-distance">Shelly BLU Distance</Option>
 					<Option value="shelly-blu-doorwindow-zb">Shelly BLU Door/Window ZB</Option>
 					<Option value="shelly-blu-ht-display-zb">Shelly BLU H&amp;T Display ZB</Option>
@@ -1186,6 +1187,17 @@
 				<Label>No configuration options are available for this device.</Label>
 			</Field>
     	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" id="shelly-blu-button-tough-1-zb">
+		<Name>Shelly BLU Button Tough 1 ZB</Name>
+		<ConfigUI>
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
+		</ConfigUI>
 		<States>
 		</States>
 	</Device>

@@ -13,12 +13,12 @@ Button events fire when a button or input is pressed. Each one asks for a **Devi
 | Button Down | A button is pressed down | :white_check_mark: | :heavy_minus_sign: |
 | Button Up | A button is released | :white_check_mark: | :heavy_minus_sign: |
 | Single Push | A button is pressed once | :white_check_mark: | All |
-| Double Push | A button is pressed twice quickly | :white_check_mark: | Button1, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB |
-| Triple Push | A button is pressed three times quickly | :white_check_mark: | Button1, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB |
-| Long Push | A button is held, then released | :white_check_mark: | Button1, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB |
-| Hold Push | A button has been held long enough, while it's still held | :heavy_minus_sign: | Button1, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB, Door/Window, Motion, H&T |
-| Long Double Push | A button is pressed once, then pressed and held | :heavy_minus_sign: | RC Button 4 ZB, Wall Switch 4 ZB |
-| Long Triple Push | A button is pressed twice, then pressed and held | :heavy_minus_sign: | RC Button 4 ZB, Wall Switch 4 ZB |
+| Double Push | A button is pressed twice quickly | :white_check_mark: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB |
+| Triple Push | A button is pressed three times quickly | :white_check_mark: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB |
+| Long Push | A button is held, then released | :white_check_mark: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB |
+| Hold Push | A button has been held long enough, while it's still held | :heavy_minus_sign: | Button1, Button Tough 1 ZB, RC Button 4, RC Button 4 ZB, Wall Switch 4 ZB, Door/Window, Motion, H&T |
+| Long Double Push | A button is pressed once, then pressed and held | :heavy_minus_sign: | Button Tough 1 ZB, RC Button 4 ZB, Wall Switch 4 ZB |
+| Long Triple Push | A button is pressed twice, then pressed and held | :heavy_minus_sign: | Button Tough 1 ZB, RC Button 4 ZB, Wall Switch 4 ZB |
 
 :white_check_mark: means supported, and :heavy_minus_sign: means the device doesn't send that event.
 
