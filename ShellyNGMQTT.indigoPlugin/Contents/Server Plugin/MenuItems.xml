@@ -18,18 +18,27 @@
         <ButtonTitle>Get Link</ButtonTitle>
         <ConfigUI>
             <Field id="help" type="label">
-                <Label>If a Shelly works with the plugin, report it so others know the model has been verified on a real device. This logs a link to a device verification form on GitHub with the device's details filled in. A verification is a community note of support, not a warranty: you aren't responsible or liable for how the device or plugin works for anyone else.</Label>
+                <Label>Let others know a Shelly model works with the plugin.</Label>
             </Field>
+
             <Field id="device-id" type="menu">
                 <Label>Device:</Label>
                 <List class="self" method="get_shelly_devices" dynamicReload="true"/>
             </Field>
+            <Field id="device-id-help" type="label" fontColor="darkgray" fontSize="small" alignWithControl="true">
+                <Label>Logs a link to a GitHub form with the device's details filled in.</Label>
+            </Field>
+
             <Field id="open-browser" type="checkbox" defaultValue="false">
                 <Label>Open in browser:</Label>
                 <Description>also open the link</Description>
             </Field>
             <Field id="open-browser-help" type="label" fontColor="darkgray" fontSize="small" alignWithControl="true">
-                <Label>The browser opens on the Indigo server Mac. From a remote client, copy the link from the event log instead.</Label>
+                <Label>Opens on the Indigo server Mac. From a remote client, copy the link from the event log.</Label>
+            </Field>
+
+            <Field id="disclaimer" type="label" fontColor="darkgray" fontSize="small">
+                <Label>A verification is a community note of support, not a warranty. You aren't responsible or liable for how the device or plugin works for anyone else.</Label>
             </Field>
         </ConfigUI>
     </MenuItem>
