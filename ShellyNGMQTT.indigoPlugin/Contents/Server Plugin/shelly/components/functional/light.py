@@ -83,6 +83,10 @@ class Light(Component):
             self.toggle()
         elif action.deviceAction == indigo.kDeviceAction.SetBrightness:
             self.set(brightness=action.actionValue)
+        elif action.deviceAction == indigo.kDeviceAction.BrightenBy:
+            self.set(offset=action.actionValue)
+        elif action.deviceAction == indigo.kDeviceAction.DimBy:
+            self.set(offset=-1 * action.actionValue)
 
     def get_config(self):
         """
@@ -262,12 +266,14 @@ class Light(Component):
         self,
         on: bool | None = None,
         brightness: int | None = None,
+        offset: int | None = None,
         toggle_after: int | None = None,
     ):
         """
         This method sets the output of the Switch component to on or off.
 
         :param on: True to turn the switch on, False otherwise.
+        :param offset: Set current brightness level with applied offset. Can not be used together with brightness.
         :param toggle_after: Optional time in seconds to undo the action.
         :return: None
         """
@@ -277,6 +283,8 @@ class Light(Component):
             params["on"] = on
         if brightness is not None:
             params["brightness"] = brightness
+        if offset is not None:
+            params["offset"] = offset
         if toggle_after is not None:
             params["toggle_after"] = toggle_after
 
