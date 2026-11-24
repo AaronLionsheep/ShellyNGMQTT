@@ -269,16 +269,18 @@ class ShellyBLU(Shelly):
 
         return BLEData(
             packet=packet,
-            sensors=dict(
-                **{
-                    sensor.device_key.key: sensor.native_value
-                    for sensor in update.entity_values.values()
-                },
+            # Sensor values win over binary sensors sharing a key, keeping the
+            # battery percentage over the battery low flag (both are "battery")
+            sensors={
                 **{
                     sensor.device_key.key: sensor.native_value
                     for sensor in update.binary_entity_values.values()
                 },
-            ),
+                **{
+                    sensor.device_key.key: sensor.native_value
+                    for sensor in update.entity_values.values()
+                },
+            },
             events=dict(
                 **{
                     event.device_key.key: {event.event_type: event.event_properties}

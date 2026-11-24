@@ -36,6 +36,7 @@ body:
         - Shelly BLU Distance
         - Shelly BLU Door/Window
         - Shelly BLU H&T
+        - Shelly BLU H&T Display ZB
         - Shelly BLU Motion
         - Shelly BLU RC Button 4
     validations:

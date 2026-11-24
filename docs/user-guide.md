@@ -173,6 +173,7 @@ Model-specific states:
 | Shelly BLU Door/Window | Open/closed (`onOffState`), illuminance (`illuminance`), rotation (`rotation`) |
 | Shelly BLU Motion | Motion detected (`onOffState`), illuminance (`illuminance`) |
 | Shelly BLU H&T | Temperature (`temperature`, also `sensorValue`), humidity (`humidity`) |
+| Shelly BLU H&T Display ZB | Temperature (`temperature`, also `sensorValue`), humidity (`humidity`), light detected (`light`), light level: `dark`, `twilight`, or `bright` (`lightLevel`) |
 | Shelly BLU Distance | Distance in mm (`distance`), vibration (`vibration`), distance or container level (`sensorValue`) |
 
 ## Troubleshooting
