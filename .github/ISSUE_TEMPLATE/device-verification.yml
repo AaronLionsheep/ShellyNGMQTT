@@ -42,6 +42,7 @@ body:
         - Shelly BLU Motion ZB
         - Shelly BLU RC Button 4
         - Shelly BLU RC Button 4 ZB
+        - Shelly BLU Wall Switch 4 ZB
     validations:
       required: true
 
