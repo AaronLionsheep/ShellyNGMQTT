@@ -13,7 +13,16 @@
   },
   "shelly-blu-ht": {
     "name": "Shelly BLU H&T",
-    "verified_by": []
+    "verified_by": [
+      {
+        "github_username": "AaronLionsheep",
+        "indigo_username": "aaronlionsheep",
+        "anonymous": false,
+        "firmware": "1.0.23.0",
+        "plugin_version": "1.4.0",
+        "issue": 162
+      }
+    ]
   },
   "shelly-blu-ht-display-zb": {
     "name": "Shelly BLU H&T Display ZB",
