@@ -1,0 +1,66 @@
+name: Dependencies
+
+# macOS runners are limited, so only check installs when the dependencies change. The weekly run catches breakage
+# that doesn't come from a lockfile change, such as a new Python release on the runners.
+on:
+  pull_request:
+    paths:
+      - "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.in"
+      - "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt"
+      - ".github/workflows/dependencies.yaml"
+  schedule:
+    - cron: "0 12 * * 1"
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  install:
+    name: Install Dependencies
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-26, macos-26-intel]
+        python: [3.11, 3.13]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    timeout-minutes: 5
+    steps:
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Set up Python
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+      with:
+        python-version: ${{ matrix.python }}
+
+    - name: Install dependencies
+      run: |
+        pip install -r "ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/requirements.txt" --report install.json
+
+    # Require all packages from from pre-build wheels, except for known packages
+    # - A package that no longer provides a binary should be investigated (ex: cryptography dropping macos-x64 support)
+    # - A new package that does not include a binary should be known since this may complicate plugin installation
+    - name: Audit dependencies built from source
+      run: |
+        COMPILED=$(jq '
+          [
+            .install[] |
+            select(.download_info.url | endswith(".whl") | not) |
+            .metadata.name
+          ] - [
+            "bluetooth-data-tools",
+            "habluetooth",
+            "PyRIC"
+          ]
+        ' install.json)
+
+        echo "Packages compiled unexpectedly: $COMPILED"
+        echo "$COMPILED" | jq -e '. == []'
+
+    # Unit tests run on Linux, so make sure the packages the plugin imports load on macOS
+    - name: Import dependencies
+      run: python -c "import bthome_ble, habluetooth"

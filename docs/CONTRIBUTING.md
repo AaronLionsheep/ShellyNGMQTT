@@ -95,7 +95,7 @@ Pass a path or `-k` to run part of the suite, for example `conda run -n shellyng
 - **Every test has a docstring** saying what it checks and why, for example `"""Each call returns a separate dict so devices never share props"""`.
 - **Coverage:** pytest prints a coverage report with missing lines. New code should be covered.
 
-CI runs the suite on Apple Silicon and Intel macOS with Python 3.11 and 3.13, so avoid syntax or library features newer than Python 3.11.
+CI runs the suite on Linux with Python 3.11 and 3.13, so keep tests platform-independent and avoid syntax or library features newer than Python 3.11.
 
 ## Adding a New Device
 
@@ -137,9 +137,10 @@ Every pull request runs:
 
 - **Lint PR:** checks that the title follows Conventional Commits
 - **Code Quality:** `ruff check` and `ruff format --check`
-- **Test:** unit tests on macOS (Apple Silicon and Intel) with Python 3.11 and 3.13
+- **Test:** unit tests on Linux with Python 3.11 and 3.13
 - **Lockfile Up to Date:** regenerates `requirements.txt` and fails if it doesn't match `requirements.in`
-- **Install Dependencies:** installs `requirements.txt` on the same matrix and fails if a package unexpectedly builds from source
+
+Pull requests that change `requirements.in` or `requirements.txt` also run **Install Dependencies**, which installs `requirements.txt` on Apple Silicon and Intel macOS with Python 3.11 and 3.13, fails if a package unexpectedly builds from source, and checks that the plugin's dependencies import. It also runs weekly to catch breakage that doesn't come from a lockfile change.
 
 Dependency updates are opened automatically by Renovate (see [renovate.json](../renovate.json)).
 
