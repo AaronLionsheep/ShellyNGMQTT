@@ -37,7 +37,7 @@ class WiFi(Component):
         """
 
         if error:
-            self.logger.error(error)
+            self.log_rpc_error("read configuration", error)
             return
 
         self.latest_config = {
@@ -97,11 +97,7 @@ class WiFi(Component):
         """
 
         if error:
-            self.logger.error(
-                "Error writing configuration: {}".format(
-                    error.get("message", "<Unknown>")
-                )
-            )
+            self.log_rpc_error("write configuration", error)
             return
 
         if status.get("restart_required", False):
@@ -129,7 +125,7 @@ class WiFi(Component):
         """
 
         if error:
-            self.logger.error(error)
+            self.log_rpc_error("read status", error)
             return
 
         if status and status.get("ssid", None):

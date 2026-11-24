@@ -80,7 +80,7 @@ class Humidity(Component):
         """
 
         if error:
-            self.logger.error(error)
+            self.log_rpc_error("read configuration", error)
             return
 
         self.latest_config = {
@@ -117,11 +117,7 @@ class Humidity(Component):
         """
 
         if error:
-            self.logger.error(
-                "Error writing input configuration: {}".format(
-                    error.get("message", "<Unknown>")
-                )
-            )
+            self.log_rpc_error("write configuration", error)
             return
 
         if status.get("restart_required", False):
@@ -149,6 +145,10 @@ class Humidity(Component):
         :param status: The status message
         :return:
         """
+        if error:
+            self.log_rpc_error("read status", error)
+            return
+
         updated_states = []
 
         humidity = status.get("rh", None)

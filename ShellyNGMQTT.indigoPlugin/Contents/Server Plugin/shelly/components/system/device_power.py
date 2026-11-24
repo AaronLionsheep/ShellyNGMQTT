@@ -63,11 +63,7 @@ class DevicePower(Component):
         """
 
         if error:
-            self.logger.error(
-                "Error writing configuration: {}".format(
-                    error.get("message", "<Unknown>")
-                )
-            )
+            self.log_rpc_error("write configuration", error)
             return
 
         if status.get("restart_required", False):
@@ -97,7 +93,7 @@ class DevicePower(Component):
         """
 
         if error:
-            self.logger.error(error)
+            self.log_rpc_error("read status", error)
             return
 
         voltage = status.get("battery", {}).get("V", None)

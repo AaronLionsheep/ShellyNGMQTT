@@ -107,7 +107,7 @@ class Light(Component):
         :return: None
         """
         if error:
-            self.logger.error(error)
+            self.log_rpc_error("read configuration", error)
             return
 
         self.latest_config = {
@@ -150,11 +150,7 @@ class Light(Component):
         :return: None
         """
         if error:
-            self.logger.error(
-                "Error writing switch configuration: {}".format(
-                    error.get("message", "<Unknown>")
-                )
-            )
+            self.log_rpc_error("write configuration", error)
             return
 
         if status.get("restart_required", False):
@@ -180,6 +176,10 @@ class Light(Component):
         :param error:
         :return:
         """
+        if error:
+            self.log_rpc_error("read status", error)
+            return
+
         updated_states = []
 
         # Process output

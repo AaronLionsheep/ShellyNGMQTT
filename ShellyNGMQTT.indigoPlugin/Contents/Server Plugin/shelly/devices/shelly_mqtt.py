@@ -353,7 +353,7 @@ class ShellyMQTT(Shelly):
 
         def _response(response, error=None):
             if error:
-                self.logger.error(error)
+                self.log_rpc_error(self.device.name, "check for updates", error)
                 return
 
             if "stable" in response:
@@ -381,7 +381,7 @@ class ShellyMQTT(Shelly):
 
         def _response(response, error=None):
             if error:
-                self.logger.error(error)
+                self.log_rpc_error(self.device.name, "update", error)
                 return
 
         self.publish_rpc("Shelly.Update", {"stage": stage}, callback=_response)

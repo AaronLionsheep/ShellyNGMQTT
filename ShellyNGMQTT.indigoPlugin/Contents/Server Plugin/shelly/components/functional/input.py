@@ -70,7 +70,7 @@ class Input(Component):
         """
 
         if error:
-            self.logger.error(error)
+            self.log_rpc_error("read configuration", error)
             return
 
         self.latest_config = {
@@ -107,11 +107,7 @@ class Input(Component):
         """
 
         if error:
-            self.logger.error(
-                "Error writing input configuration: {}".format(
-                    error.get("message", "<Unknown>")
-                )
-            )
+            self.log_rpc_error("write configuration", error)
             return
 
         if status.get("restart_required", False):
@@ -137,6 +133,10 @@ class Input(Component):
         :param status: The status message
         :return:
         """
+
+        if error:
+            self.log_rpc_error("read status", error)
+            return
 
         state = status.get("state", False)
         if state is not None:

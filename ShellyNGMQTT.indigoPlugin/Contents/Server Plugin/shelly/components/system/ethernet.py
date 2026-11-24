@@ -61,7 +61,7 @@ class Ethernet(Component):
         """
 
         if error and error.get("code", 0) != 404:
-            self.logger.error(error)
+            self.log_rpc_error("read status", error)
             return
 
         if status and status.get("ip", None):

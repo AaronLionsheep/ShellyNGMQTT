@@ -81,6 +81,20 @@ class Shelly:
             self._device = device
         return self._device
 
+    def log_rpc_error(self, device_name, action, error):
+        """
+        Log an RPC error response with the name of the device that produced it.
+
+        :param device_name: The name of the Indigo device the RPC was for.
+        :param action: What the failed RPC was doing, such as "read configuration".
+        :param error: The error from the RPC response, with "code" and "message" keys.
+        :return: None
+        """
+        message = error.get("message", "Unknown error")
+        self.logger.error(
+            f'"{device_name}" failed to {action}: {message} (code {error.get("code")})'
+        )
+
     @property
     def components(self):
         """

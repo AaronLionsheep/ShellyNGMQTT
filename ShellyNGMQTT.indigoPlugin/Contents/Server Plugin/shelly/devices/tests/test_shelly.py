@@ -1,5 +1,7 @@
+import logging
 from urllib.parse import parse_qs, urlsplit
 
+from shelly.devices.shelly import Shelly
 from shelly.devices.shelly_blu_ht import ShellyBLUHT
 from shelly.devices.shelly_pro_2 import ShellyPro2
 
@@ -49,3 +51,36 @@ class TestVerificationUrl:
 
         assert "&x=1" not in url
         assert query(url)["firmware"] == "20241011/1.4.4&x=1"
+
+
+def log_rpc_error(device_name, action, error):
+    """Log an RPC error through a bare Shelly, skipping __init__ which looks up the Indigo device."""
+    shelly = object.__new__(Shelly)
+    shelly.logger = logging.getLogger("Plugin.ShellyNGMQTT")
+    shelly.log_rpc_error(device_name, action, error)
+
+
+class TestLogRpcError:
+    def test_readable_message(self, caplog):
+        """The log names the device, what failed, and Shelly's message and code instead of a raw dict"""
+        log_rpc_error(
+            "Kitchen Light",
+            "read status",
+            {"code": -105, "message": "Argument 'id', value 3 not found!"},
+        )
+
+        assert caplog.record_tuples == [
+            (
+                "Plugin.ShellyNGMQTT",
+                logging.ERROR,
+                "\"Kitchen Light\" failed to read status: Argument 'id', value 3 not found! (code -105)",
+            )
+        ]
+
+    def test_missing_message(self, caplog):
+        """An error without a message still logs a readable line instead of raising"""
+        log_rpc_error("Kitchen Shelly", "read configuration", {"code": 404})
+
+        assert caplog.messages == [
+            '"Kitchen Shelly" failed to read configuration: Unknown error (code 404)'
+        ]
