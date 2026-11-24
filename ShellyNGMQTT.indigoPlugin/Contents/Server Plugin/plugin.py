@@ -14,6 +14,7 @@ from shelly.devices.shelly_blu_door_window import ShellyBLUDoorWindow
 from shelly.devices.shelly_blu_door_window_zb import ShellyBLUDoorWindowZB
 from shelly.devices.shelly_blu_ht import ShellyBLUHT
 from shelly.devices.shelly_blu_ht_display_zb import ShellyBLUHTDisplayZB
+from shelly.devices.shelly_blu_ht_zb import ShellyBLUHTZB
 from shelly.devices.shelly_blu_motion import ShellyBLUMotion
 from shelly.devices.shelly_blu_motion_zb import ShellyBLUMotionZB
 from shelly.devices.shelly_blu_rc_button_4 import ShellyBLURCButton4
@@ -46,6 +47,7 @@ shelly_model_classes = {
     "shelly-blu-distance": ShellyBLUDistance,
     "shelly-blu-ht": ShellyBLUHT,
     "shelly-blu-ht-display-zb": ShellyBLUHTDisplayZB,
+    "shelly-blu-ht-zb": ShellyBLUHTZB,
     "shelly-blu-motion": ShellyBLUMotion,
     "shelly-blu-motion-zb": ShellyBLUMotionZB,
     "shelly-blu-wall-switch-4-zb": ShellyBLUWallSwitch4ZB,
