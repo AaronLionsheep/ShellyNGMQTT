@@ -46,7 +46,7 @@
 					<Option value="-1">%%disabled:Shelly BLU Wall Switch 4 (Not available)%%</Option>
 					<Option value="shelly-blu-distance">Shelly BLU Distance</Option>
 					<Option value="-1">%%disabled:Shelly BLU Door/Window ZB (Not available)%%</Option>
-					<Option value="-1">%%disabled:Shelly BLU H&amp;T Display ZB (Not available)%%</Option>
+					<Option value="shelly-blu-ht-display-zb">Shelly BLU H&amp;T Display ZB</Option>
 					<Option value="-1">%%disabled:Shelly BLU H&amp;T ZB (Not available)%%</Option>
 					<Option value="-1">%%disabled:Shelly BLU Motion ZB (Not available)%%</Option>
 					<Option value="-1">%%disabled:Shelly BLU RC Button 4 ZB (Not available)%%</Option>
@@ -1217,6 +1217,28 @@
 
 	<Device type="sensor" subType="kSensorDeviceSubType.Temperature" id="shelly-blu-ht">
 		<Name>Shelly BLU H&amp;T</Name>
+		<ConfigUI>
+			<Field id="temp-unit" type="menu" defaultValue="F">
+				<Label>Temperature Unit:</Label>
+				<List>
+					<Option value="F">Fahrenheit</Option>
+					<Option value="C">Celsius</Option>
+				</List>
+			</Field>
+
+			<Field id="temp-offset" type="textfield">
+				<Label>Temperature Offset:</Label>
+			</Field>
+			<Field id="temp-description" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>A positive or negative value to adjust the temperature reading by. This is applied using the desired temperature unit.</Label>
+			</Field>
+    	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Temperature" id="shelly-blu-ht-display-zb">
+		<Name>Shelly BLU H&amp;T Display ZB</Name>
 		<ConfigUI>
 			<Field id="temp-unit" type="menu" defaultValue="F">
 				<Label>Temperature Unit:</Label>

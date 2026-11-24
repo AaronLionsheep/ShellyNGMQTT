@@ -15,6 +15,10 @@
     "name": "Shelly BLU H&T",
     "verified_by": []
   },
+  "shelly-blu-ht-display-zb": {
+    "name": "Shelly BLU H&T Display ZB",
+    "verified_by": []
+  },
   "shelly-blu-motion": {
     "name": "Shelly BLU Motion",
     "verified_by": []

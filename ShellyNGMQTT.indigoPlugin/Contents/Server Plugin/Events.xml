@@ -35,6 +35,7 @@
                         self.component-input,
                         self.shelly-blu-button1,
                         self.shelly-blu-ht,
+                        self.shelly-blu-ht-display-zb,
                         self.shelly-blu-rc-button-4,
                         self.shelly-blu-distance,
                         self.shelly-blu-doorwindow,
