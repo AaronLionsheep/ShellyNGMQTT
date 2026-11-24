@@ -40,7 +40,7 @@ conda run -n shellyngmqtt-dev ruff check
 conda run -n shellyngmqtt-dev ruff format
 ```
 
-CI runs `ruff check`, `ruff format --check`, and the test suite on Apple Silicon and Intel macOS with Python 3.11 and 3.13.
+CI runs `ruff check`, `ruff format --check`, and the test suite on Linux with Python 3.11 and 3.13. When `requirements.in` or `requirements.txt` changes, and weekly, it also checks that the dependencies install on Apple Silicon and Intel macOS.
 
 ### Dependencies
 
