@@ -8,6 +8,7 @@ import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource
 from shelly.devices.shelly import Shelly, verified_devices
 from shelly.devices.shelly_blu import MAX_BLE_EVENT_AGE, ShellyBLU
 from shelly.devices.shelly_blu_button1 import ShellyBLUButton1
+from shelly.devices.shelly_blu_button_tough_1_zb import ShellyBLUButtonTough1ZB
 from shelly.devices.shelly_blu_distance import ShellyBLUDistance
 from shelly.devices.shelly_blu_door_window import ShellyBLUDoorWindow
 from shelly.devices.shelly_blu_door_window_zb import ShellyBLUDoorWindowZB
@@ -41,6 +42,7 @@ shelly_model_classes = {
     "shelly-blu-button1": ShellyBLUButton1,
     "shelly-blu-rc-button-4": ShellyBLURCButton4,
     "shelly-blu-rc-button-4-zb": ShellyBLURCButton4ZB,
+    "shelly-blu-button-tough-1-zb": ShellyBLUButtonTough1ZB,
     "shelly-blu-distance": ShellyBLUDistance,
     "shelly-blu-ht": ShellyBLUHT,
     "shelly-blu-ht-display-zb": ShellyBLUHTDisplayZB,

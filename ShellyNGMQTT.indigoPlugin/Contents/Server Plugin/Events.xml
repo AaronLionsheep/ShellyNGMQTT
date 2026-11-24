@@ -34,6 +34,7 @@
                     filter="
                         self.component-input,
                         self.shelly-blu-button1,
+                        self.shelly-blu-button-tough-1-zb,
                         self.shelly-blu-ht,
                         self.shelly-blu-ht-display-zb,
                         self.shelly-blu-rc-button-4,
@@ -67,6 +68,7 @@
                     filter="
                         self.component-input,
                         self.shelly-blu-button1,
+                        self.shelly-blu-button-tough-1-zb,
                         self.shelly-blu-rc-button-4,
                         self.shelly-blu-rc-button-4-zb,
                         self.shelly-blu-wall-switch-4-zb
@@ -93,6 +95,7 @@
                     filter="
                         self.component-input,
                         self.shelly-blu-button1,
+                        self.shelly-blu-button-tough-1-zb,
                         self.shelly-blu-rc-button-4,
                         self.shelly-blu-rc-button-4-zb,
                         self.shelly-blu-wall-switch-4-zb
@@ -127,6 +130,7 @@
                     filter="
                         self.component-input,
                         self.shelly-blu-button1,
+                        self.shelly-blu-button-tough-1-zb,
                         self.shelly-blu-rc-button-4,
                         self.shelly-blu-rc-button-4-zb,
                         self.shelly-blu-wall-switch-4-zb
@@ -212,6 +216,7 @@
                     method="get_shelly_devices"
                     filter="
                         self.shelly-blu-button1,
+                        self.shelly-blu-button-tough-1-zb,
                         self.shelly-blu-ht,
                         self.shelly-blu-rc-button-4,
                         self.shelly-blu-rc-button-4-zb,

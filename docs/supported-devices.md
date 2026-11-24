@@ -96,6 +96,7 @@ BLU+ZB devices support both Bluetooth and Zigbee. The plugin uses their Bluetoot
 | Model | Added in | Main state | Sensor value | Other states | Buttons | Settings |
 | --- | :---: | --- | --- | --- | :---: | --- |
 | [Shelly BLU Distance](https://kb.shelly.cloud/knowledge-base/shelly-blu-distance) | 1.3.0 | :heavy_minus_sign: | Distance (mm), or how full a container is (%) | Distance, vibration | 1 | Distance offset, container level measurement |
+| [Shelly BLU Button Tough 1 ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-button-tough-1-zb) | 1.5.0 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 1 | :heavy_minus_sign: |
 | [Shelly BLU Door/Window ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-door-window-zb) | 1.5.0 | Open/closed | :heavy_minus_sign: | Light level (dark, twilight, bright), rotation (tilt angle) | 1 | :heavy_minus_sign: |
 | [Shelly BLU H&T Display ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-h-t-display-zb) | 1.5.0 | :heavy_minus_sign: | Temperature | Temperature, humidity, light detected, light level (dark/twilight/bright) | 1 | Temperature unit (°F/°C), temperature offset |
 | [Shelly BLU Motion ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-motion-zb) | 1.5.0 | Motion detected | :heavy_minus_sign: | Light level (dark, twilight, bright) | 1 | :heavy_minus_sign: |
@@ -127,6 +128,7 @@ If a model works for you, report it with **Plugins → ShellyNGMQTT → Report D
 
 | Model | Status | Verified by |
 | --- | --- | --- |
+| Shelly BLU Button Tough 1 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Button+Tough+1+ZB&model=Shelly+BLU+Button+Tough+1+ZB) |
 | Shelly BLU Button1 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Button1&model=Shelly+BLU+Button1) |
 | Shelly BLU Distance | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Distance&model=Shelly+BLU+Distance) |
 | Shelly BLU Door/Window | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Door%2FWindow&model=Shelly+BLU+Door%2FWindow) |
