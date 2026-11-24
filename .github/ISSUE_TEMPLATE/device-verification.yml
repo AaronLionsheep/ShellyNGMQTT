@@ -41,6 +41,7 @@ body:
         - Shelly BLU Motion
         - Shelly BLU Motion ZB
         - Shelly BLU RC Button 4
+        - Shelly BLU RC Button 4 ZB
     validations:
       required: true
 

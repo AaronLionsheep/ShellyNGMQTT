@@ -99,6 +99,7 @@ BLU+ZB devices support both Bluetooth and Zigbee. The plugin uses their Bluetoot
 | [Shelly BLU Door/Window ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-door-window-zb) | 1.5.0 | Open/closed | :heavy_minus_sign: | Light level (dark, twilight, bright), rotation (tilt angle) | 1 | :heavy_minus_sign: |
 | [Shelly BLU H&T Display ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-h-t-display-zb) | 1.5.0 | :heavy_minus_sign: | Temperature | Temperature, humidity, light detected, light level (dark/twilight/bright) | 1 | Temperature unit (°F/°C), temperature offset |
 | [Shelly BLU Motion ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-motion-zb) | 1.5.0 | Motion detected | :heavy_minus_sign: | Light level (dark, twilight, bright) | 1 | :heavy_minus_sign: |
+| [Shelly BLU RC Button 4 ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-rc-button-4-zb) | 1.5.0 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 4 | :heavy_minus_sign: |
 
 - **Shelly BLU Distance:** turn on **Measure Level** and enter the container height and the sensor's height above the bottom of the container. The sensor value then shows how full the container is as a percentage, instead of the distance to the contents.
 - **Shelly BLU Door/Window ZB:** the light level is dark, twilight, or bright, using the dark and bright thresholds set on the device. It needs firmware 1.2.19 or newer.
@@ -134,6 +135,7 @@ If a model works for you, report it with **Plugins → ShellyNGMQTT → Report D
 | Shelly BLU Motion | :white_check_mark: Verified | [cuhouse](https://github.com/cuhouse) ([CUHouse](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=CUHouse)) |
 | Shelly BLU Motion ZB | :white_check_mark: Verified | [cuhouse](https://github.com/cuhouse) ([CUHouse](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=CUHouse)) |
 | Shelly BLU RC Button 4 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
+| Shelly BLU RC Button 4 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+RC+Button+4+ZB&model=Shelly+BLU+RC+Button+4+ZB) |
 | Shelly Plus 1 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus 1 PM | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus 2 PM | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |

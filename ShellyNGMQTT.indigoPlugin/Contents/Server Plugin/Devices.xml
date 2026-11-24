@@ -49,7 +49,7 @@
 					<Option value="shelly-blu-ht-display-zb">Shelly BLU H&amp;T Display ZB</Option>
 					<Option value="-1">%%disabled:Shelly BLU H&amp;T ZB (Not available)%%</Option>
 					<Option value="shelly-blu-motion-zb">Shelly BLU Motion ZB</Option>
-					<Option value="-1">%%disabled:Shelly BLU RC Button 4 ZB (Not available)%%</Option>
+					<Option value="shelly-blu-rc-button-4-zb">Shelly BLU RC Button 4 ZB</Option>
 					<Option value="-1">%%disabled:Shelly BLU Remote Control ZB (Not available)%%</Option>
 					<Option value="-1">%%disabled:Shelly BLU TRV (Not available)%%</Option>
 					<Option value="-1">%%disabled:Shelly BLU Wall Switch 4 ZB (Not available)%%</Option>
@@ -1222,6 +1222,17 @@
 				<Label>The height of the sensor above the bottom of the container. This will be the same value as "Container Height" unless the sensor is mounted above the top of the container.</Label>
 			</Field>
     	</ConfigUI>
+		<States>
+		</States>
+	</Device>
+
+	<Device type="sensor" subType="kSensorDeviceSubType.Binary" id="shelly-blu-rc-button-4-zb">
+		<Name>Shelly BLU RC Button 4 ZB</Name>
+		<ConfigUI>
+			<Field id="no-configuration" type="label" alignWithControl="true" fontColor="darkgray">
+				<Label>No configuration options are available for this device.</Label>
+			</Field>
+		</ConfigUI>
 		<States>
 		</States>
 	</Device>
