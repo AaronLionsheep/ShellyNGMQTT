@@ -214,7 +214,8 @@ class Plugin(indigo.PluginBase):
 
             if not verified_devices[device.deviceTypeId]["verified_by"]:
                 self.logger.warning(
-                    f"'{device.name}' is a {model_class.display_name}, which hasn't been verified on a real device yet and may not work as expected. "
+                    f"'{device.name}' is a {model_class.display_name}, which hadn't been verified on a real device as of this plugin version and may not work as expected. "
+                    "Someone may have verified it since, which will be noted in a future version of the plugin. "
                     "If it works for you, please report it with Plugins → ShellyNGMQTT → Report Device Verification..."
                 )
 
