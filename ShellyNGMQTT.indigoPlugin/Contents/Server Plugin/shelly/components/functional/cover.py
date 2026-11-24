@@ -170,18 +170,28 @@ class Cover(Component):
             self.log_rpc_error("write configuration", error)
 
     def open(self):
-        self.shelly.publish_rpc("Cover.Open", {"id": self.comp_id})
+        self.shelly.publish_rpc(
+            "Cover.Open", {"id": self.comp_id}, callback=self.command_callback("open")
+        )
         self.log_command_sent("open")
 
     def close(self):
-        self.shelly.publish_rpc("Cover.Close", {"id": self.comp_id})
+        self.shelly.publish_rpc(
+            "Cover.Close", {"id": self.comp_id}, callback=self.command_callback("close")
+        )
         self.log_command_sent("close")
 
     def stop(self):
-        self.shelly.publish_rpc("Cover.Stop", {"id": self.comp_id})
+        self.shelly.publish_rpc(
+            "Cover.Stop", {"id": self.comp_id}, callback=self.command_callback("stop")
+        )
         self.log_command_sent("stop")
 
     def go_to_position(self, pos):
         pos = max(0, min(100, int(pos)))
-        self.shelly.publish_rpc("Cover.GoToPosition", {"id": self.comp_id, "pos": pos})
+        self.shelly.publish_rpc(
+            "Cover.GoToPosition",
+            {"id": self.comp_id, "pos": pos},
+            callback=self.command_callback(f"go to {pos}%"),
+        )
         self.log_command_sent(f"go to {pos}%")

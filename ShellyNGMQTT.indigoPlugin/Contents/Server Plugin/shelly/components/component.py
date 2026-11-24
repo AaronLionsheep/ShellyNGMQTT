@@ -79,6 +79,20 @@ class Component:
         device = self.device if self.device_id else self.shelly.device
         self.shelly.log_rpc_error(device.name, action, error)
 
+    def command_callback(self, action):
+        """
+        Build an RPC callback that logs a failed command with this component's device name.
+
+        :param action: What the command does, such as "turn on".
+        :return: A callback for publish_rpc.
+        """
+
+        def callback(result, error=None):
+            if error:
+                self.log_rpc_error(action, error)
+
+        return callback
+
     def get_device_state_list(self):
         """
         Build the device state list for the device.
