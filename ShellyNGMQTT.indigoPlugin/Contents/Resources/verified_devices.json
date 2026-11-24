@@ -1,0 +1,82 @@
+{
+  "shelly-blu-button1": {
+    "name": "Shelly BLU Button1",
+    "verified_by": []
+  },
+  "shelly-blu-distance": {
+    "name": "Shelly BLU Distance",
+    "verified_by": []
+  },
+  "shelly-blu-doorwindow": {
+    "name": "Shelly BLU Door/Window",
+    "verified_by": []
+  },
+  "shelly-blu-ht": {
+    "name": "Shelly BLU H&T",
+    "verified_by": []
+  },
+  "shelly-blu-motion": {
+    "name": "Shelly BLU Motion",
+    "verified_by": []
+  },
+  "shelly-blu-rc-button-4": {
+    "name": "Shelly BLU RC Button 4",
+    "verified_by": []
+  },
+  "shelly-plus-1": {
+    "name": "Shelly Plus 1",
+    "verified_by": []
+  },
+  "shelly-plus-1-pm": {
+    "name": "Shelly Plus 1 PM",
+    "verified_by": []
+  },
+  "shelly-plus-2-pm": {
+    "name": "Shelly Plus 2 PM",
+    "verified_by": []
+  },
+  "shelly-plus-ht": {
+    "name": "Shelly Plus H&T",
+    "verified_by": []
+  },
+  "shelly-plus-i-4": {
+    "name": "Shelly Plus I4",
+    "verified_by": []
+  },
+  "shelly-plus-plug": {
+    "name": "Shelly Plus Plug",
+    "verified_by": []
+  },
+  "shelly-plus-plug-s": {
+    "name": "Shelly Plus Plug S",
+    "verified_by": []
+  },
+  "shelly-plus-plug-uk": {
+    "name": "Shelly Plus Plug UK",
+    "verified_by": []
+  },
+  "shelly-plus-walldimmer": {
+    "name": "Shelly Plus WallDimmer",
+    "verified_by": []
+  },
+  "shelly-pro-1": {
+    "name": "Shelly Pro 1",
+    "verified_by": []
+  },
+  "shelly-pro-1-pm": {
+    "name": "Shelly Pro 1 PM",
+    "verified_by": []
+  },
+  "shelly-pro-2": {
+    "name": "Shelly Pro 2",
+    "verified_by": []
+  },
+  "shelly-pro-2-pm": {
+    "name": "Shelly Pro 2 PM",
+    "verified_by": []
+  },
+  "shelly-pro-4-pm": {
+    "name": "Shelly Pro 4 PM",
+    "verified_by": []
+  }
+}

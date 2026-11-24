@@ -1,7 +1,9 @@
+import json
 import logging
 import re
 import sys
 from collections import defaultdict
+from pathlib import Path
 from queue import Queue
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
@@ -52,6 +54,11 @@ shelly_model_classes = {
     "shelly-pro-2-pm": ShellyPro2PM,
     "shelly-pro-4-pm": ShellyPro4PM,
 }
+
+# Every model keyed by device type id, with the people who confirmed it works on a real device.
+# Models with an empty "verified_by" list were built from Shelly's API docs alone.
+with open(Path(__file__).parents[1] / "Resources" / "verified_devices.json") as f:
+    verified_devices: dict[str, dict] = json.load(f)
 
 
 class Plugin(indigo.PluginBase):
@@ -204,6 +211,12 @@ class Plugin(indigo.PluginBase):
             model_class = shelly_model_classes[device.deviceTypeId]
             shelly = model_class(device.id)
             self.shellies[device.id] = shelly
+
+            if not verified_devices[device.deviceTypeId]["verified_by"]:
+                self.logger.warning(
+                    f"'{device.name}' is a {model_class.display_name}, which hasn't been verified on a real device yet and may not work as expected. "
+                    "If it works for you, please report it with Plugins → ShellyNGMQTT → Report Device Verification..."
+                )
 
             if issubclass(model_class, ShellyBLU):
                 # Ensure the BLU device has a MAC address defined
@@ -404,6 +417,9 @@ class Plugin(indigo.PluginBase):
             return values_dict, errors_dict
 
         values_dict["shelly-model"] = main_device.deviceTypeId
+        values_dict["is-verified-model"] = bool(
+            verified_devices[main_device.deviceTypeId]["verified_by"]
+        )
         values_dict["is-initial-setup"] = main_device.pluginProps.get(
             "is-initial-setup", False
         )
@@ -612,6 +628,11 @@ class Plugin(indigo.PluginBase):
         else:
             valuesDict["is-mqtt-model"] = True
             valuesDict["is-blu-model"] = False
+
+        # Separators and headers in the model menu aren't models, so they never show the warning
+        valuesDict["is-verified-model"] = model not in verified_devices or bool(
+            verified_devices[model]["verified_by"]
+        )
 
         return valuesDict
 
@@ -848,6 +869,31 @@ class Plugin(indigo.PluginBase):
 
         _shellies.sort(key=lambda d: d[1])
         return _shellies
+
+    def report_device_verification(self, values_dict, menu_item_id):
+        """
+        Log a link to a device verification issue for the selected device, and
+        optionally open it in a browser on the Indigo server.
+
+        :param values_dict: The values from the menu item dialog.
+        :param menu_item_id: The menu item id.
+        :return: True to close the dialog, or a tuple with errors to keep it open.
+        """
+        shelly = self.shellies.get(int(values_dict.get("device-id") or 0))
+        if shelly is None:
+            errors = indigo.Dict({"device-id": "You must select a device."})
+            return False, values_dict, errors
+
+        url = shelly.verification_url(
+            firmware=shelly.device.pluginProps.get("version", ""),
+            plugin_version=self.pluginVersion,
+        )
+        self.logger.info(
+            f"Device verification report for '{shelly.device.name}': {url}"
+        )
+        if values_dict.get("open-browser", False):
+            self.browserOpen(url)
+        return True
 
     def get_broker_devices(self, filter="", valuesDict=None, typeId="", targetId=0):
         """

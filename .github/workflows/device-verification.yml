@@ -1,0 +1,115 @@
+name: Device verification
+
+# When a "device verification" issue is opened or edited, the report is checked and
+# a comment on the issue says what will be added or what to fix. Valid reports
+# get a pull request that adds the verification to verified_devices.json; merging
+# it is the maintainer's approval and closes the issue. Closing the issue without
+# merging closes the pull request.
+#
+# The issue body is untrusted, so it's only passed to the script through the
+# environment and never expanded into a run command.
+
+on:
+  issues:
+    types: [opened, edited, reopened, labeled, closed]
+
+concurrency:
+  group: device-verification-${{ github.event.issue.number }}
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  BRANCH: verify-device-${{ github.event.issue.number }}
+  ISSUE_NUMBER: ${{ github.event.issue.number }}
+  GH_TOKEN: ${{ github.token }}
+  GH_REPO: ${{ github.repository }}
+
+jobs:
+  verify:
+    name: Check Report
+    if: >-
+      github.event.action != 'closed'
+      && github.event.issue.state == 'open'
+      && contains(github.event.issue.labels.*.name, 'device verification')
+      && (github.event.action != 'labeled' || github.event.label.name == 'device verification')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check report
+        id: check
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+        run: python3 scripts/device_verification.py > "$RUNNER_TEMP/comment.md"
+
+      - name: Open or update pull request
+        if: steps.check.outputs.valid == 'true'
+        env:
+          MODEL: ${{ steps.check.outputs.model }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898181+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git commit -am "chore(device): verify $MODEL"
+          git push --force origin "$BRANCH"
+
+          url=$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url')
+          if [ -z "$url" ]; then
+            url=$(gh pr create --base "${{ github.event.repository.default_branch }}" --head "$BRANCH" \
+              --title "chore(device): verify $MODEL" \
+              --body "Adds the $MODEL verification from #$ISSUE_NUMBER to \`verified_devices.json\`.
+
+          Checks don't run on pull requests opened by GitHub Actions. Close and reopen this pull request to run them before merging.
+
+          Closes #$ISSUE_NUMBER")
+          fi
+          printf '\n\nA maintainer will review %s, which adds this verification to the plugin. It will be included in the next release after it merges.\n' "$url" >> "$RUNNER_TEMP/comment.md"
+
+      # An edit made an earlier valid report invalid
+      - name: Close outdated pull request
+        if: steps.check.outputs.valid == 'false'
+        run: |
+          url=$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url')
+          if [ -n "$url" ]; then
+            gh pr close "$url" --delete-branch --comment "Closed because the report in #$ISSUE_NUMBER needs changes. A new pull request opens once it's fixed."
+          fi
+
+      - name: Note failure
+        if: failure()
+        run: |
+          printf '\n\nSomething went wrong handling this report. See the [workflow run](%s).\n' \
+            "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> "$RUNNER_TEMP/comment.md"
+
+      - name: Comment
+        if: always()
+        run: gh issue comment "$ISSUE_NUMBER" --body-file "$RUNNER_TEMP/comment.md" --edit-last --create-if-none
+
+  close:
+    name: Close Pull Request
+    if: >-
+      github.event.action == 'closed'
+      && contains(github.event.issue.labels.*.name, 'device verification')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    timeout-minutes: 5
+    steps:
+      # A merged pull request closes the issue too, but it's no longer open, so it's left alone
+      - name: Close pull request
+        run: |
+          url=$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url')
+          if [ -n "$url" ]; then
+            gh pr close "$url" --delete-branch --comment "Closed because #$ISSUE_NUMBER was closed."
+          fi

@@ -1,0 +1,89 @@
+name: Device verification
+description: Confirm that a supported Shelly model works with the plugin on a real device
+title: "Verify "
+labels: ["device verification"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping verify a device! Some models are added from Shelly's API documentation before anyone has tried them on real hardware, and the plugin shows a warning for these until someone confirms they work. In Indigo, **Plugins → ShellyNGMQTT → Report Device Verification...** gives you a link to this form with your device's details filled in.
+
+        **A verification is a community note of support, not a warranty.** It says the model worked for you. You aren't responsible or liable for how the device or the plugin works for anyone else.
+
+        When you submit this form, a pull request is opened to add your verification, and it's included in the next release once a maintainer merges it. If something didn't work, please open a [bug report](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=bug-report.yml) instead.
+
+  - type: dropdown
+    id: model
+    attributes:
+      label: Device model
+      description: The model as it's named in the plugin's **Shelly Model** menu.
+      options:
+        - Shelly Plus 1
+        - Shelly Plus 1 PM
+        - Shelly Plus 2 PM
+        - Shelly Plus H&T
+        - Shelly Plus I4
+        - Shelly Plus Plug
+        - Shelly Plus Plug S
+        - Shelly Plus Plug UK
+        - Shelly Plus WallDimmer
+        - Shelly Pro 1
+        - Shelly Pro 1 PM
+        - Shelly Pro 2
+        - Shelly Pro 2 PM
+        - Shelly Pro 4 PM
+        - Shelly BLU Button1
+        - Shelly BLU Distance
+        - Shelly BLU Door/Window
+        - Shelly BLU H&T
+        - Shelly BLU Motion
+        - Shelly BLU RC Button 4
+    validations:
+      required: true
+
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware version
+      description: Shown in the Shelly web UI or app under Settings → Firmware.
+      placeholder: "1.4.4"
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: Shown in Indigo under Plugins → Manage Plugins.
+      placeholder: "1.5.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: tested
+    attributes:
+      label: What did you test?
+      description: The features you tried and how, for example turning the relay on and off from Indigo, watching power readings, or triggering on button presses.
+    validations:
+      required: true
+
+  - type: input
+    id: forum
+    attributes:
+      label: Indigo forum username
+      description: Optional. Add it to be credited by your forum name too.
+
+  - type: checkboxes
+    id: on-behalf
+    attributes:
+      label: Submitting for someone else?
+      options:
+        - label: I'm submitting this for the Indigo forum user named above, who verified the device
+
+  - type: checkboxes
+    id: credit
+    attributes:
+      label: Credit
+      description: Leave this unchecked to verify anonymously. Anonymous verifications count the same and aren't credited by name, but your usernames are still recorded with the verification in the plugin's public repository, and this issue is public under your GitHub account.
+      options:
+        - label: List my GitHub username, and my Indigo forum username if given, publicly as a verifier of this model

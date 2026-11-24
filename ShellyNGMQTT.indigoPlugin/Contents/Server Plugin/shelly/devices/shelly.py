@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlencode
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
@@ -38,6 +39,26 @@ class Shelly:
         :return: Error messages keyed by field id, empty when the values are valid.
         """
         return {}
+
+    @classmethod
+    def verification_url(cls, firmware: str = "", plugin_version: str = "") -> str:
+        """
+        Link to a new device verification issue with this model's details filled in.
+
+        :param firmware: The device's firmware version, left blank when empty.
+        :param plugin_version: The plugin version, left blank when empty.
+        :return: The URL of the issue form.
+        """
+        fields = {
+            "template": "device-verification.yml",
+            "title": f"Verify {cls.display_name}",
+            "model": cls.display_name,
+            "firmware": firmware,
+            "plugin-version": plugin_version,
+        }
+        return "https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?" + urlencode(
+            {key: value for key, value in fields.items() if value}
+        )
 
     @property
     def device(self):
