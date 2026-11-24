@@ -83,7 +83,7 @@ class Verification:
     """
 
     model: str
-    firmware: str
+    firmware: str | None
     plugin_version: str
     tested: str
     github_username: str | None
@@ -111,7 +111,7 @@ class Verification:
             github_username = None
         return cls(
             model=fields.get("Device model", ""),
-            firmware=fields.get("Firmware version", ""),
+            firmware=fields.get("Firmware version") or None,
             plugin_version=fields.get("Plugin version", ""),
             tested=fields.get("What did you test?", ""),
             github_username=github_username,
@@ -140,13 +140,14 @@ class Verification:
             errors.append("No device model was chosen.")
         elif self.type_id(registry) is None:
             errors.append(f"`{self.model}` isn't a model the plugin supports.")
+        if not self.plugin_version:
+            errors.append("The plugin version is missing.")
+        # The firmware version is optional, but checked when given
         for label, value in [
             ("firmware version", self.firmware),
             ("plugin version", self.plugin_version),
         ]:
-            if not value:
-                errors.append(f"The {label} is missing.")
-            elif not re.fullmatch(r"[\w./+-]{1,40}", value):
+            if value and not re.fullmatch(r"[\w./+-]{1,40}", value):
                 errors.append(
                     f"The {label} should look like `1.4.4`, without spaces or other text."
                 )
@@ -225,7 +226,7 @@ class Verification:
                 f"| Model | {self.model} (`{self.type_id(registry)}`) |",
                 f"| Verifier | {', '.join(verifier)} |",
                 f"| Credited by name | {'No (anonymous)' if self.anonymous else 'Yes'} |",
-                f"| Firmware | `{self.firmware}` |",
+                f"| Firmware | {f'`{self.firmware}`' if self.firmware else 'Not given'} |",
                 f"| Plugin version | `{self.plugin_version}` |",
                 "",
                 f"This model has already been verified {len(verified_by)} time(s)."
@@ -282,7 +283,6 @@ def verification_table(registry: dict) -> str:
                 {
                     "template": "device-verification.yml",
                     "title": f"Verify {model['name']}",
-                    "model": model["name"],
                 }
             )
             lines.append(

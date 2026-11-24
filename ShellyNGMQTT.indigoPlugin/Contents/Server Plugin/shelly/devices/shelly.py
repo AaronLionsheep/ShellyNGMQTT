@@ -57,10 +57,10 @@ class Shelly:
         :param plugin_version: The plugin version, left blank when empty.
         :return: The URL of the issue form.
         """
+        # GitHub can't fill in the model dropdown from a link, so the title names the model
         fields = {
             "template": "device-verification.yml",
             "title": f"Verify {cls.display_name}",
-            "model": cls.display_name,
             "firmware": firmware,
             "plugin-version": plugin_version,
         }
