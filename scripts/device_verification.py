@@ -42,6 +42,9 @@ DOCS_END = "<!-- End of generated table -->"
 FORM_URL = "https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new"
 FORUM_PROFILE_URL = "https://forums.indigodomo.com/memberlist.php"
 
+# Models with more verifications than this collapse their verifiers in the docs table
+COLLAPSE_AFTER = 3
+
 # GitHub fills fields left empty in an issue form with this placeholder
 NO_RESPONSE = "_No response_"
 
@@ -264,7 +267,8 @@ def verification_table(registry: dict) -> str:
     A Markdown table of every model's verification status, sorted by model name.
 
     Anonymous verifications count toward a model being verified, but are only
-    shown as a count.
+    shown as a count. Models with more than COLLAPSE_AFTER verifications show a
+    count that expands to the full list.
 
     :param registry: The verified device registry.
     :return: The table.
@@ -286,10 +290,21 @@ def verification_table(registry: dict) -> str:
             )
             continue
 
-        credit = ", ".join(
+        credits = [
             verifier_credit(entry) for entry in verified_by if not entry["anonymous"]
-        )
+        ]
         anonymous = sum(entry["anonymous"] for entry in verified_by)
+        if len(verified_by) > COLLAPSE_AFTER:
+            # Keep long lists from making the row tall, one verifier per line when expanded
+            items = credits + ([f"{anonymous} anonymous"] if anonymous else [])
+            credit = (
+                f"<details><summary>{len(verified_by)} verifiers</summary>"
+                f"{'<br>'.join(items)}</details>"
+            )
+            lines.append(f"| {name} | :white_check_mark: Verified | {credit} |")
+            continue
+
+        credit = ", ".join(credits)
         if anonymous:
             credit = (
                 f"{credit} and {anonymous} anonymous"

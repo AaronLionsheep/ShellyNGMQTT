@@ -558,6 +558,67 @@ class TestVerificationTable:
             "| Shelly Pro 2 | :white_check_mark: Verified | 1 anonymous |"
         ]
 
+    def test_three_verifiers_not_collapsed(self):
+        """Up to three verifiers are listed inline, which keeps the row short"""
+        registry = {
+            "shelly-pro-2": {
+                "name": "Shelly Pro 2",
+                "verified_by": [make_entry(github_username=f"u{i}") for i in range(3)],
+            }
+        }
+
+        (row,) = self.rows(registry)
+
+        assert "<details>" not in row
+        assert row.count("https://github.com/") == 3
+
+    def test_many_verifiers_collapsed(self):
+        """Long lists collapse to a count that expands to one verifier per line"""
+        registry = {
+            "shelly-pro-2": {
+                "name": "Shelly Pro 2",
+                "verified_by": [
+                    make_entry(github_username="first"),
+                    make_entry(github_username="second"),
+                    make_entry(github_username="third"),
+                    make_entry(github_username="fourth"),
+                ],
+            }
+        }
+
+        assert self.rows(registry) == [
+            (
+                "| Shelly Pro 2 | :white_check_mark: Verified | "
+                "<details><summary>4 verifiers</summary>"
+                "[first](https://github.com/first)<br>[second](https://github.com/second)<br>"
+                "[third](https://github.com/third)<br>[fourth](https://github.com/fourth)"
+                "</details> |"
+            )
+        ]
+
+    def test_collapsed_count_includes_anonymous(self):
+        """Anonymous verifiers count toward collapsing and are summed on the last line"""
+        registry = {
+            "shelly-pro-2": {
+                "name": "Shelly Pro 2",
+                "verified_by": [
+                    make_entry(github_username="named"),
+                    *[
+                        make_entry(github_username=f"hidden{i}", anonymous=True)
+                        for i in range(3)
+                    ],
+                ],
+            }
+        }
+
+        (row,) = self.rows(registry)
+
+        assert "<summary>4 verifiers</summary>" in row
+        assert row.endswith(
+            "[named](https://github.com/named)<br>3 anonymous</details> |"
+        )
+        assert "hidden" not in row
+
 
 class TestWithVerificationTable:
     def page(self, table=""):
