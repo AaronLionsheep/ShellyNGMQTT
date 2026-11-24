@@ -178,6 +178,7 @@ Model-specific states:
 | Shelly BLU Motion ZB | Motion detected (`onOffState`), light level: `dark`, `twilight`, or `bright` (`lightLevel`) |
 | Shelly BLU Door/Window ZB | Open/closed (`onOffState`), light level: `dark`, `twilight`, or `bright` (`lightLevel`), rotation (`rotation`) |
 | Shelly BLU H&T ZB | Temperature (`temperature`, also `sensorValue`), humidity (`humidity`) |
+| Shelly BLU Remote Control ZB | Active channel (`channel`), steps of the latest wheel turn, negative when turned left (`wheel`), magic wand rotation angles (`rotation1`, `rotation2`, `rotation3`) |
 
 ## Troubleshooting
 

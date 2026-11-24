@@ -19,6 +19,7 @@ from shelly.devices.shelly_blu_motion import ShellyBLUMotion
 from shelly.devices.shelly_blu_motion_zb import ShellyBLUMotionZB
 from shelly.devices.shelly_blu_rc_button_4 import ShellyBLURCButton4
 from shelly.devices.shelly_blu_rc_button_4_zb import ShellyBLURCButton4ZB
+from shelly.devices.shelly_blu_remote_control_zb import ShellyBLURemoteControlZB
 from shelly.devices.shelly_blu_wall_switch_4_zb import ShellyBLUWallSwitch4ZB
 from shelly.devices.shelly_mqtt import ShellyMQTT
 from shelly.devices.shelly_plus_1 import ShellyPlus1
@@ -51,6 +52,7 @@ shelly_model_classes = {
     "shelly-blu-motion": ShellyBLUMotion,
     "shelly-blu-motion-zb": ShellyBLUMotionZB,
     "shelly-blu-wall-switch-4-zb": ShellyBLUWallSwitch4ZB,
+    "shelly-blu-remote-control-zb": ShellyBLURemoteControlZB,
     "shelly-plus-1": ShellyPlus1,
     "shelly-plus-1-pm": ShellyPlus1PM,
     "shelly-plus-2-pm": ShellyPlus2PM,

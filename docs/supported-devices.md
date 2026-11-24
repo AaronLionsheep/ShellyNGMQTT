@@ -102,12 +102,14 @@ BLU+ZB devices support both Bluetooth and Zigbee. The plugin uses their Bluetoot
 | [Shelly BLU H&T ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-h-t-zb) | 1.5.0 | :heavy_minus_sign: | Temperature | Temperature, humidity | 1 | Temperature unit (°F/°C), temperature offset |
 | [Shelly BLU Motion ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-motion-zb) | 1.5.0 | Motion detected | :heavy_minus_sign: | Light level (dark, twilight, bright) | 1 | :heavy_minus_sign: |
 | [Shelly BLU RC Button 4 ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-rc-button-4-zb) | 1.5.0 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 4 | :heavy_minus_sign: |
+| [Shelly BLU Remote Control ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-remote-control-zb) | 1.5.0 | :heavy_minus_sign: | :heavy_minus_sign: | Channel, wheel steps, magic wand rotation | 2 | :heavy_minus_sign: |
 | [Shelly BLU Wall Switch 4 ZB](https://kb.shelly.cloud/knowledge-base/shelly-blu-wall-switch-4-zb) | 1.5.0 | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | 4 | :heavy_minus_sign: |
 
 - **Shelly BLU Distance:** turn on **Measure Level** and enter the container height and the sensor's height above the bottom of the container. The sensor value then shows how full the container is as a percentage, instead of the distance to the contents.
 - **Shelly BLU Door/Window ZB:** the light level is dark, twilight, or bright, using the dark and bright thresholds set on the device. It needs firmware 1.2.19 or newer.
 - **Shelly BLU H&T Display ZB:** the temperature offset is applied in the selected temperature unit. The light level is dark, twilight, or bright, using the dark and bright thresholds set on the device. Light detected and light level need firmware 1.2.20 or newer.
 - **Shelly BLU H&T ZB:** the temperature offset is applied in the selected temperature unit.
+- **Shelly BLU Remote Control ZB:** the two ring buttons are buttons 1 and 2, and fire Single Push and Hold Push events. The **Channel** state shows the channel selected with the arrow buttons when a button was pressed, so a trigger can add a condition on it to act differently per channel. Turning the wheel updates **Wheel Steps** (positive when turned right, negative when turned left) instead of firing a button event.
 
 ### Common BLU States
 
@@ -142,6 +144,7 @@ If a model works for you, report it with **Plugins → ShellyNGMQTT → Report D
 | Shelly BLU Motion ZB | :white_check_mark: Verified | [cuhouse](https://github.com/cuhouse) ([CUHouse](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=CUHouse)) |
 | Shelly BLU RC Button 4 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly BLU RC Button 4 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+RC+Button+4+ZB&model=Shelly+BLU+RC+Button+4+ZB) |
+| Shelly BLU Remote Control ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Remote+Control+ZB&model=Shelly+BLU+Remote+Control+ZB) |
 | Shelly BLU Wall Switch 4 ZB | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Wall+Switch+4+ZB&model=Shelly+BLU+Wall+Switch+4+ZB) |
 | Shelly Plus 1 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus 1 PM | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
