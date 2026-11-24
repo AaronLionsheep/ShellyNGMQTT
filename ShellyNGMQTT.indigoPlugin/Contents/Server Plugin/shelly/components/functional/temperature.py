@@ -100,7 +100,7 @@ class Temperature(Component):
         """
 
         if error:
-            self.logger.error(error)
+            self.log_rpc_error("read configuration", error)
             return
 
         self.latest_config = {
@@ -136,11 +136,7 @@ class Temperature(Component):
         """
 
         if error:
-            self.logger.error(
-                "Error writing input configuration: {}".format(
-                    error.get("message", "<Unknown>")
-                )
-            )
+            self.log_rpc_error("write configuration", error)
             return
 
         if status.get("restart_required", False):
@@ -168,6 +164,10 @@ class Temperature(Component):
         :param status: The status message
         :return:
         """
+        if error:
+            self.log_rpc_error("read status", error)
+            return
+
         updated_states = []
 
         temp_c = status.get("tC", None)

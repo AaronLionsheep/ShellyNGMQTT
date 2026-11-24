@@ -104,7 +104,7 @@ class Switch(Component):
         """
 
         if error:
-            self.logger.error(error)
+            self.log_rpc_error("read configuration", error)
             return
 
         self.latest_config = {
@@ -149,11 +149,7 @@ class Switch(Component):
         """
 
         if error:
-            self.logger.error(
-                "Error writing switch configuration: {}".format(
-                    error.get("message", "<Unknown>")
-                )
-            )
+            self.log_rpc_error("write configuration", error)
             return
 
         if status.get("restart_required", False):
@@ -182,6 +178,10 @@ class Switch(Component):
         :param error:
         :return:
         """
+
+        if error:
+            self.log_rpc_error("read status", error)
+            return
 
         updated_states = []
 
@@ -273,7 +273,11 @@ class Switch(Component):
         if toggle_after is not None:
             params["toggle_after"] = toggle_after
 
-        self.shelly.publish_rpc("Switch.Set", params)
+        self.shelly.publish_rpc(
+            "Switch.Set",
+            params,
+            callback=self.command_callback("turn on" if on else "turn off"),
+        )
 
         if on is True:
             self.device.updateStateOnServer(key="onOffState", value=True)
@@ -286,5 +290,9 @@ class Switch(Component):
         """
         This method toggles the output state.
         """
-        self.shelly.publish_rpc("Switch.Toggle", {"id": self.comp_id})
+        self.shelly.publish_rpc(
+            "Switch.Toggle",
+            {"id": self.comp_id},
+            callback=self.command_callback("toggle"),
+        )
         self.log_command_sent("toggle")

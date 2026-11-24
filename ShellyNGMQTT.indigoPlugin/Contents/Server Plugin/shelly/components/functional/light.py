@@ -107,7 +107,7 @@ class Light(Component):
         :return: None
         """
         if error:
-            self.logger.error(error)
+            self.log_rpc_error("read configuration", error)
             return
 
         self.latest_config = {
@@ -150,11 +150,7 @@ class Light(Component):
         :return: None
         """
         if error:
-            self.logger.error(
-                "Error writing switch configuration: {}".format(
-                    error.get("message", "<Unknown>")
-                )
-            )
+            self.log_rpc_error("write configuration", error)
             return
 
         if status.get("restart_required", False):
@@ -180,6 +176,10 @@ class Light(Component):
         :param error:
         :return:
         """
+        if error:
+            self.log_rpc_error("read status", error)
+            return
+
         updated_states = []
 
         # Process output
@@ -288,7 +288,13 @@ class Light(Component):
         if toggle_after is not None:
             params["toggle_after"] = toggle_after
 
-        self.shelly.publish_rpc("Light.Set", params)
+        if on is None:
+            action = "set brightness"
+        else:
+            action = "turn on" if on else "turn off"
+        self.shelly.publish_rpc(
+            "Light.Set", params, callback=self.command_callback(action)
+        )
 
         if on is True:
             self.device.updateStateOnServer(key="onOffState", value=True)
@@ -303,4 +309,8 @@ class Light(Component):
 
         :return: None
         """
-        self.shelly.publish_rpc("Light.Toggle", {})
+        self.shelly.publish_rpc(
+            "Light.Toggle",
+            {"id": self.comp_id},
+            callback=self.command_callback("toggle"),
+        )

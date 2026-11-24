@@ -203,8 +203,13 @@ class ShellyMQTT(Shelly):
         rpc_id = uuid.uuid4().hex
         if not params:
             params = {}
-        if callback:
-            self.rpc_callbacks[rpc_id] = callback
+        if not callback:
+            # Commands like Switch.Set have no callback, so log their errors here
+            def callback(result, error=None):
+                if error:
+                    self.log_rpc_error(self.device.name, f"run {method}", error)
+
+        self.rpc_callbacks[rpc_id] = callback
         rpc = {
             "id": rpc_id,
             "src": self.get_address(),
@@ -353,7 +358,7 @@ class ShellyMQTT(Shelly):
 
         def _response(response, error=None):
             if error:
-                self.logger.error(error)
+                self.log_rpc_error(self.device.name, "check for updates", error)
                 return
 
             if "stable" in response:
@@ -381,7 +386,7 @@ class ShellyMQTT(Shelly):
 
         def _response(response, error=None):
             if error:
-                self.logger.error(error)
+                self.log_rpc_error(self.device.name, "update", error)
                 return
 
         self.publish_rpc("Shelly.Update", {"stage": stage}, callback=_response)
