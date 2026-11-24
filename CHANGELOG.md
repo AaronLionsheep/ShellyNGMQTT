@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/AaronLionsheep/ShellyNGMQTT/compare/v1.4.1...v1.4.2) (2026-11-24)
+
+
+### Miscellaneous Chores
+
+* **release:** Checkout code to bundle release artifact ([#154](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/154)) ([408f60d](https://github.com/AaronLionsheep/ShellyNGMQTT/commit/408f60da3332dbad0aa501c3aa21f0c2784b158c))
+
 ## [1.4.1](https://github.com/AaronLionsheep/ShellyNGMQTT/compare/1.4.0...v1.4.1) (2026-11-22)
 
 
