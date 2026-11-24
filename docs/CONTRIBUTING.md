@@ -70,7 +70,7 @@ All plugin code lives in `ShellyNGMQTT.indigoPlugin/Contents/Server Plugin/`:
 | `ConfigTemplates/` | Shared config UI fragments included by the XML files |
 | `tests/`, `shelly/**/tests/` | Unit tests, next to the code they cover |
 
-`Contents/Resources/` holds the plugin icon and `indigo-blu-relay.js`, the JavaScript that runs on the Shelly device to relay BLU advertisements over MQTT.
+`Contents/Resources/` holds the plugin icon, `indigo-blu-relay.js` (the JavaScript that runs on the Shelly device to relay BLU advertisements over MQTT), and `verified_devices.json` (see [Device Verification](#device-verification)).
 
 ## Coding Guidelines
 
@@ -103,9 +103,39 @@ CI runs the suite on Linux with Python 3.11 and 3.13, so keep tests platform-ind
 2. **Create the model class** in `shelly/devices/shelly_<model>.py`. Start from the closest existing model: `ShellyMQTT` subclasses for Wi-Fi/Ethernet devices, `ShellyBLU` subclasses for BLU devices. Set `display_name`, register the system and functional components the device has, and add any model-specific classmethods.
 3. **Add the device to `Devices.xml`.** The `id` is the Indigo device type ID (for example `shelly-plus-1`), and its `<Name>` must match `display_name`.
 4. **Register the class** in the `shelly_model_classes` mapping in `plugin.py`.
-5. **Add tests** in the matching `tests/` folder. At minimum, cover `display_name`, the plugin props, and any parsing or state logic. See `shelly/devices/tests/test_shelly_blu_motion.py` for an example.
-6. **Update the docs.** Add the device to the list in the [README](../README.md) and to the right table in [Supported Devices](supported-devices.md), linking the model name to its [Shelly Knowledge Base](https://kb.shelly.cloud) page.
-7. **Test on real hardware** if you can, and say in the pull request which models and firmware versions you tested.
+5. **Add the model to the verification registry.** Add an entry to `Contents/Resources/verified_devices.json` with the model's `display_name` as `name`, and add the name to the model menu in [.github/ISSUE_TEMPLATE/device-verification.yml](../.github/ISSUE_TEMPLATE/device-verification.yml). Leave `verified_by` empty unless you've tested the model on a real device (see [Device Verification](#device-verification)). Then run `python3 scripts/device_verification.py --docs` to add the model to the Community Verifications table in [Supported Devices](supported-devices.md#community-verifications).
+6. **Add tests** in the matching `tests/` folder. At minimum, cover `display_name`, the plugin props, and any parsing or state logic. See `shelly/devices/tests/test_shelly_blu_motion.py` for an example.
+7. **Update the docs.** Add the device to the list in the [README](../README.md) and to the right table in [Supported Devices](supported-devices.md), linking the model name to its [Shelly Knowledge Base](https://kb.shelly.cloud) page.
+8. **Test on real hardware** if you can, and say in the pull request which models and firmware versions you tested.
+
+### Device Verification
+
+`Contents/Resources/verified_devices.json` lists every model with the people who confirmed it works on a real device. Models with an empty `verified_by` list show a warning in the device creation dialog and log a warning when the device starts. Tests check that the registry and the issue form's model menu match `shelly_model_classes`.
+
+The [Community Verifications](supported-devices.md#community-verifications) table in Supported Devices is generated from the registry. Each model links its verifiers' GitHub profiles, with their Indigo forum profile in parentheses, and anonymous verifications are only counted. Don't edit the table by hand: after changing `verified_devices.json`, run `python3 scripts/device_verification.py --docs`. A test fails if the table is out of date.
+
+A verification is a community note of support that a model worked for someone, not a warranty. Verifiers aren't responsible or liable for how the device or the plugin works for anyone else.
+
+Each `verified_by` entry has these fields:
+
+| Field | Value |
+| --- | --- |
+| `github_username` | GitHub username of the issue author, or `null` when the issue was filed for a forum user |
+| `indigo_username` | Indigo forum username, or `null` |
+| `anonymous` | `true` if the verifier asked not to be credited by name |
+| `firmware` | Shelly firmware version tested |
+| `plugin_version` | Plugin version tested |
+| `issue` | The device verification issue number |
+
+Users report verifications with the [device verification](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml) issue form. In Indigo, **Plugins → ShellyNGMQTT → Report Device Verification...** logs a link to the form with the model, firmware, and plugin version filled in. The [Device verification](../.github/workflows/device-verification.yml) workflow handles the rest, using [scripts/device_verification.py](../scripts/device_verification.py):
+
+1. When an issue with the `device verification` label is opened or edited, the workflow checks the report and comments on the issue with what will be added, or the problems to fix first.
+2. For a valid report, it opens (or updates) a `chore(device): verify <model>` pull request that adds the entry, regenerates the Community Verifications table, and closes the issue. If an edit makes the report invalid, the pull request is closed until it's fixed.
+3. The pull request requests a review from the repository owner and is assigned to them. Checks on pull requests opened by GitHub Actions wait for approval, so approve the workflows on the pull request to run them, then merge it to approve the verification. To reject a report, close the issue, which also closes the pull request.
+
+Leaving the **Credit** box unchecked sets `anonymous` to `true`. The usernames are still recorded, so a later verification by the same person replaces it, but anything that credits verifiers by name should leave anonymous entries out. It still counts toward the model being verified.
+
+To credit an Indigo forum user who doesn't have a GitHub account, open the issue yourself with their forum username and check **Submitting for someone else**.
 
 ## Pull Requests
 

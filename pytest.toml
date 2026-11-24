@@ -3,5 +3,6 @@ addopts = [
     "-v",
     "-p pytest_cov",
     "--cov=ShellyNGMQTT.indigoPlugin/Contents/Server Plugin",
+    "--cov=scripts",
     "--cov-report=term-missing"
 ]

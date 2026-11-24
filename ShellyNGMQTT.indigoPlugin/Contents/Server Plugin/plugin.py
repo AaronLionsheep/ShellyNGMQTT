@@ -5,7 +5,7 @@ from collections import defaultdict
 from queue import Queue
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
-from shelly.devices.shelly import Shelly
+from shelly.devices.shelly import Shelly, verified_devices
 from shelly.devices.shelly_blu import MAX_BLE_EVENT_AGE, ShellyBLU
 from shelly.devices.shelly_blu_button1 import ShellyBLUButton1
 from shelly.devices.shelly_blu_distance import ShellyBLUDistance
@@ -203,6 +203,12 @@ class Plugin(indigo.PluginBase):
             model_class = shelly_model_classes[device.deviceTypeId]
             shelly = model_class(device.id)
             self.shellies[device.id] = shelly
+
+            if not verified_devices[device.deviceTypeId]["verified_by"]:
+                self.logger.warning(
+                    f"'{device.name}' ({model_class.display_name}) wasn't tested against a real device when this plugin version was released and may not work as expected. "
+                    "If it works, report it with Plugins → ShellyNGMQTT → Report Device Verification..."
+                )
 
             if issubclass(model_class, ShellyBLU):
                 # Ensure the BLU device has a MAC address defined
@@ -403,6 +409,9 @@ class Plugin(indigo.PluginBase):
             return values_dict, errors_dict
 
         values_dict["shelly-model"] = main_device.deviceTypeId
+        values_dict["is-verified-model"] = bool(
+            verified_devices[main_device.deviceTypeId]["verified_by"]
+        )
         values_dict["is-initial-setup"] = main_device.pluginProps.get(
             "is-initial-setup", False
         )
@@ -611,6 +620,11 @@ class Plugin(indigo.PluginBase):
         else:
             valuesDict["is-mqtt-model"] = True
             valuesDict["is-blu-model"] = False
+
+        # Separators and headers in the model menu aren't models, so they never show the warning
+        valuesDict["is-verified-model"] = model not in verified_devices or bool(
+            verified_devices[model]["verified_by"]
+        )
 
         return valuesDict
 
@@ -847,6 +861,69 @@ class Plugin(indigo.PluginBase):
 
         _shellies.sort(key=lambda d: d[1])
         return _shellies
+
+    def get_shelly_devices_for_verification(
+        self, filter="", valuesDict=None, typeId="", targetId=0
+    ):
+        """
+        List the started Shelly devices for the verification menu item, with
+        unverified models first so they're quick to find.
+
+        Each device shows its model, since one report covers every device of
+        that model. An em dash separates them because device names often
+        contain parentheses.
+
+        :return: The menu items.
+        """
+        unverified = []
+        verified = []
+        for shelly in sorted(
+            self.shellies.values(), key=lambda s: s.device.name.lower()
+        ):
+            item = (
+                str(shelly.device.id),
+                f"{shelly.device.name} — {shelly.display_name}",
+            )
+            if verified_devices[shelly.device.deviceTypeId]["verified_by"]:
+                verified.append(item)
+            else:
+                unverified.append(item)
+
+        return [
+            ("none", "%%disabled:Unverified Models%%"),
+            ("none", "%%separator%%"),
+            *(unverified or [("none", "%%disabled:None%%")]),
+            ("none", "%%disabled: %%"),
+            ("none", "%%disabled:Community Verified Models%%"),
+            ("none", "%%separator%%"),
+            *(verified or [("none", "%%disabled:None%%")]),
+        ]
+
+    def report_device_verification(self, values_dict, menu_item_id):
+        """
+        Log a link to a device verification issue for the selected device, and
+        optionally open it in a browser on the Indigo server.
+
+        :param values_dict: The values from the menu item dialog.
+        :param menu_item_id: The menu item id.
+        :return: True to close the dialog, or a tuple with errors to keep it open.
+        """
+        device_id = values_dict.get("device-id", "")
+        shelly = self.shellies.get(int(device_id)) if device_id.isdigit() else None
+        if shelly is None:
+            errors = indigo.Dict({"device-id": "You must select a device."})
+            return False, values_dict, errors
+
+        url = shelly.verification_url(
+            firmware=shelly.device.pluginProps.get("version", ""),
+            plugin_version=self.pluginVersion,
+        )
+        self.logger.info(
+            f"Device verification report for '{shelly.device.name}': {url}"
+        )
+        if values_dict.get("open-browser", False):
+            self.browserOpen(url)
+        return True
 
     def get_broker_devices(self, filter="", valuesDict=None, typeId="", targetId=0):
         """

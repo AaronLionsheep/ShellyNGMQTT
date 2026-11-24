@@ -57,6 +57,14 @@
 				<CallbackMethod>deviceFactoryModelChanged</CallbackMethod>
 			</Field>
 
+			<Field id="is-verified-model" type="checkbox" defaultValue="true" hidden="true" />
+			<Field id="verified-model-note" type="label" fontColor="green" alignWithControl="true" visibleBindingId="is-verified-model" visibleBindingValue="true">
+				<Label>✔︎ Verified on a real device by the community.</Label>
+			</Field>
+			<Field id="unverified-model-warning" type="label" fontColor="orange" alignWithControl="true" visibleBindingId="is-verified-model" visibleBindingValue="false">
+				<Label>⚠︎ Untested on a real device as of this plugin version. If it works, please report it from the plugin's menu.</Label>
+			</Field>
+
 			<Field id="is-mqtt-model" type="checkbox" defaultValue="true" hidden="true" />
 			<Field id="is-blu-model" type="checkbox" defaultValue="false" hidden="true" />
 
@@ -694,7 +702,7 @@
 	</Device>
 
 	<Device type="sensor" id="shelly-pro-2">
-		<Name>Shelly Pro 1</Name>
+		<Name>Shelly Pro 2</Name>
 		<ConfigUI>
             <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
             <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />

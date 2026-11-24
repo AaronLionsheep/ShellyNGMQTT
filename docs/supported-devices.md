@@ -2,7 +2,7 @@
 
 ShellyNGMQTT supports Shelly Gen2+ Wi-Fi devices over MQTT, and Shelly BLU Bluetooth devices relayed through them. Gen1 devices are supported by the [ShellyMQTT](https://www.indigodomo.com/pluginstore/236/) plugin instead.
 
-Don't see your device? Open a [new device request](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=new-device.yml).
+Don't see your device? Open a [new device request](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=new-device.yml). To see which models people have confirmed work on real devices, see [Community Verifications](#community-verifications).
 
 In the tables on this page, :white_check_mark: means the device has the feature and the plugin supports it, and :heavy_minus_sign: means the device itself doesn't have it. **Added in** is the first plugin version that supports the model.
 
@@ -109,3 +109,36 @@ All BLU devices also report:
 - **Packet ID,** a counter the device increases with each broadcast
 
 Every BLU device has at least one button, which can fire [button events](events.md#button-events).
+
+## Community Verifications
+
+Some models are added from Shelly's API documentation before anyone has tried them on a real device. This table shows which models people in the community have confirmed work with the plugin. It includes verifications made since the last release, so it may be ahead of the plugin version you have installed. A verification is a community note of support, not a warranty.
+
+If a model works for you, report it with **Plugins → ShellyNGMQTT → Report Device Verification...** in Indigo, or with the [device verification](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml) form. See [Creating Devices](user-guide.md#creating-devices) for details.
+
+<!-- Generated from verified_devices.json by scripts/device_verification.py --docs. Don't edit by hand. -->
+
+| Model | Status | Verified by |
+| --- | --- | --- |
+| Shelly BLU Button1 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Button1&model=Shelly+BLU+Button1) |
+| Shelly BLU Distance | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Distance&model=Shelly+BLU+Distance) |
+| Shelly BLU Door/Window | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Door%2FWindow&model=Shelly+BLU+Door%2FWindow) |
+| Shelly BLU H&T | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+H%26T&model=Shelly+BLU+H%26T) |
+| Shelly BLU Motion | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+BLU+Motion&model=Shelly+BLU+Motion) |
+| Shelly BLU RC Button 4 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
+| Shelly Plus 1 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
+| Shelly Plus 1 PM | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
+| Shelly Plus 2 PM | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
+| Shelly Plus H&T | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
+| Shelly Plus I4 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+I4&model=Shelly+Plus+I4) |
+| Shelly Plus Plug | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
+| Shelly Plus Plug S | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+Plug+S&model=Shelly+Plus+Plug+S) |
+| Shelly Plus Plug UK | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+Plug+UK&model=Shelly+Plus+Plug+UK) |
+| Shelly Plus WallDimmer | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+WallDimmer&model=Shelly+Plus+WallDimmer) |
+| Shelly Pro 1 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
+| Shelly Pro 1 PM | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Pro+1+PM&model=Shelly+Pro+1+PM) |
+| Shelly Pro 2 | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
+| Shelly Pro 2 PM | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Pro+2+PM&model=Shelly+Pro+2+PM) |
+| Shelly Pro 4 PM | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Pro+4+PM&model=Shelly+Pro+4+PM) |
+
+<!-- End of generated table -->

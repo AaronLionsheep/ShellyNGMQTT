@@ -1,6 +1,7 @@
 import logging
 
 import indigo  # pyright: ignore[reportMissingModuleSource]
+import plugin as plugin_module
 import pytest
 
 ERROR = "Must be a positive number of seconds."
@@ -452,6 +453,68 @@ class TestDeviceFactoryModelChanged:
         assert values_dict is values
         assert values_dict["shelly-model"] == "shelly-blu-ht"
         assert values_dict["mac-address"] == "abc"
+
+    @pytest.mark.parametrize("model", ["shelly-pro-2", "shelly-blu-ht"])
+    def test_unverified_model_shows_warning(self, plugin, model, monkeypatch):
+        """Models nobody has verified on a real device warn before they're created"""
+        monkeypatch.setitem(plugin_module.verified_devices[model], "verified_by", [])
+
+        values_dict = plugin.deviceFactoryModelChanged(
+            indigo.Dict({"shelly-model": model}), "", 0
+        )
+
+        assert values_dict["is-verified-model"] is False
+
+    def test_verified_model_hides_warning(self, plugin, monkeypatch):
+        """Switching to a verified model hides a warning shown for the previous model"""
+        monkeypatch.setitem(
+            plugin_module.verified_devices["shelly-pro-2"],
+            "verified_by",
+            [{"github_username": "tester"}],
+        )
+        values = indigo.Dict(
+            {"shelly-model": "shelly-pro-2", "is-verified-model": False}
+        )
+
+        values_dict = plugin.deviceFactoryModelChanged(values, "", 0)
+
+        assert values_dict["is-verified-model"] is True
+
+    @pytest.mark.parametrize("model", ["", "-1", "shelly-pro-3-em"])
+    def test_non_model_hides_warning(self, plugin, model):
+        """Menu headers, separators, and unavailable models aren't models to warn about"""
+        values_dict = plugin.deviceFactoryModelChanged(
+            indigo.Dict({"shelly-model": model}), "", 0
+        )
+
+        assert values_dict["is-verified-model"] is True
+
+
+class TestReportDeviceVerification:
+    @pytest.mark.parametrize(
+        "values",
+        [{}, {"device-id": ""}, {"device-id": "none"}, {"device-id": "123"}],
+    )
+    def test_no_started_device(self, plugin, values):
+        """A device must be chosen, and menu headers or unknown ids don't count"""
+        result = plugin.report_device_verification(indigo.Dict(values), "")
+
+        assert result[0] is False
+        assert result[2] == {"device-id": "You must select a device."}
+
+
+class TestGetShellyDevicesForVerification:
+    def test_no_devices(self, plugin):
+        """Both sections show a disabled "None" until a Shelly device has started"""
+        assert plugin.get_shelly_devices_for_verification() == [
+            ("none", "%%disabled:Unverified Models%%"),
+            ("none", "%%separator%%"),
+            ("none", "%%disabled:None%%"),
+            ("none", "%%disabled: %%"),
+            ("none", "%%disabled:Community Verified Models%%"),
+            ("none", "%%separator%%"),
+            ("none", "%%disabled:None%%"),
+        ]
 
 
 class TestGetDiscoveredBluAddresses:

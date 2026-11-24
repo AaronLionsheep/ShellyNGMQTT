@@ -1,6 +1,15 @@
+import json
 import logging
+from pathlib import Path
+from urllib.parse import urlencode
 
 import indigo  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
+
+# Every model keyed by device type id, with the people who confirmed it works on a real device.
+# Models with an empty "verified_by" list were built from Shelly's API docs alone.
+# Loaded here rather than in plugin.py, which Indigo runs without defining __file__.
+with open(Path(__file__).parents[3] / "Resources" / "verified_devices.json") as f:
+    verified_devices: dict[str, dict] = json.load(f)
 
 
 class Shelly:
@@ -38,6 +47,26 @@ class Shelly:
         :return: Error messages keyed by field id, empty when the values are valid.
         """
         return {}
+
+    @classmethod
+    def verification_url(cls, firmware: str = "", plugin_version: str = "") -> str:
+        """
+        Link to a new device verification issue with this model's details filled in.
+
+        :param firmware: The device's firmware version, left blank when empty.
+        :param plugin_version: The plugin version, left blank when empty.
+        :return: The URL of the issue form.
+        """
+        fields = {
+            "template": "device-verification.yml",
+            "title": f"Verify {cls.display_name}",
+            "model": cls.display_name,
+            "firmware": firmware,
+            "plugin-version": plugin_version,
+        }
+        return "https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?" + urlencode(
+            {key: value for key, value in fields.items() if value}
+        )
 
     @property
     def device(self):

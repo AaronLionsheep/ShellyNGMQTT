@@ -1,0 +1,51 @@
+from urllib.parse import parse_qs, urlsplit
+
+from shelly.devices.shelly_blu_ht import ShellyBLUHT
+from shelly.devices.shelly_pro_2 import ShellyPro2
+
+
+def query(url):
+    """The query parameters of a URL, with single values unwrapped."""
+    return {key: value[0] for key, value in parse_qs(urlsplit(url).query).items()}
+
+
+class TestVerificationUrl:
+    def test_issue_form(self):
+        """The link opens the device verification form in the plugin's repository"""
+        url = urlsplit(ShellyPro2.verification_url())
+
+        assert url.netloc == "github.com"
+        assert url.path == "/AaronLionsheep/ShellyNGMQTT/issues/new"
+        assert query(ShellyPro2.verification_url())["template"] == (
+            "device-verification.yml"
+        )
+
+    def test_model_details(self):
+        """The title and model menu are filled in from the model's display name"""
+        fields = query(ShellyBLUHT.verification_url())
+
+        assert fields["title"] == "Verify Shelly BLU H&T"
+        assert fields["model"] == "Shelly BLU H&T"
+
+    def test_versions(self):
+        """Known versions are filled in so the reporter doesn't have to look them up"""
+        fields = query(
+            ShellyPro2.verification_url(firmware="1.4.4", plugin_version="1.5.0")
+        )
+
+        assert fields["firmware"] == "1.4.4"
+        assert fields["plugin-version"] == "1.5.0"
+
+    def test_unknown_versions_left_blank(self):
+        """Empty versions are left out so the form shows its placeholders"""
+        fields = query(ShellyPro2.verification_url())
+
+        assert "firmware" not in fields
+        assert "plugin-version" not in fields
+
+    def test_special_characters_encoded(self):
+        """Names with "&" and "/" can't break the query string"""
+        url = ShellyBLUHT.verification_url(firmware="20241011/1.4.4&x=1")
+
+        assert "&x=1" not in url
+        assert query(url)["firmware"] == "20241011/1.4.4&x=1"

@@ -11,4 +11,30 @@
         <ConfigUI actionId="Shelly.Update"/>
         <ButtonTitle>Update!</ButtonTitle>
     </MenuItem>
+
+    <MenuItem id="report-device-verification">
+        <Name>Report Device Verification...</Name>
+        <CallbackMethod>report_device_verification</CallbackMethod>
+        <ButtonTitle>Get Link</ButtonTitle>
+        <ConfigUI>
+            <Field id="device-id" type="menu">
+                <Label>Device:</Label>
+                <List class="self" method="get_shelly_devices_for_verification" dynamicReload="true"/>
+            </Field>
+            <Field id="device-id-help" type="label" fontColor="darkgray" fontSize="small" alignWithControl="true">
+                <Label>Logs a pre-filled GitHub link to report the model works with this plugin version.</Label>
+            </Field>
+
+            <Field id="open-browser" type="checkbox" defaultValue="false">
+                <Description>Open in browser</Description>
+            </Field>
+            <Field id="open-browser-help" type="label" fontColor="darkgray" fontSize="small" alignWithControl="true">
+                <Label>Opens on the Indigo server Mac. From a remote client, copy the link from the event log.</Label>
+            </Field>
+
+            <Field id="disclaimer" type="label" fontColor="darkgray" fontSize="small">
+                <Label>&#10;A verification is a community note of support, not a warranty. You aren't responsible or liable for how the device or plugin works for anyone else.</Label>
+            </Field>
+        </ConfigUI>
+    </MenuItem>
 </MenuItems>

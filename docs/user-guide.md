@@ -90,6 +90,14 @@ Leave the two age settings blank to use the defaults. See [BLU Relay](blu-relay.
 5. **Shelly Plus 2 PM only:** choose the **Device Profile**, **Switch** or **Cover (Roller/Shutter)**, matching the profile set on the Shelly.
 6. Click **Submit**.
 
+Some models are added from Shelly's API documentation before anyone has tried them on a real device. For these, the dialog shows an orange warning when you choose the model, and the plugin logs a warning each time the device starts. They usually work, but if one doesn't, please [report it](reporting-bugs.md). Models that someone has confirmed work show a green note saying they've been verified by the community instead.
+
+Verifications are included in the plugin when it's released, so the warning reflects the version you have installed. Someone may have verified the model since, which will be noted in a future version of the plugin. Updating the plugin picks up any new verifications.
+
+If it does work, please send a device verification report, which removes the warning in the next release. Choose **Plugins → ShellyNGMQTT → Report Device Verification...**, pick the device, and click **Get Link**. The plugin logs a link to a [device verification](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml) form on GitHub with the model, firmware, and plugin version filled in. Check **Open in browser** to also open it, but note that the browser opens on the Indigo server Mac, so from a remote client copy the link from the event log instead. You can report devices that are already verified too.
+
+A verification is a community note of support that the model worked for you, not a warranty. You aren't responsible or liable for how the device or the plugin works for anyone else. You can choose to be credited by your GitHub and Indigo forum usernames, or verify anonymously.
+
 The plugin creates the main Shelly device and one Indigo device per component, grouped together. The main device holds device-level information like Wi-Fi signal strength and firmware versions; the component devices are what you control and trigger on. See [Supported Devices](supported-devices.md) for what each model creates.
 
 To change the connection settings later, edit any device in the group and click **Edit Device Settings...**. Renaming the main device doesn't rename its components.
@@ -190,6 +198,7 @@ Work through the path a message takes, from the Shelly to Indigo:
 | `MQTT Connector plugin not enabled, aborting.` | Enable MQTT Connector. The plugin checks again every minute. |
 | `'<device>' is not properly setup! Address is unknown.` or `Check the broker and topic root.` | Edit the device and fill in the **MQTT Broker** and **Base MQTT Topic**. |
 | `Error writing ... configuration: <message>` | The Shelly rejected a settings change. The message after the colon comes from the Shelly and explains why. |
+| `'<device>' (<model>) wasn't tested against a real device when this plugin version was released ...` | Nobody had confirmed this model works with the plugin when your version was released. Someone may have since, which a newer version will include. If it works for you, send a device verification report with **Plugins → ShellyNGMQTT → Report Device Verification...** (see [Creating Devices](#creating-devices)). |
 | `No trigger type found for button event: <event>` | A BLU device sent a kind of button press the plugin doesn't recognize. Please [report it](reporting-bugs.md), including the log lines. |
 | Messages mentioning the BLU Relay, Bluetooth scanning, or NTP sync | See [BLU Relay troubleshooting](blu-relay.md#troubleshooting). |
 
