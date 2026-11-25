@@ -73,7 +73,7 @@
 				<List class="self" filter="" method="get_broker_devices" dynamicReload="true"/>
 			</Field>
 			<Field id="broker-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
-				<Label>The broker that this device communicates with
+				<Label>The broker that this device communicates with.
 				</Label>
 			</Field>
 
@@ -81,7 +81,7 @@
 				<Label>Base MQTT Topic:</Label>
 			</Field>
 			<Field id="address-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
-				<Label>The base address of the device
+				<Label>The base address of the device.
 				</Label>
 			</Field>
 
@@ -89,7 +89,7 @@
 				<Label>Message Type:</Label>
 			</Field>
 			<Field id="message-type-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="is-mqtt-model" visibleBindingValue="true">
-				<Label>The message type from an MQTTConnector trigger that will be delivering messages for this device
+				<Label>The message type from an MQTTConnector trigger that will be delivering messages for this device.
 				</Label>
 			</Field>
 
@@ -119,11 +119,9 @@
 				<Label>Initial Name:</Label>
 			</Field>
 			<Field id="initial-name-description" type="label" visibleBindingId="is-initial-setup" visibleBindingValue="true" alignWithControl="true" fontColor="darkgray">
-				<Label>The base name for the device (ex: Living Room Light) that can be used to create friendly default component names
+				<Label>The base name for the device (ex: Living Room Light) that can be used to create friendly default component names.
 				</Label>
 			</Field>
-
-			<Field id="model-specific-sep" type="separator" visibleBindingId="supports-cover-profile" visibleBindingValue="true"/>
 
 			<!-- Shelly Plus 2 PM / Shelly Pro 2 PM-->
 			<Field id="profile" type="menu" defaultValue="switch" visibleBindingId="supports-cover-profile" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
@@ -132,6 +130,10 @@
 					<Option value="switch">Switch</Option>
 					<Option value="cover">Cover (Roller/Shutter)</Option>
 				</List>
+			</Field>
+			<Field id="profile-description" type="label" alignWithControl="true" fontColor="darkgray" visibleBindingId="supports-cover-profile" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
+				<Label>The profile configured on the Shelly, which determines whether switch or cover devices are created.
+				</Label>
 			</Field>
 		</ConfigUI>
 	</DeviceFactory>
