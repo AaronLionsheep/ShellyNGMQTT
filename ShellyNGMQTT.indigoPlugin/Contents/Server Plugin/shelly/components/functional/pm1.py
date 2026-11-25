@@ -64,6 +64,24 @@ class PM1(Component):
         """
         return "curEnergyLevel"
 
+    def update_state_image(self):
+        """
+        Show the energy meter icon, using the off version when nothing is drawing power.
+
+        The saved power state is used because a NotifyStatus may only include
+        the fields that changed.
+
+        :return: None
+        """
+        # TODO: Loads with small standby readings may need a configurable cutoff.
+        power = self.device.states.get("curEnergyLevel", 0) or 0
+        image = (
+            indigo.kStateImageSel.EnergyMeterOn
+            if power > 0
+            else indigo.kStateImageSel.EnergyMeterOff
+        )
+        self.device.updateStateImageOnServer(image)
+
     def get_config(self):
         """
         Get the configuration of the power meter.
@@ -207,3 +225,4 @@ class PM1(Component):
             )
 
         self.device.updateStatesOnServer(updated_states)
+        self.update_state_image()
