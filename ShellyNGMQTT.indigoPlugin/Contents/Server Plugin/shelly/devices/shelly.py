@@ -41,6 +41,20 @@ class Shelly:
         self.update_state_image()
 
     @classmethod
+    def plugin_props(cls) -> dict:
+        """
+        Default pluginProps that all devices of this class will have.
+
+        Applied every time the device starts, because Indigo only fills in the
+        hidden Supports* fields from Devices.xml when the settings dialog is saved.
+        """
+        return {
+            "SupportsStatusRequest": True,
+            "SupportsOnState": False,
+            "SupportsSensorValue": False,
+        }
+
+    @classmethod
     def validate_config_ui(cls, values_dict) -> dict[str, str]:
         """
         Validate the values from the device settings dialog.

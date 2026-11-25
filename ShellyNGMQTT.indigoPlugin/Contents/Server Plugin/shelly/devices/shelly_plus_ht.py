@@ -18,6 +18,12 @@ class ShellyPlusHT(ShellyMQTT):
 
     display_name = "Shelly Plus H&T"
 
+    @classmethod
+    def plugin_props(cls) -> dict:
+        props = super().plugin_props()
+        props.update(SupportsStatusRequest=False, SupportsBatteryLevel=True)
+        return props
+
     def __init__(self, device_id):
         super().__init__(device_id)
 
@@ -30,21 +36,13 @@ class ShellyPlusHT(ShellyMQTT):
             "ht-ui": HT_UI(self),
         }
 
-        props = self.device.pluginProps
-        props.update(
-            {
-                "SupportsStatusRequest": False,
-                "SupportsOnState": False,
-                "SupportsSensorValue": False,
-                "SupportsBatteryLevel": True,
-            }
-        )
-        self.device.replacePluginPropsOnServer(props)
-
+        sensor_props = {"SupportsOnState": False, "SupportsSensorValue": True}
         self.temperature = self.register_component(
-            Temperature, "Temperature", comp_id=0
+            Temperature, "Temperature", comp_id=0, props=sensor_props
         )
-        self.humidity = self.register_component(Humidity, "Humidity", comp_id=0)
+        self.humidity = self.register_component(
+            Humidity, "Humidity", comp_id=0, props=sensor_props
+        )
 
     def handle_notify_status(self, component_type, instance_id, status):
         """

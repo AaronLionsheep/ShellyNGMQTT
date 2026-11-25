@@ -1,14 +1,48 @@
 import logging
 from urllib.parse import parse_qs, urlsplit
 
+import plugin as plugin_module
+import pytest
 from shelly.devices.shelly import Shelly
 from shelly.devices.shelly_blu_ht import ShellyBLUHT
+from shelly.devices.shelly_plus_ht import ShellyPlusHT
 from shelly.devices.shelly_pro_2 import ShellyPro2
 
 
 def query(url):
     """The query parameters of a URL, with single values unwrapped."""
     return {key: value[0] for key, value in parse_qs(urlsplit(url).query).items()}
+
+
+class TestPluginProps:
+    def test_wifi_default(self):
+        """Wi-Fi main devices hide the on/off state and sensor value they don't have"""
+        assert ShellyPro2.plugin_props() == {
+            "SupportsStatusRequest": True,
+            "SupportsOnState": False,
+            "SupportsSensorValue": False,
+        }
+
+    def test_plus_ht(self):
+        """The sleeping Plus H&T can't answer status requests and reports its battery"""
+        assert ShellyPlusHT.plugin_props() == {
+            "SupportsStatusRequest": False,
+            "SupportsOnState": False,
+            "SupportsSensorValue": False,
+            "SupportsBatteryLevel": True,
+        }
+
+    def test_returns_new_dict(self):
+        """Each call returns a separate dict so devices never share props"""
+        assert Shelly.plugin_props() is not Shelly.plugin_props()
+
+    @pytest.mark.parametrize("model_class", plugin_module.shelly_model_classes.values())
+    def test_every_model_sets_on_state_and_sensor_value(self, model_class):
+        """Indigo falls back to showing an on/off state when these props are missing (#193)"""
+        props = model_class.plugin_props()
+
+        assert "SupportsOnState" in props
+        assert "SupportsSensorValue" in props
 
 
 class TestVerificationUrl:
