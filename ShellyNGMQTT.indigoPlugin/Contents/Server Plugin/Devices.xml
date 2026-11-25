@@ -60,7 +60,7 @@
 			<Field id="verified-model-note" type="label" fontColor="green" alignWithControl="true" visibleBindingId="is-verified-model" visibleBindingValue="true">
 				<Label>✔︎ Verified on a real device by the community.</Label>
 			</Field>
-			<Field id="unverified-model-warning" type="label" fontColor="orange" alignWithControl="true" visibleBindingId="is-verified-model" visibleBindingValue="false">
+			<Field id="unverified-model-warning" type="label" fontColor="orange" alignWithControl="true" visibleBindingId="is-verified-model" visibleBindingValue="false" alwaysUseInDialogHeightCalc="true">
 				<Label>⚠︎ Untested on a real device as of this plugin version. If it works, please report it from the plugin's menu.</Label>
 			</Field>
 
