@@ -142,10 +142,6 @@
 	<Device type="sensor" id="shelly-plus-1">
 		<Name>Shelly Plus 1</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -193,10 +189,6 @@
 	<Device type="sensor" id="shelly-plus-1-pm">
 		<Name>Shelly Plus 1 PM</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -244,10 +236,6 @@
 	<Device type="sensor" id="shelly-plus-2-pm">
 		<Name>Shelly Plus 2 PM</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -295,10 +283,6 @@
 	<Device type="sensor" id="shelly-plus-walldimmer">
 		<Name>Shelly Plus WallDimmer</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -346,10 +330,6 @@
 	<Device type="sensor" id="shelly-plus-i-4">
 		<Name>Shelly Plus I4</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -396,10 +376,6 @@
 	<Device type="sensor" id="shelly-plus-pm-mini">
 		<Name>Shelly Plus PM Mini</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -495,10 +471,6 @@
 	<Device type="sensor" id="shelly-plus-plug">
 		<Name>Shelly Plus Plug (US/IT)</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -546,10 +518,6 @@
 	<Device type="sensor" id="shelly-plus-plug-s">
 		<Name>Shelly Plus Plug S</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -597,10 +565,6 @@
 	<Device type="sensor" id="shelly-plus-plug-uk">
 		<Name>Shelly Plus Plug UK</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -648,10 +612,6 @@
 	<Device type="sensor" id="shelly-pro-1">
 		<Name>Shelly Pro 1</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -703,10 +663,6 @@
 	<Device type="sensor" id="shelly-pro-1-pm">
 		<Name>Shelly Pro 1 PM</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -758,10 +714,6 @@
 	<Device type="sensor" id="shelly-pro-2">
 		<Name>Shelly Pro 2</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -813,10 +765,6 @@
 	<Device type="sensor" id="shelly-pro-2-pm">
 		<Name>Shelly Pro 2 PM</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -868,10 +816,6 @@
 		<Device type="sensor" id="shelly-pro-4-pm">
 		<Name>Shelly Pro 4 PM</Name>
 		<ConfigUI>
-            <Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-            <Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="settings-section" type="menu" defaultValue="indigo">
 				<Label>Configuration Section:</Label>
 				<List>
@@ -923,10 +867,6 @@
 	<Device type="relay" id="component-switch">
 		<Name>Switch Component</Name>
 		<ConfigUI>
-			<Field type="checkbox" id="SupportsEnergyMeter" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsPowerMeter" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsEnergyMeterCurPower" defaultValue="false" hidden="true" />
-
 			<Field id="name" type="textfield">
 				<Label>Name:</Label>
 			</Field>
@@ -1042,10 +982,6 @@
 	<Device type="sensor" id="component-input">
 		<Name>Input Component</Name>
 		<ConfigUI>
-			<Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-			<Field type="checkbox" id="SupportsOnState" defaultValue="true" hidden="true" />
-			<Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-
 			<Field id="name" type="textfield">
 				<Label>Name:</Label>
 			</Field>
@@ -1084,13 +1020,6 @@
 	<Device type="sensor" id="component-pm1">
 		<Name>Power Meter Component</Name>
 		<ConfigUI>
-			<Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-			<Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-			<Field type="checkbox" id="SupportsSensorValue" defaultValue="false" hidden="true" />
-			<Field type="checkbox" id="SupportsEnergyMeter" defaultValue="false" hidden="true" />
-			<Field type="checkbox" id="SupportsPowerMeter" defaultValue="false" hidden="true" />
-			<Field type="checkbox" id="SupportsEnergyMeterCurPower" defaultValue="false" hidden="true" />
-
 			<Field id="name" type="textfield">
 				<Label>Name:</Label>
 			</Field>
@@ -1102,10 +1031,6 @@
 	<Device type="sensor" id="component-temperature">
 		<Name>Temperature Component</Name>
 		<ConfigUI>
-			<Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-			<Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-			<Field type="checkbox" id="SupportsSensorValue" defaultValue="true" hidden="true" />
-
 			<Field id="name" type="textfield">
 				<Label>Name:</Label>
 			</Field>
@@ -1143,10 +1068,6 @@
 	<Device type="sensor" id="component-humidity">
 		<Name>Humidity Component</Name>
 		<ConfigUI>
-			<Field type="checkbox" id="SupportsStatusRequest" defaultValue="true" hidden="true" />
-			<Field type="checkbox" id="SupportsOnState" defaultValue="false" hidden="true" />
-			<Field type="checkbox" id="SupportsSensorValue" defaultValue="true" hidden="true" />
-
 			<Field id="name" type="textfield">
 				<Label>Name:</Label>
 			</Field>
@@ -1433,10 +1354,6 @@
 	<Device type="dimmer" id="component-light">
 		<Name>Light Component</Name>
 		<ConfigUI>
-			<Field type="checkbox" id="SupportsEnergyMeter" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsPowerMeter" defaultValue="false" hidden="true" />
-            <Field type="checkbox" id="SupportsEnergyMeterCurPower" defaultValue="false" hidden="true" />
-
 			<Field id="name" type="textfield">
 				<Label>Name:</Label>
 			</Field>
