@@ -93,7 +93,7 @@ Pass a path or `-k` to run part of the suite, for example `conda run -n shellyng
 - **Test pure logic.** Unit tests cover parsing, state calculation, validation, and similar logic that doesn't need a live Indigo server. Use the `plugin` and `indigo` fixtures from pytest-indigo where a test needs them, and never use `MagicMock` or monkeypatching on the `indigo` module or Indigo devices. If logic is hard to test without a mock, move it into a classmethod or function that takes plain data.
 - **Parsing code needs thorough tests.** New parsing logic (BTHome data, RPC payloads, and so on) should come with a dedicated dataclass and tests that cover normal values, edge cases, and malformed input.
 - **Every test has a docstring** saying what it checks and why, for example `"""Each call returns a separate dict so devices never share props"""`.
-- **Coverage:** pytest prints a coverage report with missing lines. New code should be covered.
+- **Coverage:** pytest prints a coverage report with missing lines. New code should be covered. On pull requests, CI combines coverage from every Python version, adds the total to the run summary, and comments on the pull request with the coverage of the changed lines. No minimum is enforced yet.
 
 CI runs the suite on Linux with Python 3.11 and 3.13, so keep tests platform-independent and avoid syntax or library features newer than Python 3.11.
 
