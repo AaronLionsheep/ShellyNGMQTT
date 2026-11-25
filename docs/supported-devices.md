@@ -28,6 +28,7 @@ In the tables below:
 | [Shelly Plus 2 PM](https://kb.shelly.cloud/knowledge-base/shelly-plus-2pm) | 0.1.0 | 2 Switches and 2 Inputs, or 1 Cover and 2 Inputs | :white_check_mark: | :white_check_mark: |
 | [Shelly Plus WallDimmer](https://kb.shelly.cloud/knowledge-base/shelly-plus-wall-dimmer) | 1.2.0 | 1 Light | :white_check_mark: | :white_check_mark: |
 | [Shelly Plus I4](https://kb.shelly.cloud/knowledge-base/shelly-plus-i4) ([I4DC](https://kb.shelly.cloud/knowledge-base/shelly-plus-i4dc)) | 0.1.0 | 4 Inputs | :heavy_minus_sign: | :white_check_mark: |
+| [Shelly Plus PM Mini](https://kb.shelly.cloud/knowledge-base/shelly-plus-pm-mini) | 1.5.0 | 1 Power Meter | :white_check_mark: | :white_check_mark: |
 | [Shelly Plus H&T](https://kb.shelly.cloud/knowledge-base/shelly-plus-h-t) | 0.4.0 | 1 Temperature, 1 Humidity | :heavy_minus_sign: | :heavy_minus_sign: |
 | Shelly Plus Plug ([US](https://kb.shelly.cloud/knowledge-base/shelly-plus-plug-us)/[IT](https://kb.shelly.cloud/knowledge-base/shelly-plus-plug-it)) | 0.4.0 | 1 Switch | :white_check_mark: | :white_check_mark: |
 | [Shelly Plus Plug S](https://kb.shelly.cloud/knowledge-base/shelly-plus-plug-s) | 1.1.0 | 1 Switch | :white_check_mark: | :white_check_mark: |
@@ -58,6 +59,7 @@ Each component type is a standard Indigo device type, so it works with Indigo's 
 | Switch | Relay | On/off | Device temperature (°C and °F); with power metering: power, energy, voltage, current, power factor |
 | Light | Dimmer | On/off and brightness | Device temperature (°C and °F); with power metering: power, energy, voltage, current, power factor |
 | Cover | Dimmer | Position (0-100%, 0 is closed) | Cover state (opening, closing, stopped, ...), device temperature (°C and °F); with power metering: power, energy, voltage |
+| Power Meter | Sensor | Power (W) | Energy (kWh), returned energy (kWh), voltage, current, frequency |
 | Input | Sensor | On/off (pressed or switch closed) | :heavy_minus_sign: |
 | Temperature | Sensor | Temperature | Temperature in °C and °F |
 | Humidity | Sensor | Humidity (%) | :heavy_minus_sign: |
@@ -150,6 +152,7 @@ If a model works for you, report it with **Plugins → ShellyNGMQTT → Report D
 | Shelly Plus 2 PM | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus H&T | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus I4 | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+I4) |
+| Shelly Plus PM Mini | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+PM+Mini) |
 | Shelly Plus Plug | :white_check_mark: Verified | [AaronLionsheep](https://github.com/AaronLionsheep) ([aaronlionsheep](https://forums.indigodomo.com/memberlist.php?mode=viewprofile&un=aaronlionsheep)) |
 | Shelly Plus Plug S | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+Plug+S) |
 | Shelly Plus Plug UK | :warning: Not yet verified | [Report it](https://github.com/AaronLionsheep/ShellyNGMQTT/issues/new?template=device-verification.yml&title=Verify+Shelly+Plus+Plug+UK) |
