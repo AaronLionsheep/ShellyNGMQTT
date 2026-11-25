@@ -30,6 +30,7 @@ from shelly.devices.shelly_plus_i4 import ShellyPlusI4
 from shelly.devices.shelly_plus_plug import ShellyPlusPlug
 from shelly.devices.shelly_plus_plug_s import ShellyPlusPlugS
 from shelly.devices.shelly_plus_plug_uk import ShellyPlusPlugUK
+from shelly.devices.shelly_plus_pm_mini import ShellyPlusPMMini
 from shelly.devices.shelly_plus_walldimmer import ShellyPlusWallDimmer
 from shelly.devices.shelly_pro_1 import ShellyPro1
 from shelly.devices.shelly_pro_1_pm import ShellyPro1PM
@@ -59,6 +60,7 @@ shelly_model_classes = {
     "shelly-plus-walldimmer": ShellyPlusWallDimmer,
     "shelly-plus-i-4": ShellyPlusI4,
     "shelly-plus-ht": ShellyPlusHT,
+    "shelly-plus-pm-mini": ShellyPlusPMMini,
     "shelly-plus-plug": ShellyPlusPlug,
     "shelly-plus-plug-s": ShellyPlusPlugS,
     "shelly-plus-plug-uk": ShellyPlusPlugUK,
