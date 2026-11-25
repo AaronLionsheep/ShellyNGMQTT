@@ -24,7 +24,7 @@ In the tables below:
 | Model | Added in | Indigo devices created | Power metering | BLU gateway |
 | --- | :---: | --- | :---: | :---: |
 | [Shelly Plus 1](https://kb.shelly.cloud/knowledge-base/shelly-plus-1) ([Mini](https://kb.shelly.cloud/knowledge-base/shelly-plus-1-mini)) | 0.1.0 | 1 Switch, 1 Input | :heavy_minus_sign: | :white_check_mark: |
-| [Shelly Plus 1 PM](https://kb.shelly.cloud/knowledge-base/shelly-plus-1pm) | 0.3.0 | 1 Switch, 1 Input | :white_check_mark: | :white_check_mark: |
+| [Shelly Plus 1 PM](https://kb.shelly.cloud/knowledge-base/shelly-plus-1pm) ([Mini](https://kb.shelly.cloud/knowledge-base/shelly-plus-1pm-mini)) | 0.3.0 | 1 Switch, 1 Input | :white_check_mark: | :white_check_mark: |
 | [Shelly Plus 2 PM](https://kb.shelly.cloud/knowledge-base/shelly-plus-2pm) | 0.1.0 | 2 Switches and 2 Inputs, or 1 Cover and 2 Inputs | :white_check_mark: | :white_check_mark: |
 | [Shelly Plus WallDimmer](https://kb.shelly.cloud/knowledge-base/shelly-plus-wall-dimmer) | 1.2.0 | 1 Light | :white_check_mark: | :white_check_mark: |
 | [Shelly Plus I4](https://kb.shelly.cloud/knowledge-base/shelly-plus-i4) ([I4DC](https://kb.shelly.cloud/knowledge-base/shelly-plus-i4dc)) | 0.1.0 | 4 Inputs | :heavy_minus_sign: | :white_check_mark: |
