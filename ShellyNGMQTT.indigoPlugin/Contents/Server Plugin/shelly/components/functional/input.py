@@ -11,6 +11,12 @@ class Input(Component):
     component_type = "input"
     device_type_id = "component-input"
 
+    @classmethod
+    def plugin_props(cls) -> dict:
+        props = super().plugin_props()
+        props.update(SupportsOnState=True, SupportsSensorValue=False)
+        return props
+
     def __init__(self, shelly, device_id, comp_id=0):
         """
         Create an Input component and assign it to a Shelly device.

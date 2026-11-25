@@ -32,16 +32,7 @@ class ShellyPlusPMMini(ShellyMQTT):
         self.blu_relay = BluRelayScript(self.system_components["script"])
         self.blu_relay.sync()
 
-        self.pm1 = self.register_component(
-            PM1,
-            "Power Meter",
-            props={
-                "SupportsOnState": "false",
-                "SupportsPowerMeter": "true",
-                "SupportsEnergyMeter": "true",
-                "SupportsEnergyMeterCurPower": "true",
-            },
-        )
+        self.pm1 = self.register_component(PM1, "Power Meter")
 
     def handle_notify_status(self, component_type, instance_id, status):
         """

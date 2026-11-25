@@ -228,6 +228,11 @@ class Plugin(indigo.PluginBase):
                     "If it works, report it with Plugins → ShellyNGMQTT → Report Device Verification..."
                 )
 
+            # Update any plugin props on the device
+            props = device.pluginProps
+            props.update(model_class.plugin_props())
+            device.replacePluginPropsOnServer(props)
+
             if issubclass(model_class, ShellyBLU):
                 # Ensure the BLU device has a MAC address defined
                 address = shelly.get_address()
@@ -239,11 +244,6 @@ class Plugin(indigo.PluginBase):
 
                 # Track the device associated with the BLU address
                 self.blu_address_devices[address].add(device.id)
-
-                # Update any plugin props on the device
-                props = device.pluginProps
-                props.update(model_class.plugin_props())
-                device.replacePluginPropsOnServer(props)
             else:
                 # Check that the device has a broker and an address
                 if shelly.get_broker_id() is None or shelly.get_address() is None:
@@ -625,7 +625,9 @@ class Plugin(indigo.PluginBase):
                 return
 
             # Update the device properties from the factory UI
-            main_device.replacePluginPropsOnServer(device_props)
+            props = main_device.pluginProps
+            props.update(device_props)
+            main_device.replacePluginPropsOnServer(props)
 
             # Initialize the device and its components to populate the already opened UI
             model_class(main_device.id)

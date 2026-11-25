@@ -41,6 +41,20 @@ class Shelly:
         self.update_state_image()
 
     @classmethod
+    def plugin_props(cls) -> dict:
+        """
+        Default pluginProps that all devices of this class will have.
+
+        Applied every time the device starts, because Indigo only fills in the
+        hidden Supports* fields from Devices.xml when the settings dialog is saved.
+        """
+        return {
+            "SupportsStatusRequest": True,
+            "SupportsOnState": False,
+            "SupportsSensorValue": False,
+        }
+
+    @classmethod
     def validate_config_ui(cls, values_dict) -> dict[str, str]:
         """
         Validate the values from the device settings dialog.
@@ -252,12 +266,11 @@ class Shelly:
         :param component_class: The class of the component to create.
         :param name: The name of the component (device model).
         :param comp_id: The identifier for the component.
-        :param props: Properties to set for the device.
+        :param props: Properties to set for the device, on top of the component's plugin_props().
         :return: The created component object.
         """
 
-        if props is None:
-            props = {}
+        props = {**component_class.plugin_props(), **(props or {})}
         if name not in self.component_devices:
             # The component name we are trying to register is new, so we did
             # not find a device with that name already in the group. Create it

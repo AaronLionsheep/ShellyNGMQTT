@@ -194,7 +194,9 @@ class ShellyBLU(Shelly):
     @classmethod
     def plugin_props(cls) -> dict[str, Any]:
         """Default pluginProps that all devices of this class will have."""
-        return {"SupportsStatusRequest": False, "SupportsBatteryLevel": True}
+        props = super().plugin_props()
+        props.update(SupportsStatusRequest=False, SupportsBatteryLevel=True)
+        return props
 
     @staticmethod
     def normalize_address(address: str) -> str:
