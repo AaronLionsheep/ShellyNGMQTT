@@ -7,6 +7,7 @@ dependencies:
   - pytest >=9
   - pytest-cov
   - uv
+  - gh
   - pip
   - pip:
     - -r ShellyNGMQTT.indigoPlugin/Contents/Server\ Plugin/requirements.txt
