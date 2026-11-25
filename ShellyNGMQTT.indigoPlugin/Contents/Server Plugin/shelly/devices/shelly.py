@@ -266,12 +266,11 @@ class Shelly:
         :param component_class: The class of the component to create.
         :param name: The name of the component (device model).
         :param comp_id: The identifier for the component.
-        :param props: Properties to set for the device.
+        :param props: Properties to set for the device, on top of the component's plugin_props().
         :return: The created component object.
         """
 
-        if props is None:
-            props = {}
+        props = {**component_class.plugin_props(), **(props or {})}
         if name not in self.component_devices:
             # The component name we are trying to register is new, so we did
             # not find a device with that name already in the group. Create it

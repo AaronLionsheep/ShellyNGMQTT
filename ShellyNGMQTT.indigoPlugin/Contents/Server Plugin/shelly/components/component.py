@@ -9,6 +9,17 @@ class Component:
     component_type = None
     device_type_id = None
 
+    @classmethod
+    def plugin_props(cls) -> dict:
+        """
+        Default pluginProps that every device of this component will have.
+
+        Models can override these with the props they pass to register_component.
+        Indigo only fills in the hidden Supports* fields from Devices.xml when the
+        settings dialog is saved, so props the component always needs belong here.
+        """
+        return {"SupportsStatusRequest": True}
+
     def __init__(self, shelly, device_id=None, comp_id=0):
         """
 

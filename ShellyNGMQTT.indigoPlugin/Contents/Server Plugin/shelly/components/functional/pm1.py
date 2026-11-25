@@ -15,6 +15,18 @@ class PM1(Component):
     component_type = "pm1"
     device_type_id = "component-pm1"
 
+    @classmethod
+    def plugin_props(cls) -> dict:
+        props = super().plugin_props()
+        props.update(
+            SupportsOnState=False,
+            SupportsSensorValue=False,
+            SupportsPowerMeter=True,
+            SupportsEnergyMeter=True,
+            SupportsEnergyMeterCurPower=True,
+        )
+        return props
+
     def __init__(self, shelly, device_id, comp_id=0):
         """
         Create a PM1 component and assign it to a ShellyNG device.

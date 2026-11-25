@@ -11,6 +11,12 @@ class Temperature(Component):
     component_type = "temperature"
     device_type_id = "component-temperature"
 
+    @classmethod
+    def plugin_props(cls) -> dict:
+        props = super().plugin_props()
+        props.update(SupportsOnState=False, SupportsSensorValue=True)
+        return props
+
     def __init__(self, shelly, device_id, comp_id=0):
         """
         Create a Temperature component and assign it to a Shelly device.

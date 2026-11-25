@@ -11,6 +11,12 @@ class Humidity(Component):
     component_type = "humidity"
     device_type_id = "component-humidity"
 
+    @classmethod
+    def plugin_props(cls) -> dict:
+        props = super().plugin_props()
+        props.update(SupportsOnState=False, SupportsSensorValue=True)
+        return props
+
     def __init__(self, shelly, device_id, comp_id=0):
         """
         Create a Humidity component and assign it to a Shelly device.

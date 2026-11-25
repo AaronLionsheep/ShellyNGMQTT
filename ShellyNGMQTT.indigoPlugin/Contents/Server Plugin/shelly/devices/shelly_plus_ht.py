@@ -36,12 +36,13 @@ class ShellyPlusHT(ShellyMQTT):
             "ht-ui": HT_UI(self),
         }
 
-        sensor_props = {"SupportsOnState": False, "SupportsSensorValue": True}
+        # The H&T sleeps between readings, so status requests would never be answered
+        sleeping_props = {"SupportsStatusRequest": False}
         self.temperature = self.register_component(
-            Temperature, "Temperature", comp_id=0, props=sensor_props
+            Temperature, "Temperature", comp_id=0, props=sleeping_props
         )
         self.humidity = self.register_component(
-            Humidity, "Humidity", comp_id=0, props=sensor_props
+            Humidity, "Humidity", comp_id=0, props=sleeping_props
         )
 
     def handle_notify_status(self, component_type, instance_id, status):
