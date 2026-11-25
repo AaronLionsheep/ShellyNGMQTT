@@ -28,7 +28,7 @@ class ShellyPlusWallDimmer(ShellyMQTT):
         self.blu_relay = BluRelayScript(self.system_components["script"])
         self.blu_relay.sync()
 
-        self.switch = self.register_component(
+        self.light = self.register_component(
             Light,
             "Light",
             props={
