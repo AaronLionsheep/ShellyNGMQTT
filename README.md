@@ -16,7 +16,7 @@ Using Gen1 Shelly devices? Use the [ShellyMQTT](https://www.indigodomo.com/plugi
 
 ## Supported Devices
 
-- **Gen2:** Plus 1, Plus 1 PM, Plus 2 PM, Plus WallDimmer, Plus I4, Plus H&T, Plus Plug (US/IT), Plus Plug S, Plus Plug UK, Pro 1, Pro 1 PM, Pro 2, Pro 2 PM, Pro 4 PM
+- **Gen2:** Plus 1, Plus 1 PM, Plus 2 PM, Plus WallDimmer, Plus I4, Plus PM Mini, Plus H&T, Plus Plug (US/IT), Plus Plug S, Plus Plug UK, Pro 1, Pro 1 PM, Pro 2, Pro 2 PM, Pro 4 PM
 - **BLU:** Button1, RC Button 4, Wall Switch 4, Door/Window, Motion, H&T
 - **BLU+ZB:** Button Tough 1 ZB, Distance, Door/Window ZB, H&T Display ZB, H&T ZB, Motion ZB, RC Button 4 ZB, Wall Switch 4 ZB
 

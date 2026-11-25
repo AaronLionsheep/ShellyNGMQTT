@@ -147,6 +147,10 @@
     "name": "Shelly Plus I4",
     "verified_by": []
   },
+  "shelly-plus-pm-mini": {
+    "name": "Shelly Plus PM Mini",
+    "verified_by": []
+  },
   "shelly-plus-plug": {
     "name": "Shelly Plus Plug",
     "verified_by": [
