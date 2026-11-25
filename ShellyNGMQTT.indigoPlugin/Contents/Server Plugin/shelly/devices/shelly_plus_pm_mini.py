@@ -36,6 +36,7 @@ class ShellyPlusPMMini(ShellyMQTT):
             PM1,
             "Power Meter",
             props={
+                "SupportsOnState": "false",
                 "SupportsPowerMeter": "true",
                 "SupportsEnergyMeter": "true",
                 "SupportsEnergyMeterCurPower": "true",
