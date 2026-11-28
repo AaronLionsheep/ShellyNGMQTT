@@ -44,7 +44,7 @@ dbus-fast==5.2.0 ; sys_platform == 'linux'
     #   bleak-retry-connector
     #   bluetooth-adapters
     #   habluetooth
-habluetooth==7.1.3
+habluetooth==7.2.1
     # via
     #   -r requirements.in
     #   bluetooth-sensor-state-data
